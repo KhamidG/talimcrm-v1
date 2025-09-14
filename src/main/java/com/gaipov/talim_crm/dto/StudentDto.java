@@ -19,4 +19,6 @@ public class StudentDto {
     private UserRole roles = UserRole.STUDENT;
 
     private LocalDate created_at;
+
+    private LocalDate deleted_at;
 }

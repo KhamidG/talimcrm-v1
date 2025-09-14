@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/v1/student")
 public class StudentController {
@@ -15,5 +18,26 @@ public class StudentController {
     @PostMapping("/register")
     public ResponseEntity<StudentDto> register(@RequestBody StudentDto dto) {
         return ResponseEntity.ok(service.registerNewStudent(dto));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<StudentDto>> getAllStudentsList() {
+        return ResponseEntity.ok(service.getAllStudents());
+    }
+
+    @GetMapping("/byId/{id}")
+    public ResponseEntity<Optional<StudentDto>> getById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.getStudentById(id));
+    }
+
+//    @PutMapping("/update/{id}")
+//    public StudentDto updateData(@PathVariable("id") Long id) {
+//        return
+//    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

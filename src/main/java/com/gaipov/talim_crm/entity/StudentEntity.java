@@ -3,6 +3,7 @@ package com.gaipov.talim_crm.entity;
 import com.gaipov.talim_crm.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 
@@ -27,6 +28,9 @@ public class StudentEntity {
     @OneToOne
     private GroupEntity group;
 
-    @Column
+    @CreatedDate
     private LocalDate created_at;
+
+    @Column
+    private LocalDate deleted_at;
 }
