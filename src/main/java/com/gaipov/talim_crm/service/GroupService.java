@@ -2,18 +2,25 @@ package com.gaipov.talim_crm.service;
 
 import com.gaipov.talim_crm.dto.GroupDto;
 import com.gaipov.talim_crm.entity.GroupEntity;
+import com.gaipov.talim_crm.entity.TeacherEntity;
+import com.gaipov.talim_crm.exps.NotFoundExp;
 import com.gaipov.talim_crm.repository.GroupRepo;
+import com.gaipov.talim_crm.repository.TeacherRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
     @Autowired
     GroupRepo groupRepo;
+
+    @Autowired
+    TeacherRepo teacherRepo;
 
     public GroupDto createGroup(GroupDto dto) {
         GroupEntity groupEntity = new GroupEntity();
@@ -29,10 +36,34 @@ public class GroupService {
         return dto;
     }
 
-    public List<GroupDto> all() {
-        return groupRepo.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+    public List<GroupDto> getAllGroups() {
+        return groupRepo.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public Optional<GroupDto> getGroupById(Long id) {
+        return groupRepo.findById(id).map(this::toDto);
+    }
+
+    public void deleteById(Long id) {
+        GroupEntity entity = groupRepo.findById(id).orElseThrow(() -> new NotFoundExp("Group not found"));
+
+        entity.setDeleted_at(LocalDate.now());
+        groupRepo.save(entity);
+    }
+
+    public String assignTeacherToGroup(Long groupId, Long teacherId) {
+        TeacherEntity teacherEntity = teacherRepo.findById(teacherId).orElseThrow(() -> new NotFoundExp("Teacher not found"));
+
+        GroupEntity groupEntity = groupRepo.findById(groupId).orElseThrow(() -> new NotFoundExp("Group not found"));
+
+        groupEntity.setTeacherEntity(teacherEntity);
+        groupRepo.save(groupEntity);
+
+        return "Successfully pinned";
+    }
+
+    public List<GroupDto> findGroupByName(String groupName) {
+        GroupEntity groupEntity = groupRepo.findByNameOfGroup(groupName); // todo
     }
 
     private GroupDto toDto(GroupEntity entity) {
