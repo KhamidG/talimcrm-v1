@@ -17,8 +17,8 @@ public class GroupEntity {
     @Column
     private String nameOfGroup;
 
-    @ManyToOne
-    private TeacherEntity teacherEntity;
+//    @ManyToOne
+//    private TeacherEntity teacherEntity;
 
     @Column
     @Enumerated(EnumType.STRING)

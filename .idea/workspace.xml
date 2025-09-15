@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="add: Add CRUD to StudentService">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/enums/UserStatus.java" afterDir="false" />
+    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="add: sortByStatus and find by full name in StudentService">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/GroupController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/StudentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/StudentDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/StudentRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/StudentRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,18 +53,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Run.executor": "Run",
-    "Application.TalimCrmApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "student-service",
-    "last_opened_file_path": "/Users/khamidgaipov/Documents/Projects/talim_crm_v1/talimcrm-v1"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Run.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TalimCrmApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;student-service&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/khamidgaipov/Documents/Projects/talim_crm_v1/talimcrm-v1&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/talimcrm-v1" />
@@ -112,12 +111,21 @@
       <option name="project" value="LOCAL" />
       <updated>1757870358644</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add: sortByStatus and find by full name in StudentService">
+      <option name="closed" value="true" />
+      <created>1757932682558</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1757932682558</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="recreate" />
     <MESSAGE value="add: Add CRUD to StudentService" />
-    <option name="LAST_COMMIT_MESSAGE" value="add: Add CRUD to StudentService" />
+    <MESSAGE value="add: sortByStatus and find by full name in StudentService" />
+    <option name="LAST_COMMIT_MESSAGE" value="add: sortByStatus and find by full name in StudentService" />
   </component>
 </project>

@@ -48,4 +48,11 @@ public class StudentController {
         return ResponseEntity.ok(service.sortByStatus(userStatus));
     }
 
+    @PostMapping("/addToGroup/{studentId}/{groupId}")
+    public ResponseEntity<String> addToGroup(@PathVariable("studentId") Long studentId,
+                                             @PathVariable("groupId") Long groupId) {
+        return ResponseEntity.ok(service.assignStudentToGroup(studentId, groupId));
+    }
+
+
 }

@@ -1,10 +1,12 @@
 package com.gaipov.talim_crm.service;
 
 import com.gaipov.talim_crm.dto.StudentDto;
+import com.gaipov.talim_crm.entity.GroupEntity;
 import com.gaipov.talim_crm.entity.StudentEntity;
 import com.gaipov.talim_crm.enums.UserRole;
 import com.gaipov.talim_crm.enums.UserStatus;
 import com.gaipov.talim_crm.exps.NotFoundExp;
+import com.gaipov.talim_crm.repository.GroupRepo;
 import com.gaipov.talim_crm.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ import java.util.stream.Collectors;
 public class StudentService {
     @Autowired
     StudentRepo studentRepo;
+
+    @Autowired
+    GroupRepo groupRepo;
 
     // Create new student and add to DB
     public StudentDto registerNewStudent(StudentDto dto) {
@@ -82,6 +87,21 @@ public class StudentService {
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    // Add student to Group
+    public String assignStudentToGroup(Long studentId, Long groupId) {
+        StudentEntity studentEntity = studentRepo.findById(studentId)
+                .orElseThrow(() -> new NotFoundExp("Student not found."));
+
+        GroupEntity groupEntity = groupRepo.findById(groupId)
+                .orElseThrow(() -> new NotFoundExp("Group is not found."));
+
+        groupEntity.getListOfStudents().add(studentEntity);
+
+        groupRepo.save(groupEntity);
+
+        return "Successfully added.";
     }
 
     // For convert entity to DTO
