@@ -2,6 +2,7 @@ package com.gaipov.talim_crm.dto;
 
 import com.gaipov.talim_crm.entity.GroupEntity;
 import com.gaipov.talim_crm.enums.UserRole;
+import com.gaipov.talim_crm.enums.UserStatus;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ public class StudentDto {
     private GroupEntity group;
 
     private UserRole roles = UserRole.STUDENT;
+
+    private UserStatus status;
 
     private LocalDate created_at;
 

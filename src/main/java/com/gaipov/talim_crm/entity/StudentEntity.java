@@ -1,6 +1,7 @@
 package com.gaipov.talim_crm.entity;
 
 import com.gaipov.talim_crm.enums.UserRole;
+import com.gaipov.talim_crm.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,6 +28,9 @@ public class StudentEntity {
 
     @OneToOne
     private GroupEntity group;
+
+    @Column
+    private UserStatus status;
 
     @CreatedDate
     private LocalDate created_at;
