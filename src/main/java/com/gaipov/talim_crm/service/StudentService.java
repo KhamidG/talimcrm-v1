@@ -9,6 +9,8 @@ import com.gaipov.talim_crm.exps.NotFoundExp;
 import com.gaipov.talim_crm.repository.GroupRepo;
 import com.gaipov.talim_crm.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,12 +34,10 @@ public class StudentService {
         entity.setRoles(UserRole.STUDENT);
         entity.setStatus(UserStatus.ACTIVE);
         entity.setGroup(dto.getGroup());
-        dto.setCreated_at(LocalDate.now());
+        entity.setCreated_at(LocalDate.now());
 
         studentRepo.save(entity);
-        dto.setId(entity.getId());
-
-        return dto;
+        return toDto(entity);
     }
 
     // All students list
@@ -69,8 +69,7 @@ public class StudentService {
             throw new NotFoundExp("Student not found.");
         }
 
-        return studentRepo.findByFullName(fullName)
-                .stream()
+        return optional.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -83,8 +82,7 @@ public class StudentService {
             throw new NotFoundExp("Students with this status not found.");
         }
 
-        return studentRepo.findByStatus(userStatus)
-                .stream()
+        return optional.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -104,6 +102,7 @@ public class StudentService {
         return "Successfully added.";
     }
 
+    // remove student from group
     public String removeStudentFromGroup(Long studentId, Long groupId) {
         StudentEntity studentEntity = studentRepo.findById(studentId)
                 .orElseThrow(() -> new NotFoundExp("Student not found."));
@@ -112,10 +111,18 @@ public class StudentService {
                 .orElseThrow(() -> new NotFoundExp("Group is not found."));
 
         groupEntity.getListOfStudents().remove(studentEntity);
-        studentEntity.setDeleted_at(LocalDate.now());
 
         groupRepo.save(groupEntity);
         return "Successfully removed.";
+    }
+
+
+    // Use pagination
+    public List<StudentDto> getAllStudentsByPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return studentRepo.findAll(pageable).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     // For convert entity to DTO
