@@ -104,6 +104,20 @@ public class StudentService {
         return "Successfully added.";
     }
 
+    public String removeStudentFromGroup(Long studentId, Long groupId) {
+        StudentEntity studentEntity = studentRepo.findById(studentId)
+                .orElseThrow(() -> new NotFoundExp("Student not found."));
+
+        GroupEntity groupEntity = groupRepo.findById(groupId)
+                .orElseThrow(() -> new NotFoundExp("Group is not found."));
+
+        groupEntity.getListOfStudents().remove(studentEntity);
+        studentEntity.setDeleted_at(LocalDate.now());
+
+        groupRepo.save(groupEntity);
+        return "Successfully removed.";
+    }
+
     // For convert entity to DTO
     private StudentDto toDto(StudentEntity entity) {
         StudentDto dto = new StudentDto();

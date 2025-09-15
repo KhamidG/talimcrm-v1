@@ -54,5 +54,9 @@ public class StudentController {
         return ResponseEntity.ok(service.assignStudentToGroup(studentId, groupId));
     }
 
-
+    @DeleteMapping("/remove/{studentId}/{groupId}")
+    public ResponseEntity<String> removeFromGroup(@PathVariable("studentId") Long studentId,
+                                                  @PathVariable("groupId") Long groupId) {
+        return ResponseEntity.ok(service.removeStudentFromGroup(studentId, groupId));
+    }
 }
