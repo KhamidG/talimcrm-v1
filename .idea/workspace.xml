@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="add: start GroupService">
+    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="add: add methods: Delete, assign teacher to group, find by name to the GroupService">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,18 +49,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Run.executor": "Run",
-    "Application.TalimCrmApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "group-service",
-    "last_opened_file_path": "/Users/khamidgaipov/Documents/Projects/talim_crm_v1/talimcrm-v1"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Run.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TalimCrmApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;group-service&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/khamidgaipov/Documents/Projects/talim_crm_v1/talimcrm-v1&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/talimcrm-v1" />
@@ -146,7 +147,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757956077868</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="add: add methods: Delete, assign teacher to group, find by name to the GroupService">
+      <option name="closed" value="true" />
+      <created>1757990062130</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1757990062131</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -157,6 +166,7 @@
     <MESSAGE value="add: remove student from group" />
     <MESSAGE value="refactor" />
     <MESSAGE value="add: start GroupService" />
-    <option name="LAST_COMMIT_MESSAGE" value="add: start GroupService" />
+    <MESSAGE value="add: add methods: Delete, assign teacher to group, find by name to the GroupService" />
+    <option name="LAST_COMMIT_MESSAGE" value="add: add methods: Delete, assign teacher to group, find by name to the GroupService" />
   </component>
 </project>
