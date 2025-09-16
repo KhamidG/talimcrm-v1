@@ -63,8 +63,18 @@ public class GroupService {
     }
 
     public List<GroupDto> findGroupByName(String groupName) {
-        GroupEntity groupEntity = groupRepo.findByNameOfGroup(groupName); // todo
+        List<GroupEntity> groupEntity = groupRepo.findByNameOfGroup(groupName);
+
+        if (groupEntity.isEmpty()) {
+            throw new NotFoundExp("Group not found.");
+        }
+
+        return groupEntity.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
+
+
 
     private GroupDto toDto(GroupEntity entity) {
         GroupDto dto = new GroupDto();
