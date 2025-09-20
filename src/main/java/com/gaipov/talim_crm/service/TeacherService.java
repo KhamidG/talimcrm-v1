@@ -40,7 +40,34 @@ public class TeacherService {
                 .collect(Collectors.toList());
     }
 
+    public List<TeacherDto> findByNameOfTeacher(String name) {
+        List<TeacherEntity> optional = teacherRepo.findByFullName(name);
 
+        if (optional.isEmpty()) {
+            throw new NotFoundExp("Teacher not found");
+        }
+        return optional.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    // delete teacher
+    public String quitTeacher(Long teacherId) {
+        TeacherEntity foundTeacher = teacherRepo.findById(teacherId)
+                .orElseThrow(() -> new NotFoundExp("Teacher not found"));
+
+        foundTeacher.setDeleted_at(LocalDate.now());
+        return "Successfully deleted";
+    }
+
+    // Teacher go to leave, not deleted
+    public String onLeave(Long teacherId) {
+        TeacherEntity foundTeacher = teacherRepo.findById(teacherId)
+                .orElseThrow(() -> new NotFoundExp("Teacher not found"));
+
+        foundTeacher.setOn_leave_time(LocalDate.now());
+        return "Successfully go to leave";
+    }
 
     private TeacherDto toDto(TeacherEntity entity) {
         TeacherDto dto = new TeacherDto();

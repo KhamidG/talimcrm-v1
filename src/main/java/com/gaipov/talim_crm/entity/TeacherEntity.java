@@ -29,4 +29,10 @@ public class TeacherEntity {
 
     @Column
     private LocalDate created_at;
+
+    @Column
+    private LocalDate deleted_at;
+
+    @Column
+    private LocalDate on_leave_time;
 }
