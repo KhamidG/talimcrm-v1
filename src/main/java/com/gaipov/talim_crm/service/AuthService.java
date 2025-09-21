@@ -12,25 +12,4 @@ import java.time.LocalDate;
 
 @Service
 public class AuthService {
-    @Autowired
-    StudentRepo studentRepo;
-
-    @Autowired
-    TeacherRepo teacherRepo;
-
-
-
-    public TeacherDto createTeacher(TeacherDto dto) {
-        TeacherEntity entity = new TeacherEntity();
-        entity.setFullName(dto.getFullName());
-        entity.setPhoneNum(dto.getPhoneNum());
-        entity.setRoles(UserRole.TEACHER);
-        entity.setLevelOfKnowledge(dto.getLevelOfKnowledge());
-        entity.setCreated_at(LocalDate.now());
-
-        teacherRepo.save(entity);
-        dto.setId(entity.getId());
-
-        return dto;
-    }
 }

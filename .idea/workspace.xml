@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="add: teacher">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/TeacherController.java" afterDir="false" />
+    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="add: teacher delete and go to leave">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/PaymentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/PaymentDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/PaymentEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/enums/PaymentStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/enums/PaymentType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/PaymentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/PaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/TeacherRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/TeacherRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/AuthService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,9 +24,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Exception" />
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -28,7 +34,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="student-service" />
+        <entry key="$PROJECT_DIR$" value="teacher-service" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -58,8 +64,10 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "group-service",
+    "git-widget-placeholder": "payment-service",
+    "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/khamidgaipov/Documents/Projects/talim_crm_v1/talimcrm-v1",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
@@ -67,6 +75,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.gaipov.talim_crm.enums" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/talimcrm-v1" />
     </key>
@@ -168,8 +179,27 @@
       <option name="project" value="LOCAL" />
       <updated>1758038267809</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="add: teacher delete and go to leave">
+      <option name="closed" value="true" />
+      <created>1758362706133</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1758362706133</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="recreate" />
@@ -181,6 +211,7 @@
     <MESSAGE value="add: start GroupService" />
     <MESSAGE value="add: add methods: Delete, assign teacher to group, find by name to the GroupService" />
     <MESSAGE value="add: teacher" />
-    <option name="LAST_COMMIT_MESSAGE" value="add: teacher" />
+    <MESSAGE value="add: teacher delete and go to leave" />
+    <option name="LAST_COMMIT_MESSAGE" value="add: teacher delete and go to leave" />
   </component>
 </project>
