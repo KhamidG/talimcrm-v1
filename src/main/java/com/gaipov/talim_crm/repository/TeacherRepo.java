@@ -4,9 +4,9 @@ import com.gaipov.talim_crm.entity.TeacherEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface TeacherRepo extends JpaRepository<TeacherEntity, Long> {
-    Optional<TeacherEntity> findByFullName(String fullName);
+    List<TeacherEntity> findByFullName(String fullName);
 }

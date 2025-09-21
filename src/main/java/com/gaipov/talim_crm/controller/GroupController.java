@@ -21,6 +21,25 @@ public class GroupController {
 
     @GetMapping("/all")
     public ResponseEntity<List<GroupDto>> all() {
-        return ResponseEntity.ok(service.all());
+        return ResponseEntity.ok(service.getAllGroups());
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteGroup(@PathVariable("id") Long id) {
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/assignTeacher/{gI}/{tI}")
+    public ResponseEntity<String> assignTeacherToGroup(@PathVariable("gI") Long groupId,
+                                                       @PathVariable("tI") Long teacherId) {
+        return ResponseEntity.ok(service.assignTeacherToGroup(groupId, teacherId));
+    }
+
+    @GetMapping("/byName/{name}")
+    public ResponseEntity<List<GroupDto>> findByName(@PathVariable("name") String name) {
+        return ResponseEntity.ok(service.findGroupByName(name));
+    }
+
+
 }
