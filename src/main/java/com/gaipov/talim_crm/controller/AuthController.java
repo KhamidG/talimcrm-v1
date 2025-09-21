@@ -12,11 +12,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
-    @Autowired
-    AuthService service;
-
-    @PostMapping("/createTeacher")
-    public ResponseEntity<TeacherDto> createStudent(@RequestBody TeacherDto dto) {
-        return ResponseEntity.ok(service.createTeacher(dto));
-    }
 }
