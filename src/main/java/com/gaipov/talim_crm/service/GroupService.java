@@ -2,6 +2,7 @@ package com.gaipov.talim_crm.service;
 
 import com.gaipov.talim_crm.dto.GroupDto;
 import com.gaipov.talim_crm.entity.GroupEntity;
+import com.gaipov.talim_crm.entity.StudentEntity;
 import com.gaipov.talim_crm.entity.TeacherEntity;
 import com.gaipov.talim_crm.exps.NotFoundExp;
 import com.gaipov.talim_crm.repository.GroupRepo;
@@ -27,13 +28,12 @@ public class GroupService {
         groupEntity.setNameOfGroup(dto.getNameOfGroup());
         groupEntity.setTypeOfGroup(dto.getTypeOfGroup());
         groupEntity.setListOfStudents(dto.getListOfStudents());
-        dto.setMaxStudents(30);
-        dto.setCreated_at(LocalDate.now());
+        groupEntity.setMaxStudents(30);
+        groupEntity.setCreated_at(LocalDate.now());
 
         groupRepo.save(groupEntity);
-        dto.setId(groupEntity.getId());
 
-        return dto;
+        return toDto(groupEntity);
     }
 
     public List<GroupDto> getAllGroups() {
@@ -70,10 +70,16 @@ public class GroupService {
         }
 
         return groupEntity.stream()
-                .map(this::toDto)
+                .map(this:: toDto)
                 .collect(Collectors.toList());
     }
 
+    public Integer getCurrentStudentsCount(Long groupId) {
+        GroupEntity entity = groupRepo.findById(groupId)
+                .orElseThrow(() -> new NotFoundExp("Group Not Found"));
+
+        return entity.getListOfStudents().size();
+    }
 
 
     private GroupDto toDto(GroupEntity entity) {

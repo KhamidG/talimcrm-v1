@@ -1,6 +1,7 @@
 package com.gaipov.talim_crm.controller;
 
 import com.gaipov.talim_crm.dto.GroupDto;
+import com.gaipov.talim_crm.entity.StudentEntity;
 import com.gaipov.talim_crm.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,8 @@ public class GroupController {
         return ResponseEntity.ok(service.findGroupByName(name));
     }
 
-
+    @GetMapping("/countOfStudents/{id}")
+    public ResponseEntity<Integer> getCountOfStudents(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.getCurrentStudentsCount(id));
+    }
 }

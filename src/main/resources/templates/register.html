@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New Student</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <h1>Talim CRM</h1>
+    <nav>
+        <a href="index.html">Students</a>
+        <a href="register.html">Register New</a>
+    </nav>
+</header>
+
+<main class="container">
+    <h2>Register New Student</h2>
+    <form id="registerForm" class="form-card">
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="PROSPECT">Prospect</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+            </select>
+        </div>
+        <button type="submit" class="btn submit-btn">Register Student</button>
+    </form>
+</main>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const registerForm = document.getElementById('registerForm');
+
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(registerForm);
+            const studentData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('http://localhost:8080/v1/student/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(studentData)
+                });
+
+                if (response.ok) {
+                    alert('Student registered successfully!');
+                    window.location.href = 'index.html'; // Redirect to the student list
+                } else {
+                    alert('Failed to register student.');
+                }
+            } catch (error) {
+                console.error('Error registering student:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
+</script>
+</html>

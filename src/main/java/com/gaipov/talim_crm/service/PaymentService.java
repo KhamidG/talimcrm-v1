@@ -38,8 +38,8 @@ public class PaymentService {
 
         paymentEntity.setSum(paymentDto.getSum());
         paymentEntity.setPaymentType(paymentDto.getPaymentType());
-        paymentEntity.setPaymentStatus(PaymentStatus.NOT_PAID);
-        paymentEntity.setCreatedAt(LocalDate.of(2025, 2, 1));
+        paymentEntity.setPaymentStatus(PaymentStatus.PAID);
+        paymentEntity.setCreatedAt(LocalDate.now());
 
         PaymentEntity savedPayment = paymentRepository.save(paymentEntity);
 

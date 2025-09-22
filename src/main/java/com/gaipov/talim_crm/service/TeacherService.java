@@ -1,14 +1,11 @@
 package com.gaipov.talim_crm.service;
 
-import com.gaipov.talim_crm.dto.StudentDto;
 import com.gaipov.talim_crm.dto.TeacherDto;
-import com.gaipov.talim_crm.entity.StudentEntity;
 import com.gaipov.talim_crm.entity.TeacherEntity;
 import com.gaipov.talim_crm.enums.UserRole;
 import com.gaipov.talim_crm.exps.NotFoundExp;
 import com.gaipov.talim_crm.repository.TeacherRepo;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.parser.TE;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -57,6 +54,8 @@ public class TeacherService {
                 .orElseThrow(() -> new NotFoundExp("Teacher not found"));
 
         foundTeacher.setDeleted_at(LocalDate.now());
+        teacherRepo.save(foundTeacher);
+
         return "Successfully deleted";
     }
 
@@ -66,6 +65,8 @@ public class TeacherService {
                 .orElseThrow(() -> new NotFoundExp("Teacher not found"));
 
         foundTeacher.setOn_leave_time(LocalDate.now());
+        teacherRepo.save(foundTeacher);
+
         return "Successfully go to leave";
     }
 
