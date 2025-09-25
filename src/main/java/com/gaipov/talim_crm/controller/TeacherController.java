@@ -1,25 +1,44 @@
 package com.gaipov.talim_crm.controller;
 
+import com.gaipov.talim_crm.dto.GroupDto;
 import com.gaipov.talim_crm.dto.TeacherDto;
+import com.gaipov.talim_crm.enums.GroupRole;
 import com.gaipov.talim_crm.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/api/teacher")
+@Controller
+@RequestMapping("/v1/teacher")
 public class TeacherController {
     private final TeacherService teacherService;
 
-    @PostMapping("/create")
+    @GetMapping("/register")
+    public String registerForm(Model model){
+        model.addAttribute("teacher", new TeacherDto());
+        return "teacher_register";
+    }
+
+    @PostMapping("/register")
     public ResponseEntity<TeacherDto> createTeacher(@RequestBody TeacherDto dto) {
         return ResponseEntity.ok(teacherService.createTeacher(dto));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/listPage")
+    public String showGroupsPage(Model model) {
+        List<TeacherDto> teacherDtos = teacherService.getAllTeachers();
+        model.addAttribute("teachers", teacherDtos);
+        return "teachers";
+    }
+
+
+    @GetMapping("/list")
+    @ResponseBody
     public ResponseEntity<List<TeacherDto>> listOfAllTeachers() {
         return ResponseEntity.ok(teacherService.listOfDto());
     }

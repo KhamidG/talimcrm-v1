@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📚 Talim CRM</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+        </nav>
+    </aside>
+    <main class="main-content">
+<div class="container">
+
+    <h1>Payments</h1>
+
+    <div class="controls" style="display:flex; gap:12px; align-items:center; margin:12px 0; flex-wrap:wrap;">
+        <input id="searchInput" type="text" placeholder="Search by student id or group id" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px; min-width:260px;">
+        <select id="typeFilter" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
+            <option value="">All types</option>
+            <option value="CASH">CASH</option>
+            <option value="CARD">CARD</option>
+        </select>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Student ID</th>
+            <th>Group ID</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Created</th>
+        </tr>
+        </thead>
+        <tbody id="paymentsTableBody">
+        <tr th:each="p : ${payments}">
+            <td th:text="${p.id}">1</td>
+            <td th:text="${p.student}">10</td>
+            <td th:text="${p.groupId}">5</td>
+            <td th:text="${p.sum}">100000</td>
+            <td th:text="${p.paymentType}">CASH</td>
+            <td th:text="${p.paymentStatus}">PAID</td>
+            <td th:text="${p.created_at}">2025-01-01</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(payments)}">
+            <td colspan="7" style="text-align:center; padding:20px; color:#888;">No payments</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    </main>
+</div>
+
+<script>
+    let payments = [];
+    document.addEventListener('DOMContentLoaded', () => {
+        const srch = document.getElementById('searchInput');
+        const type = document.getElementById('typeFilter');
+        srch && srch.addEventListener('input', filter);
+        type && type.addEventListener('change', filter);
+    });
+    function filter(){
+        const term = (document.getElementById('searchInput').value||'').toLowerCase().trim();
+        const type = document.getElementById('typeFilter').value;
+        if (!Array.isArray(payments) || payments.length === 0) return;
+        const tbody = document.getElementById('paymentsTableBody');
+        const data = payments.filter(p => {
+            const matchesTerm = !term || String(p.student||'').includes(term) || String(p.groupId||'').includes(term);
+            const matchesType = !type || p.paymentType === type;
+            return matchesTerm && matchesType;
+        });
+        tbody.innerHTML = '';
+        if (data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">No payments</td></tr>`;
+            return;
+        }
+        data.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${p.id}</td>
+                <td>${p.student}</td>
+                <td>${p.groupId}</td>
+                <td>${p.sum}</td>
+                <td>${p.paymentType}</td>
+                <td>${p.paymentStatus}</td>
+                <td>${p.created_at}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+</script>
+</body>
+</html>
+

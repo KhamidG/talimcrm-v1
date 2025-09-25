@@ -2,30 +2,27 @@ package com.gaipov.talim_crm.entity;
 
 import com.gaipov.talim_crm.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.time.LocalDate;
+import java.util.Date;
 
+@Data
 @Entity
-@Getter
-@Setter
-@Table(name = "auth_entity")
+@Table(name = "auth")
 public class AuthEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "full_name")
     private String fullName;
 
-    @Column
+    @Column(name = "phone_num")
     private String phoneNum;
 
-    @Column
     @Enumerated(EnumType.STRING)
-    private UserRole roles = UserRole.NEW_USER;
+    private UserRole roles;
 
-    @Column
-    private LocalDate created_at;
+    @Column(name = "created_at")
+    private Date created_at;
 }

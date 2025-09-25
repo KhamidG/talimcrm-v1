@@ -4,19 +4,44 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="refactor: PaymentService">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/script.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/details.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/register.html" afterDir="false" />
+    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="refactor: frontend.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/ProfileRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/edit.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/edit.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/group_register.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/groups.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/groups.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/register.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/register.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/teacher_register.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/teachers.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/group_register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/groups.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/students.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/teacher_register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/teachers.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/GroupController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/PaymentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/TeacherController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/TeacherController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/AuthDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/AuthDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/GroupDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/GroupDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/AuthEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/AuthEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/enums/UserStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/enums/UserStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/AuthService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/PaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,8 +106,9 @@
       <recent name="com.gaipov.talim_crm.enums" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/resources/templates" />
       <recent name="$PROJECT_DIR$/src/main/resources/static" />
+      <recent name="$PROJECT_DIR$/src/main/resources/static/css" />
+      <recent name="$PROJECT_DIR$/src/main/resources/templates" />
       <recent name="$PROJECT_DIR$/talimcrm-v1" />
     </key>
   </component>
@@ -191,7 +217,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758362706133</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="refactor: frontend.">
+      <option name="closed" value="true" />
+      <created>1758540812577</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1758540812577</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -216,6 +250,7 @@
     <MESSAGE value="add: add methods: Delete, assign teacher to group, find by name to the GroupService" />
     <MESSAGE value="add: teacher" />
     <MESSAGE value="add: teacher delete and go to leave" />
-    <option name="LAST_COMMIT_MESSAGE" value="add: teacher delete and go to leave" />
+    <MESSAGE value="refactor: frontend." />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: frontend." />
   </component>
 </project>

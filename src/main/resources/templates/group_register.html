@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Student</title>
+    <title>Create Group</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
 </head>
 <body>
@@ -25,20 +25,30 @@
     <main class="main-content">
 <div class="container">
 
-    <h1>Create Student</h1>
+    <h1>Create Group</h1>
 
-    <form id="studentRegisterForm" style="max-width:520px;">
+    <form id="groupRegisterForm" style="max-width:520px;">
         <div style="margin-bottom:12px;">
-            <label>Full name *</label>
-            <input type="text" id="fullName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="John Doe" required>
+            <label>Name *</label>
+            <input type="text" id="nameOfGroup" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Group name" required>
         </div>
         <div style="margin-bottom:12px;">
-            <label>Phone *</label>
-            <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
+            <label>Type *</label>
+            <select id="typeOfGroup" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" required>
+                <option value="BEGINNER">Beginner</option>
+                <option value="INTERMEDIATE">Intermediate</option>
+                <option value="PRE_IELTS">Pre-IELTS</option>
+                <option value="IELTS">IELTS</option>
+                <option value="CEFR">CEFR</option>
+            </select>
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Max students</label>
+            <input type="number" id="maxStudents" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="30">
         </div>
         <div class="actions">
             <button type="submit" class="btn">Create</button>
-            <a th:href="@{/v1/student/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
+            <a th:href="@{/v1/group/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
         </div>
     </form>
 </div>
@@ -46,12 +56,13 @@
 </div>
 
 <script>
-    const API = '/v1/student';
-    document.getElementById('studentRegisterForm').addEventListener('submit', async (e) => {
+    const API = '/v1/group';
+    document.getElementById('groupRegisterForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
-            fullName: document.getElementById('fullName').value.trim(),
-            phoneNum: document.getElementById('phoneNum').value.trim()
+            nameOfGroup: document.getElementById('nameOfGroup').value.trim(),
+            typeOfGroup: document.getElementById('typeOfGroup').value,
+            maxStudents: document.getElementById('maxStudents').value ? parseInt(document.getElementById('maxStudents').value) : null
         };
         const res = await fetch(`${API}/register`, {
             method: 'POST',
@@ -59,11 +70,12 @@
             body: JSON.stringify(payload)
         });
         if (res.ok) {
-            window.location.href = '/v1/student/listPage';
+            window.location.href = '/v1/group/listPage';
         } else {
-            alert('Failed to create student');
+            alert('Failed to create group');
         }
     });
 </script>
 </body>
 </html>
+

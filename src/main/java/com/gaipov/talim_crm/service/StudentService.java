@@ -33,7 +33,6 @@ public class StudentService {
         entity.setPhoneNum(dto.getPhoneNum());
         entity.setRoles(UserRole.STUDENT);
         entity.setStatus(UserStatus.ACTIVE);
-        entity.setGroup(dto.getGroup());
         entity.setCreated_at(LocalDate.now());
 
         studentRepo.save(entity);
@@ -95,9 +94,8 @@ public class StudentService {
         GroupEntity groupEntity = groupRepo.findById(groupId)
                 .orElseThrow(() -> new NotFoundExp("Group is not found."));
 
-        groupEntity.getListOfStudents().add(studentEntity);
-
-        groupRepo.save(groupEntity);
+        studentEntity.setGroup(groupEntity);
+        studentRepo.save(studentEntity);
 
         return "Successfully added.";
     }
@@ -110,9 +108,10 @@ public class StudentService {
         GroupEntity groupEntity = groupRepo.findById(groupId)
                 .orElseThrow(() -> new NotFoundExp("Group is not found."));
 
-        groupEntity.getListOfStudents().remove(studentEntity);
-
-        groupRepo.save(groupEntity);
+        if (studentEntity.getGroup() != null && groupEntity.getId().equals(studentEntity.getGroup().getId())) {
+            studentEntity.setGroup(null);
+            studentRepo.save(studentEntity);
+        }
         return "Successfully removed.";
     }
 
@@ -140,4 +139,25 @@ public class StudentService {
         return dto;
     }
 
+    public StudentDto updateStudent(StudentDto dto) {
+        Optional<StudentEntity> studentOptional = studentRepo.findById(dto.getId());
+
+        if (studentOptional.isPresent()) {
+            StudentEntity existingStudent = studentOptional.get();
+
+            existingStudent.setFullName(dto.getFullName());
+            existingStudent.setPhoneNum(dto.getPhoneNum());
+            existingStudent.setStatus(dto.getStatus());
+
+            StudentEntity updatedStudent = studentRepo.save(existingStudent);
+
+            return toDto(updatedStudent);
+        } else {
+            throw new RuntimeException("Ученик с ID " + dto.getId() + " не найден.");
+        }
+    }
+
+    public Integer studentsCountWithActiveStatus(UserStatus status) {
+        return studentRepo.findByStatus(status).size();
+    }
 }

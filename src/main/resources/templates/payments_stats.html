@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments Stats</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📚 Talim CRM</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+        </nav>
+    </aside>
+    <main class="main-content">
+<div class="container">
+
+    <h1>Payments statistics</h1>
+
+    <div class="status-summary" style="display:flex; gap:16px; flex-wrap:wrap; margin:16px 0;">
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>Total income</h3>
+            <p id="statIncome">0</p>
+        </div>
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>Total cash</h3>
+            <p id="statCash">0</p>
+        </div>
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>Total card</h3>
+            <p id="statCard">0</p>
+        </div>
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>Payments count</h3>
+            <p id="statCount">0</p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Student ID</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody id="paymentsTableBody">
+        <tr th:each="p : ${payments}">
+            <td th:text="${p.id}">1</td>
+            <td th:text="${p.student}">10</td>
+            <td th:text="${p.sum}">100000</td>
+            <td th:text="${p.paymentType}">CASH</td>
+            <td th:text="${p.created_at}">2025-01-01</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(payments)}">
+            <td colspan="5" style="text-align:center; padding:20px; color:#888;">No payments</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    const payments = /*[[${payments}]]*/ [];
+    document.addEventListener('DOMContentLoaded', () => compute());
+    function compute(){
+        let income = 0, cash = 0, card = 0;
+        (payments||[]).forEach(p => {
+            const amount = Number(p.sum || 0);
+            income += amount;
+            if (p.paymentType === 'CASH') cash += amount; else if (p.paymentType === 'CARD') card += amount;
+        });
+        document.getElementById('statIncome').textContent = income.toLocaleString();
+        document.getElementById('statCash').textContent = cash.toLocaleString();
+        document.getElementById('statCard').textContent = card.toLocaleString();
+        document.getElementById('statCount').textContent = (payments||[]).length;
+    }
+</script>
+</body>
+</html>
+

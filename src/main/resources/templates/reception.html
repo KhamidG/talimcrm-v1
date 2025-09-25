@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reception - Quick Register</title>
+    <link rel="stylesheet" th:href="@{/reception.css}" />
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📚 Talim CRM</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+        </nav>
+    </aside>
+    <div class="content-container">
+        <h1>Reception - quick register</h1>
+        <div class="form-table-container">
+            <form id="quickRegisterForm" class="reception-card">
+                <div style="margin-bottom:12px;">
+                    <label>Full name *</label>
+                    <input type="text" id="fullName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Client full name" required>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Phone *</label>
+                    <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn">Register</button>
+                </div>
+            </form>
+            <div class="reception-card reception-list">
+                <h2 style="margin:0 0 12px;">Recently registered</h2>
+                <input id="searchInput" type="text" placeholder="Search by name or phone" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px; min-width:260px; margin-bottom:12px; width:100%; max-width:360px;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full name</th>
+                        <th>Phone</th>
+                        <th>Created</th>
+                    </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                    <tr th:each="u : ${users}">
+                        <td th:text="${u.id}">1</td>
+                        <td th:text="${u.fullName} ?: '—'"></td>
+                        <td th:text="${u.phoneNum} ?: '—'"></td>
+                        <td th:text="${u.created_at} ? ${#dates.format(u.created_at, 'dd.MM.yyyy HH:mm')} : '—'"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(users)}">
+                        <td colspan="4" style="text-align:center; padding:20px; color:#888;">No users yet</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = '/v1/auth';
+    let users = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadUsers();
+        document.getElementById('searchInput').addEventListener('input', filter);
+        document.getElementById('quickRegisterForm').addEventListener('submit', submitForm);
+    });
+
+    async function loadUsers(){
+        try{
+            const res = await fetch(`${API}/list`);
+            if(!res.ok) throw new Error('Failed');
+            users = await res.json();
+            render(users);
+        }catch(e){ console.error(e); }
+    }
+
+    async function submitForm(e){
+        e.preventDefault();
+        const payload = {
+            fullName: document.getElementById('fullName').value.trim(),
+            phoneNum: document.getElementById('phoneNum').value.trim()
+        };
+        if(!payload.fullName || !payload.phoneNum) return;
+        const res = await fetch(`${API}/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        if(res.ok){
+            document.getElementById('quickRegisterForm').reset();
+            await loadUsers();
+        } else {
+            alert('Failed to register');
+        }
+    }
+
+    function filter(){
+        const term = document.getElementById('searchInput').value.toLowerCase().trim();
+        const data = term ? users.filter(u => (u.fullName||'').toLowerCase().includes(term) || (u.phoneNum||'').toLowerCase().includes(term)) : users;
+        render(data);
+    }
+
+    function render(data){
+        const tbody = document.getElementById('usersTableBody');
+        tbody.innerHTML = '';
+        if(!data || data.length === 0){
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:#888;">No users yet</td></tr>`;
+            return;
+        }
+        data.slice().sort((a,b)=> (b.id||0) - (a.id||0)).forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${u.id}</td>
+                <td>${escapeHtml(u.fullName)||'—'}</td>
+                <td>${escapeHtml(u.phoneNum)||'—'}</td>
+                <td>${formatDateTime(u.created_at)||'—'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function formatDateTime(v){ if(!v) return ''; const d=new Date(v); return isNaN(d)?String(v):d.toLocaleString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+    function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+</script>
+</body>
+</html>
+

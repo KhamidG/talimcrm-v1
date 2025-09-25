@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📚 Talim CRM</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+        </nav>
+    </aside>
+    <main class="main-content">
+<div class="container">
+
+    <h1>Teachers</h1>
+
+    <div class="controls" style="display:flex; gap:12px; align-items:center; margin:12px 0; flex-wrap:wrap;">
+        <input id="searchInput" type="text" placeholder="Search by name" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px; min-width:260px;">
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Full name</th>
+            <th>Phone</th>
+            <th>Knowledge level</th>
+        </tr>
+        </thead>
+        <tbody id="teacherTableBody"></tbody>
+    </table>
+</div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    const API = '/v1/teacher';
+    let teachers = /*[[${teachers}]]*/ [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!Array.isArray(teachers) || teachers.length === 0) load(); else render(teachers);
+        document.getElementById('searchInput').addEventListener('input', filter);
+    });
+
+    async function load() {
+        const res = await fetch(`${API}/list`);
+        teachers = await res.json();
+        render(teachers);
+    }
+
+    function filter() {
+        const term = document.getElementById('searchInput').value.toLowerCase().trim();
+        const data = term ? teachers.filter(t => (t.fullName||'').toLowerCase().includes(term)) : teachers;
+        render(data);
+    }
+
+    function render(data) {
+        const tbody = document.getElementById('teacherTableBody');
+        tbody.innerHTML = '';
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px; color:#888;">No teachers found</td></tr>`;
+            return;
+        }
+        data.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${escapeHtml(t.fullName)||''}</td>
+                <td>${escapeHtml(t.phoneNum)||''}</td>
+                <td>${escapeHtml(t.levelOfKnowledge)||''}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+</script>
+</body>
+</html>

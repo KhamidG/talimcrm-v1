@@ -4,6 +4,7 @@ import com.gaipov.talim_crm.enums.UserRole;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 public class AuthDto {
@@ -11,5 +12,5 @@ public class AuthDto {
     private String fullName;
     private String phoneNum;
     private UserRole roles;
-    private LocalDate created_at;
+    private Date created_at;
 }

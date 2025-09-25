@@ -1,5 +1,6 @@
 package com.gaipov.talim_crm.service;
 
+import com.gaipov.talim_crm.dto.StudentDto;
 import com.gaipov.talim_crm.dto.TeacherDto;
 import com.gaipov.talim_crm.entity.TeacherEntity;
 import com.gaipov.talim_crm.enums.UserRole;
@@ -44,6 +45,13 @@ public class TeacherService {
             throw new NotFoundExp("Teacher not found");
         }
         return optional.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    // All teachers list
+    public List<TeacherDto> getAllTeachers() {
+        return teacherRepo.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }

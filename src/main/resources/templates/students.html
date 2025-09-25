@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📚 Talim CRM</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+        </nav>
+    </aside>
+    <main class="main-content">
+<div class="container">
+    <h1>Students</h1>
+
+    <div class="status-summary" style="display:flex; gap:16px; flex-wrap:wrap; margin:16px 0;">
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>Total</h3>
+            <p id="statTotal">0</p>
+        </div>
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>Active</h3>
+            <p id="statActive">0</p>
+        </div>
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>In register</h3>
+            <p id="statInRegister">0</p>
+        </div>
+        <div class="status-card" style="flex:1; min-width:160px;">
+            <h3>Stop learning</h3>
+            <p id="statStopped">0</p>
+        </div>
+    </div>
+
+    <div class="controls" style="display:flex; gap:12px; align-items:center; margin:12px 0; flex-wrap:wrap;">
+        <input id="searchInput" type="text" placeholder="Search by name or phone" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px; min-width:260px;">
+        <select id="statusFilter" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
+            <option value="">All statuses</option>
+            <option th:each="st : ${userStatuses}" th:value="${st}" th:text="${st}"></option>
+        </select>
+    </div>
+
+    <div th:if="${#lists.isEmpty(students)}">
+        <p>No students found.</p>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(students)}">
+        <table class="table" style="width:100%; border-collapse: collapse;">
+            <thead>
+            <tr>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">ID</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Full name</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Phone</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Status</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Created</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="studentsTableBody"></tbody>
+        </table>
+    </div>
+</div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    const API_BASE = '/v1/student';
+    let students = /*[[${students}]]*/ [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!Array.isArray(students) || students.length === 0) {
+            loadStudents();
+        } else {
+            render(students);
+        }
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+    });
+
+    async function loadStudents() {
+        try {
+            const res = await fetch(`${API_BASE}/list`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            students = await res.json();
+            render(students);
+        } catch (e) {
+            console.error('Failed to load students', e);
+        }
+    }
+
+    function applyFilters() {
+        const term = document.getElementById('searchInput').value.toLowerCase().trim();
+        const status = document.getElementById('statusFilter').value;
+        let data = students.slice();
+        if (term) {
+            data = data.filter(s => (s.fullName || '').toLowerCase().includes(term) || (s.phoneNum || '').toLowerCase().includes(term));
+        }
+        if (status) {
+            data = data.filter(s => s.status === status);
+        }
+        render(data);
+    }
+
+    function render(data) {
+        const tbody = document.getElementById('studentsTableBody');
+        tbody.innerHTML = '';
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#888;">No students found</td></tr>`;
+        } else {
+            data.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="border-bottom:1px solid #f0f0f0; padding:8px;">${s.id}</td>
+                    <td style="border-bottom:1px solid #f0f0f0; padding:8px;">${escapeHtml(s.fullName) || ''}</td>
+                    <td style="border-bottom:1px solid #f0f0f0; padding:8px;">${escapeHtml(s.phoneNum) || ''}</td>
+                    <td style="border-bottom:1px solid #f0f0f0; padding:8px;"><span class="status ${statusClass(s.status)}">${s.status || ''}</span></td>
+                    <td style="border-bottom:1px solid #f0f0f0; padding:8px;">${formatDate(s.created_at)}</td>
+                    <td style="border-bottom:1px solid #f0f0f0; padding:8px; display:flex; gap:8px;"><a href="/v1/student/edit/${s.id}">Edit</a></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        updateStats(data || []);
+    }
+
+    function updateStats(list) {
+        const total = list.length;
+        const active = list.filter(s => s.status === 'ACTIVE').length;
+        const inRegister = list.filter(s => s.status === 'IN_REGISTER').length;
+        const stopped = list.filter(s => s.status === 'STOP_LEARNING').length;
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statActive').textContent = active;
+        document.getElementById('statInRegister').textContent = inRegister;
+        document.getElementById('statStopped').textContent = stopped;
+    }
+
+    function statusClass(status) {
+        if (!status) return '';
+        const key = String(status).toLowerCase();
+        if (key === 'active') return 'active';
+        if (key === 'in_register') return 'in_register';
+        if (key === 'stop_learning') return 'stop_learning';
+        return '';
+    }
+
+    function formatDate(value) {
+        if (!value) return '';
+        try {
+            const d = new Date(value);
+            if (isNaN(d.getTime())) return String(value);
+            return d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        } catch (_) {
+            return String(value);
+        }
+    }
+
+    function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+    }
+</script>
+</body>
+</html>

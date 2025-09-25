@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Изменить данные ученика</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/edit.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="header">
+    <div class="header-content">
+        <h1 class="logo">Ta'lim CRM</h1>
+        <nav class="navigation">
+            <a th:href="@{/v1/student/listPage}" class="nav-link">Ученики</a>
+            <a href="#" class="nav-link">Группы</a>
+        </nav>
+    </div>
+</header>
+
+<main class="main-container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Изменить данные ученика</h2>
+        </div>
+        <div class="form-container">
+            <form id="editForm" class="student-form" th:object="${student}">
+                <input type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label for="fullName">Полное имя</label>
+                    <input type="text" id="fullName" th:field="*{fullName}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNum">Номер телефона</label>
+                    <input type="text" id="phoneNum" th:field="*{phoneNum}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Статус</label>
+                    <select id="status" th:field="*{status}">
+                        <option th:each="status : ${userStatuses}"
+                                th:value="${status}"
+                                th:text="${status}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn submit-btn">Сохранить изменения</button>
+                    <a th:href="@{/v1/student/listPage}" class="btn cancel-btn">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<script th:src="@{/edit.js}"></script>
+</body>
+</html>

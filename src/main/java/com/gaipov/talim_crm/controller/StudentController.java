@@ -1,12 +1,12 @@
 package com.gaipov.talim_crm.controller;
 
 import com.gaipov.talim_crm.dto.StudentDto;
-import com.gaipov.talim_crm.enums.UserRole;
 import com.gaipov.talim_crm.enums.UserStatus;
 import com.gaipov.talim_crm.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,15 +18,26 @@ public class StudentController {
     @Autowired
     StudentService service;
 
-    @GetMapping("/")
-    public String showFrontend() {
-        return "index";
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        // ЭТО НОВАЯ СТРОКА: Создаем пустой объект DTO и передаем его в модель.
+        // Thymeleaf будет использовать этот объект для привязки полей формы.
+        model.addAttribute("student", new StudentDto());
+        return "register";
     }
 
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<StudentDto> register(@RequestBody StudentDto dto) {
         return ResponseEntity.ok(service.registerNewStudent(dto));
+    }
+
+    @GetMapping("/listPage")
+    public String showStudentsPage(Model model) {
+        List<StudentDto> students = service.getAllStudents();
+        model.addAttribute("students", students);
+        model.addAttribute("userStatuses", UserStatus.values());
+        return "students";
     }
 
     @GetMapping("/list")
@@ -73,4 +84,30 @@ public class StudentController {
                                                   @PathVariable("groupId") Long groupId) {
         return ResponseEntity.ok(service.removeStudentFromGroup(studentId, groupId));
     }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        Optional<StudentDto> studentOptional = service.getStudentById(id);
+        if (studentOptional.isPresent()) {
+            model.addAttribute("student", studentOptional.get());
+            model.addAttribute("userStatuses", UserStatus.values());
+            return "edit";
+        } else {
+            return "redirect:/v1/student/listPage";
+        }
+    }
+
+    @PutMapping("/edit")
+    @ResponseBody
+    public ResponseEntity<StudentDto> editStudent(@RequestBody StudentDto studentDto) {
+        return ResponseEntity.ok(service.updateStudent(studentDto));
+    }
+
+    @GetMapping("/count/{status}")
+    @ResponseBody
+    public ResponseEntity<Integer> studentsCountByStatus(@PathVariable("status") UserStatus status) {
+        Integer count = service.studentsCountWithActiveStatus(status);
+        return ResponseEntity.ok(count);
+    }
 }
+

@@ -8,35 +8,37 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name = "groups")
 @Data
 public class GroupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "name_of_group", nullable = false)
     private String nameOfGroup;
 
-    @ManyToOne
-    private TeacherEntity teacherEntity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id", nullable = true)
+    private TeacherEntity teacher;
 
-    @Column
+    @Column(name = "type_of_group", nullable = false)
     @Enumerated(EnumType.STRING)
     private GroupRole typeOfGroup;
 
-    @Column
-    @ManyToMany
+    @OneToMany
+    @JoinColumn(name = "group_id")
     private List<StudentEntity> listOfStudents;
 
-    @Column
+    @Column(name = "max_students")
     private Integer maxStudents;
 
-    @Column
+    @Column(name = "current_students")
     private Integer currentStudents;
 
-    @Column
+    @Column(name = "created_at")
     private LocalDate created_at;
 
-    @Column
+    @Column(name = "deleted_at")
     private LocalDate deleted_at;
 }

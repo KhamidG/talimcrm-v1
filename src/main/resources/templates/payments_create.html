@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Payment</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📚 Talim CRM</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+        </nav>
+    </aside>
+
+    <h1>Create payment</h1>
+
+    <form id="paymentForm" style="max-width:520px;">
+        <div style="margin-bottom:12px;">
+            <label>Student ID *</label>
+            <input type="number" id="studentId" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. 12" required>
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Group ID *</label>
+            <input type="number" id="groupId" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. 5" required>
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Amount *</label>
+            <input type="number" step="0.01" id="sum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. 150000" required>
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Payment type *</label>
+            <select id="paymentType" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" required>
+                <option value="CASH">CASH</option>
+                <option value="CARD">CARD</option>
+            </select>
+        </div>
+        <div class="actions">
+            <button type="submit" class="btn">Create</button>
+            <a th:href="@{/v1/pay/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const studentId = Number(document.getElementById('studentId').value);
+        const groupId = Number(document.getElementById('groupId').value);
+        const payload = {
+            sum: Number(document.getElementById('sum').value),
+            paymentType: document.getElementById('paymentType').value
+        };
+        try{
+            const res = await fetch(`/v1/pay/create/${studentId}/${groupId}`, {
+                method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+            });
+            if(!res.ok) throw new Error(await res.text());
+            window.location.href = '/v1/pay/listPage';
+        }catch(e){ alert(e.message || 'Failed to create payment'); }
+    });
+</script>
+</body>
+</html>
+

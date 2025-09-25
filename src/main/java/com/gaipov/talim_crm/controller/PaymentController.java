@@ -4,6 +4,7 @@ import com.gaipov.talim_crm.dto.PaymentDto;
 import com.gaipov.talim_crm.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,23 @@ public class PaymentController {
             @PathVariable("studentId") Long studentId,
             @PathVariable("groupId") Long groupId) {
         return ResponseEntity.ok(paymentService.createPayment(paymentDto, studentId, groupId));
+    }
+
+    @GetMapping("/listPage")
+    public String paymentsPage(Model model) {
+        model.addAttribute("payments", paymentService.listOfPayments());
+        return "payments";
+    }
+
+    @GetMapping("/statsPage")
+    public String paymentsStatsPage(Model model) {
+        model.addAttribute("payments", paymentService.listOfPayments());
+        return "payments_stats";
+    }
+
+    @GetMapping("/createPage")
+    public String createPaymentPage() {
+        return "payments_create";
     }
 
     @GetMapping("/all")

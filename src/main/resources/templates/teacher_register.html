@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Student</title>
+    <title>Create Teacher</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
 </head>
 <body>
@@ -25,20 +25,24 @@
     <main class="main-content">
 <div class="container">
 
-    <h1>Create Student</h1>
+    <h1>Create Teacher</h1>
 
-    <form id="studentRegisterForm" style="max-width:520px;">
+    <form id="teacherRegisterForm" style="max-width:520px;">
         <div style="margin-bottom:12px;">
             <label>Full name *</label>
-            <input type="text" id="fullName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="John Doe" required>
+            <input type="text" id="fullName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Full name" required>
         </div>
         <div style="margin-bottom:12px;">
             <label>Phone *</label>
             <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
         </div>
+        <div style="margin-bottom:12px;">
+            <label>Knowledge level</label>
+            <input type="text" id="levelOfKnowledge" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. B2, IELTS 7.0">
+        </div>
         <div class="actions">
             <button type="submit" class="btn">Create</button>
-            <a th:href="@{/v1/student/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
+            <a th:href="@{/v1/teacher/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
         </div>
     </form>
 </div>
@@ -46,12 +50,13 @@
 </div>
 
 <script>
-    const API = '/v1/student';
-    document.getElementById('studentRegisterForm').addEventListener('submit', async (e) => {
+    const API = '/v1/teacher';
+    document.getElementById('teacherRegisterForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
             fullName: document.getElementById('fullName').value.trim(),
-            phoneNum: document.getElementById('phoneNum').value.trim()
+            phoneNum: document.getElementById('phoneNum').value.trim(),
+            levelOfKnowledge: document.getElementById('levelOfKnowledge').value.trim()
         };
         const res = await fetch(`${API}/register`, {
             method: 'POST',
@@ -59,9 +64,9 @@
             body: JSON.stringify(payload)
         });
         if (res.ok) {
-            window.location.href = '/v1/student/listPage';
+            window.location.href = '/v1/teacher/listPage';
         } else {
-            alert('Failed to create student');
+            alert('Failed to create teacher');
         }
     });
 </script>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groups</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📚 Talim CRM</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+    </nav>
+</aside>
+    <main class="main-content">
+<div class="container">
+
+    <h1>Groups</h1>
+
+    <div class="controls" style="display:flex; gap:12px; align-items:center; margin:12px 0; flex-wrap:wrap;">
+        <input id="searchInput" type="text" placeholder="Search by name or teacher" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px; min-width:260px;">
+        <select id="typeFilter" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
+            <option value="">All types</option>
+                <option value="BEGINNER">Beginner</option>
+                <option value="INTERMEDIATE">Intermediate</option>
+                <option value="PRE_IELTS">Pre-IELTS</option>
+                <option value="IELTS">IELTS</option>
+                <option value="CEFR">CEFR</option>
+            </select>
+        </div>
+
+    <table class="table">
+                <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Teacher</th>
+            <th>Students</th>
+            <th>Max</th>
+            <th>Created</th>
+            <th>Actions</th>
+                </tr>
+                </thead>
+        <tbody id="groupsTableBody">
+        <tr th:if="${#lists.isEmpty(groups)}">
+            <td colspan="8" style="text-align:center; padding:20px; color:#888;">No groups found</td>
+        </tr>
+        <tr th:each="g : ${groups}">
+            <td th:text="${g.id}">1</td>
+            <td th:text="${g.nameOfGroup} ?: '—'"></td>
+            <td th:text="${g.typeOfGroup} ?: '—'"></td>
+            <td th:text="${g.teacherFullName} ?: '—'"></td>
+            <td th:text="${g.currentStudents} ?: 0"></td>
+            <td th:text="${g.maxStudents} ?: '—'"></td>
+            <td th:text="${g.created_at} ?: '—'"></td>
+            <td>
+                <div class="actions">
+                    <button class="action-btn edit-btn" type="button" th:attr="data-group-id=${g.id}" onclick="openAssignTeacherModal(this)">Assign teacher</button>
+                    <button class="action-btn" type="button" style="background:#6c757d;color:#fff;" th:attr="data-group-id=${g.id}" onclick="openAddStudentModal(this)">Add student</button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+            </table>
+</div>
+    </main>
+</div>
+<!-- Assign Teacher Modal -->
+<div id="assignTeacherModal" class="modal" style="display:none; position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,.4); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:12px; padding:20px; width:90%; max-width:420px; position:relative; z-index:1;">
+        <h3 style="margin-top:0;">Assign teacher to group</h3>
+        <div style="margin:12px 0;">
+            <label>Teacher</label>
+            <select id="assignTeacherSelect" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;"></select>
+        </div>
+        <div class="actions" style="justify-content:flex-end;">
+            <button class="action-btn" type="button" style="background:#ccc;" onclick="closeAssignTeacherModal()">Cancel</button>
+            <button class="action-btn edit-btn" type="button" onclick="confirmAssignTeacher()">Assign</button>
+        </div>
+        <input type="hidden" id="assignTeacherGroupId" />
+    </div>
+    <div onclick="closeAssignTeacherModal()" style="position:absolute; inset:0;"></div>
+            </div>
+
+<!-- Add Student Modal -->
+<div id="addStudentModal" class="modal" style="display:none; position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,.4); align-items:center; justify-content:center;">
+    <div class="modal-content" style="background:#fff; border-radius:12px; padding:20px; width:90%; max-width:420px; position:relative; z-index:1;">
+        <h3 style="margin-top:0;">Add student to group</h3>
+        <div style="margin:12px 0;">
+            <label>Student</label>
+            <select id="addStudentSelect" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;"></select>
+                </div>
+        <div class="actions" style="justify-content:flex-end;">
+            <button class="action-btn" type="button" style="background:#ccc;" onclick="closeAddStudentModal()">Cancel</button>
+            <button class="action-btn edit-btn" type="button" onclick="confirmAddStudent()">Add</button>
+        </div>
+        <input type="hidden" id="addStudentGroupId" />
+    </div>
+    <div onclick="closeAddStudentModal()" style="position:absolute; inset:0;"></div>
+</div>
+
+<script>
+    let teachersCache = [];
+    let studentsCache = [];
+
+    async function openAssignTeacherModal(btn){
+        const groupId = btn.getAttribute('data-group-id');
+        document.getElementById('assignTeacherGroupId').value = groupId;
+        const modal = document.getElementById('assignTeacherModal');
+        modal.style.display = 'flex';
+        try {
+            if (teachersCache.length === 0) {
+                const res = await fetch('/v1/teacher/list');
+                if (!res.ok) throw new Error('Teacher list failed');
+                teachersCache = await res.json();
+            }
+            const sel = document.getElementById('assignTeacherSelect');
+            sel.innerHTML = teachersCache.map(t => `<option value="${t.id}">${escapeHtml(t.fullName)||'—'} (${escapeHtml(t.phoneNum)||''})</option>`).join('');
+        } catch(e){ alert('Failed to load teachers'); }
+    }
+    function closeAssignTeacherModal(){ document.getElementById('assignTeacherModal').style.display='none'; }
+    async function confirmAssignTeacher(){
+        const groupId = document.getElementById('assignTeacherGroupId').value;
+        const teacherId = document.getElementById('assignTeacherSelect').value;
+        try{
+            const res = await fetch(`/v1/group/assignTeacher/${groupId}/${teacherId}`, { method:'POST' });
+            if (!res.ok) throw new Error(await res.text());
+            closeAssignTeacherModal();
+            window.location.reload();
+        }catch(e){ alert(e.message || 'Failed to assign teacher'); }
+    }
+
+    async function openAddStudentModal(btn){
+        const groupId = btn.getAttribute('data-group-id');
+        document.getElementById('addStudentGroupId').value = groupId;
+        const modal = document.getElementById('addStudentModal');
+        modal.style.display = 'flex';
+        try {
+            if (studentsCache.length === 0) {
+                const res = await fetch('/v1/student/list');
+                if (!res.ok) throw new Error('Student list failed');
+                studentsCache = await res.json();
+            }
+            const sel = document.getElementById('addStudentSelect');
+            sel.innerHTML = studentsCache.map(s => `<option value="${s.id}">${escapeHtml(s.fullName)||'—'} (${escapeHtml(s.phoneNum)||''})</option>`).join('');
+        } catch(e){ alert('Failed to load students'); }
+    }
+    function closeAddStudentModal(){ document.getElementById('addStudentModal').style.display='none'; }
+    async function confirmAddStudent(){
+        const groupId = document.getElementById('addStudentGroupId').value;
+        const studentId = document.getElementById('addStudentSelect').value;
+        try{
+            const res = await fetch(`/v1/student/addToGroup/${studentId}/${groupId}`, { method:'POST' });
+            if (!res.ok) throw new Error(await res.text());
+            closeAddStudentModal();
+            window.location.reload();
+        }catch(e){ alert(e.message || 'Failed to add student'); }
+    }
+
+    function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+</script>
+</body>
+</html>

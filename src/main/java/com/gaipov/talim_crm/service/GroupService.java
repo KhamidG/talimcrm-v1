@@ -9,6 +9,7 @@ import com.gaipov.talim_crm.repository.GroupRepo;
 import com.gaipov.talim_crm.repository.TeacherRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +18,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
-    @Autowired
-    GroupRepo groupRepo;
 
     @Autowired
-    TeacherRepo teacherRepo;
+    private GroupRepo groupRepo;
+
+    @Autowired
+    private TeacherRepo teacherRepo;
 
     public GroupDto createGroup(GroupDto dto) {
         GroupEntity groupEntity = new GroupEntity();
@@ -37,7 +39,9 @@ public class GroupService {
     }
 
     public List<GroupDto> getAllGroups() {
-        return groupRepo.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        return groupRepo.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     public Optional<GroupDto> getGroupById(Long id) {
@@ -45,32 +49,36 @@ public class GroupService {
     }
 
     public void deleteById(Long id) {
-        GroupEntity entity = groupRepo.findById(id).orElseThrow(() -> new NotFoundExp("Group not found"));
+        GroupEntity entity = groupRepo.findById(id)
+                .orElseThrow(() -> new NotFoundExp("Group not found"));
 
         entity.setDeleted_at(LocalDate.now());
         groupRepo.save(entity);
     }
 
+    @Transactional
     public String assignTeacherToGroup(Long groupId, Long teacherId) {
-        TeacherEntity teacherEntity = teacherRepo.findById(teacherId).orElseThrow(() -> new NotFoundExp("Teacher not found"));
+        TeacherEntity teacherEntity = teacherRepo.findById(teacherId)
+                .orElseThrow(() -> new NotFoundExp("Teacher not found with ID: " + teacherId));
 
-        GroupEntity groupEntity = groupRepo.findById(groupId).orElseThrow(() -> new NotFoundExp("Group not found"));
+        GroupEntity groupEntity = groupRepo.findById(groupId)
+                .orElseThrow(() -> new NotFoundExp("Group not found with ID: " + groupId));
 
-        groupEntity.setTeacherEntity(teacherEntity);
+        groupEntity.setTeacher(teacherEntity);
         groupRepo.save(groupEntity);
 
-        return "Successfully pinned";
+        return "Teacher assigned successfully";
     }
 
     public List<GroupDto> findGroupByName(String groupName) {
-        List<GroupEntity> groupEntity = groupRepo.findByNameOfGroup(groupName);
+        List<GroupEntity> groupEntities = groupRepo.findByNameOfGroup(groupName);
 
-        if (groupEntity.isEmpty()) {
+        if (groupEntities.isEmpty()) {
             throw new NotFoundExp("Group not found.");
         }
 
-        return groupEntity.stream()
-                .map(this:: toDto)
+        return groupEntities.stream()
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -78,21 +86,32 @@ public class GroupService {
         GroupEntity entity = groupRepo.findById(groupId)
                 .orElseThrow(() -> new NotFoundExp("Group Not Found"));
 
-        return entity.getListOfStudents().size();
+        return entity.getListOfStudents() != null ? entity.getListOfStudents().size() : 0;
     }
-
 
     private GroupDto toDto(GroupEntity entity) {
         GroupDto dto = new GroupDto();
-
         dto.setId(entity.getId());
         dto.setNameOfGroup(entity.getNameOfGroup());
+        dto.setTeacherFullName(entity.getTeacher() != null ? entity.getTeacher().getFullName() : null);
         dto.setTypeOfGroup(entity.getTypeOfGroup());
         dto.setListOfStudents(entity.getListOfStudents());
-        dto.setCurrentStudents(dto.getListOfStudents().size());
+        dto.setCurrentStudents(entity.getListOfStudents() != null ? entity.getListOfStudents().size() : 0);
         dto.setMaxStudents(entity.getMaxStudents());
         dto.setCreated_at(entity.getCreated_at());
-
         return dto;
+    }
+
+    public void updateGroup(GroupEntity group) {
+        Optional<GroupEntity> existingGroup = groupRepo.findById(group.getId());
+        if (existingGroup.isPresent()) {
+            GroupEntity updatedGroup = existingGroup.get();
+            updatedGroup.setNameOfGroup(group.getNameOfGroup());
+            updatedGroup.setTypeOfGroup(group.getTypeOfGroup());
+            updatedGroup.setMaxStudents(group.getMaxStudents());
+            groupRepo.save(updatedGroup);
+        } else {
+            throw new NotFoundExp("Group not found with ID: " + group.getId());
+        }
     }
 }
