@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -20,8 +21,6 @@ public class StudentController {
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
-        // ЭТО НОВАЯ СТРОКА: Создаем пустой объект DTO и передаем его в модель.
-        // Thymeleaf будет использовать этот объект для привязки полей формы.
         model.addAttribute("student", new StudentDto());
         return "register";
     }
@@ -108,6 +107,21 @@ public class StudentController {
     public ResponseEntity<Integer> studentsCountByStatus(@PathVariable("status") UserStatus status) {
         Integer count = service.studentsCountWithActiveStatus(status);
         return ResponseEntity.ok(count);
+    }
+
+    @PostMapping("/convertFromUser")
+    @ResponseBody
+    public ResponseEntity<StudentDto> convertFromUser(@RequestBody Map<String, Object> request) {
+        try {
+            Long userId = Long.valueOf(request.get("userId").toString());
+            String fullName = request.get("fullName").toString();
+            String phoneNum = request.get("phoneNum").toString();
+            
+            StudentDto createdStudent = service.convertFromUser(userId, fullName, phoneNum);
+            return ResponseEntity.ok(createdStudent);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
     }
 }
 

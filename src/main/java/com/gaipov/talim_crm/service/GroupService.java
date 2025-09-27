@@ -30,7 +30,7 @@ public class GroupService {
         groupEntity.setNameOfGroup(dto.getNameOfGroup());
         groupEntity.setTypeOfGroup(dto.getTypeOfGroup());
         groupEntity.setListOfStudents(dto.getListOfStudents());
-        groupEntity.setMaxStudents(30);
+        groupEntity.setMaxStudents(dto.getMaxStudents());
         groupEntity.setCreated_at(LocalDate.now());
 
         groupRepo.save(groupEntity);

@@ -1,5 +1,6 @@
 package com.gaipov.talim_crm.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gaipov.talim_crm.entity.StudentEntity;
 import com.gaipov.talim_crm.enums.GroupRole;
 import lombok.Data;
@@ -13,6 +14,7 @@ public class GroupDto {
     private String nameOfGroup;
     private String teacherFullName;
     private GroupRole typeOfGroup;
+    @JsonIgnore
     private List<StudentEntity> listOfStudents;
     private Integer maxStudents;
     private Integer currentStudents;

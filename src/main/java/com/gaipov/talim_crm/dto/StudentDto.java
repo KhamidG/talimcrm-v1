@@ -21,6 +21,8 @@ public class StudentDto {
 
     private UserStatus status;
 
+    private Integer progress;
+
     private LocalDate created_at;
 
     private LocalDate deleted_at;

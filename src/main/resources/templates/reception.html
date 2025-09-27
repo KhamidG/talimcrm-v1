@@ -3,134 +3,728 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reception - Quick Register</title>
-    <link rel="stylesheet" th:href="@{/reception.css}" />
-    <link rel="stylesheet" th:href="@{/style.css}" />
+    <title>Reception - Talim CRM</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/reception.css}">
 </head>
 <body>
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="sidebar-header">📚 Talim CRM</div>
-        <nav class="sidebar-nav">
-            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
-            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
-            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
-            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
-            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
-        </nav>
-    </aside>
-    <div class="content-container">
-        <h1>Reception - quick register</h1>
-        <div class="form-table-container">
-            <form id="quickRegisterForm" class="reception-card">
-                <div style="margin-bottom:12px;">
-                    <label>Full name *</label>
-                    <input type="text" id="fullName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Client full name" required>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Talim CRM</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-link active" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+                <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+                <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+                <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+                <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+                <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+                <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+                <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+                <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div class="reception-container">
+                <h1>Reception Dashboard - New Clients</h1>
+                
+                <!-- Quick Registration Form -->
+                <div class="registration-section">
+                    <div class="card">
+                        <h2>Quick Registration</h2>
+                        <form id="quickRegisterForm" class="registration-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" class="form-input" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="tel" id="phone" name="phone" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role" class="form-label">Role</label>
+                                    <select id="role" name="role" class="form-input" required>
+                                        <option value="">Select Role</option>
+                                        <option value="STUDENT">Student (Created with IN_REGISTER status)</option>
+                                        <option value="TEACHER">Teacher</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="testScore" class="form-label">Placement test score (0-40)</label>
+                                    <input type="number" id="testScore" name="testScore" min="0" max="40" class="form-input" placeholder="e.g. 26">
+                                    <small style="color:#666;">Used only for Students to suggest empty groups</small>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success">Register User</button>
+                        </form>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <label>Phone *</label>
-                    <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
+
+                <!-- Suggested Groups (after student registration) -->
+                <div id="suggestedGroupsSection" class="users-section" style="display:none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Suggested empty groups</h2>
+                            <div class="controls">
+                                <input type="text" id="groupSearch" placeholder="Search groups..." class="form-input">
+                            </div>
+                        </div>
+                        <div style="margin: -10px 0 10px 0; color:#666;" id="suggestionHint"></div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Students</th>
+                                    <th>Max</th>
+                                    <th>Created</th>
+                                </tr>
+                                </thead>
+                                <tbody id="suggestedGroupsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="actions">
-                    <button type="submit" class="btn">Register</button>
+
+                <!-- Recent Users List -->
+                <div class="users-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>New Clients (IN_REGISTER status)</h2>
+                            <div class="controls">
+                                <input type="text" id="searchUsers" placeholder="Search users..." class="form-input">
+                                <select id="pageSize" class="form-input" style="margin-left: 10px;">
+                                    <option value="10">10 per page</option>
+                                    <option value="25" selected>25 per page</option>
+                                    <option value="50">50 per page</option>
+                                    <option value="100">100 per page</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="usersTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <!-- Users will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination Controls -->
+                        <div id="paginationControls" style="display:flex; justify-content:space-between; align-items:center; margin:20px 0; padding:10px 0;">
+                            <div id="paginationInfo" style="color:#666; font-size:14px;">
+                                Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalRecords">0</span> entries
+                            </div>
+                            <div id="paginationButtons" style="display:flex; gap:8px;">
+                                <button id="prevPage" class="btn btn-outline" style="padding:8px 12px; border:1px solid #ddd; background:white; border-radius:6px; cursor:pointer;" disabled>Previous</button>
+                                <div id="pageNumbers" style="display:flex; gap:4px;"></div>
+                                <button id="nextPage" class="btn btn-outline" style="padding:8px 12px; border:1px solid #ddd; background:white; border-radius:6px; cursor:pointer;" disabled>Next</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </form>
-            <div class="reception-card reception-list">
-                <h2 style="margin:0 0 12px;">Recently registered</h2>
-                <input id="searchInput" type="text" placeholder="Search by name or phone" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px; min-width:260px; margin-bottom:12px; width:100%; max-width:360px;">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Full name</th>
-                        <th>Phone</th>
-                        <th>Created</th>
-                    </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                    <tr th:each="u : ${users}">
-                        <td th:text="${u.id}">1</td>
-                        <td th:text="${u.fullName} ?: '—'"></td>
-                        <td th:text="${u.phoneNum} ?: '—'"></td>
-                        <td th:text="${u.created_at} ? ${#dates.format(u.created_at, 'dd.MM.yyyy HH:mm')} : '—'"></td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(users)}">
-                        <td colspan="4" style="text-align:center; padding:20px; color:#888;">No users yet</td>
-                    </tr>
-                    </tbody>
-                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Group Selection Modal -->
+    <div id="groupSelectionModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Choose Group for <span id="modalClientName"></span></h3>
+                <span class="close" onclick="closeGroupSelectionModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="placementScore" class="form-label">Placement Test Score (0-40)</label>
+                    <input type="number" id="placementScore" min="0" max="40" class="form-input" placeholder="Enter score">
+                    <small style="color:#666;">Score > 25 → IELTS groups with available spots, Score ≤ 25 → BEGINNER/PRE_IELTS groups with available spots</small>
+                </div>
+                <div class="form-group">
+                    <label for="groupSearchModal" class="form-label">Search Groups</label>
+                    <input type="text" id="groupSearchModal" placeholder="Search groups..." class="form-input">
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Students</th>
+                                <th>Max</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalGroupsBody">
+                            <!-- Groups will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    const API = '/v1/auth';
-    let users = [];
+    <script>
+        let allUsers = [];
+        let currentPage = 1;
+        let pageSize = 25;
+        let filteredData = [];
 
-    document.addEventListener('DOMContentLoaded', () => {
-        loadUsers();
-        document.getElementById('searchInput').addEventListener('input', filter);
-        document.getElementById('quickRegisterForm').addEventListener('submit', submitForm);
-    });
-
-    async function loadUsers(){
-        try{
-            const res = await fetch(`${API}/list`);
-            if(!res.ok) throw new Error('Failed');
-            users = await res.json();
-            render(users);
-        }catch(e){ console.error(e); }
-    }
-
-    async function submitForm(e){
-        e.preventDefault();
-        const payload = {
-            fullName: document.getElementById('fullName').value.trim(),
-            phoneNum: document.getElementById('phoneNum').value.trim()
-        };
-        if(!payload.fullName || !payload.phoneNum) return;
-        const res = await fetch(`${API}/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
-        if(res.ok){
-            document.getElementById('quickRegisterForm').reset();
-            await loadUsers();
-        } else {
-            alert('Failed to register');
-        }
-    }
-
-    function filter(){
-        const term = document.getElementById('searchInput').value.toLowerCase().trim();
-        const data = term ? users.filter(u => (u.fullName||'').toLowerCase().includes(term) || (u.phoneNum||'').toLowerCase().includes(term)) : users;
-        render(data);
-    }
-
-    function render(data){
-        const tbody = document.getElementById('usersTableBody');
-        tbody.innerHTML = '';
-        if(!data || data.length === 0){
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:#888;">No users yet</td></tr>`;
-            return;
-        }
-        data.slice().sort((a,b)=> (b.id||0) - (a.id||0)).forEach(u => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${u.id}</td>
-                <td>${escapeHtml(u.fullName)||'—'}</td>
-                <td>${escapeHtml(u.phoneNum)||'—'}</td>
-                <td>${formatDateTime(u.created_at)||'—'}</td>
-            `;
-            tbody.appendChild(tr);
+        // Load users on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUsers();
+            document.getElementById('pageSize').addEventListener('change', (e) => {
+                pageSize = parseInt(e.target.value);
+                currentPage = 1;
+                applyFilters();
+            });
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderPage();
+                }
+            });
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredData.length / pageSize);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderPage();
+                }
+            });
         });
-    }
 
-    function formatDateTime(v){ if(!v) return ''; const d=new Date(v); return isNaN(d)?String(v):d.toLocaleString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
-    function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
-</script>
+        // Quick registration form
+        let isSubmitting = false;
+        document.getElementById('quickRegisterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (isSubmitting) return; // prevent double submit
+            isSubmitting = true;
+
+            const formData = new FormData(this);
+            const userData = {
+                fullName: formData.get('firstName') + ' ' + formData.get('lastName'),
+                phoneNum: formData.get('phone'),
+                roles: formData.get('role')
+            };
+            const scoreValue = Number(document.getElementById('testScore').value || '0'); // capture before reset
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            fetch('/v1/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    const msg = await response.text();
+                    throw new Error(msg || 'Request failed');
+                }
+                return response.json();
+            })
+            .then(async dto => {
+                showNotification('New client registered successfully!', 'success');
+                this.reset();
+                loadUsers();
+                
+                // If role is STUDENT, show suggested groups for manual assignment
+                if ((userData.roles || '').toUpperCase() === 'STUDENT') {
+                    await showSuggestedGroups(scoreValue);
+                } else {
+                    hideSuggestedGroups();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Error registering user', 'error');
+            })
+            .finally(() => {
+                isSubmitting = false;
+                if (submitBtn) submitBtn.disabled = false;
+            });
+        });
+
+        // Load users from API
+        function loadUsers() {
+            fetch('/v1/auth/users')
+                .then(response => response.json())
+                .then(data => {
+                    allUsers = Array.isArray(data) ? data : [];
+                    applyFilters();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Apply filters and pagination
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchUsers').value.toLowerCase();
+            const filteredUsers = allUsers.filter(user => 
+                (user.fullName && user.fullName.toLowerCase().includes(searchTerm)) ||
+                (user.phoneNum && user.phoneNum.includes(searchTerm)) ||
+                (user.roles && user.roles.toLowerCase().includes(searchTerm))
+            );
+            filteredData = filteredUsers;
+            currentPage = 1;
+            renderPage();
+        }
+
+        // Render users table with pagination
+        function renderPage() {
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            if (pageData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">No users found</td></tr>';
+            } else {
+                pageData.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${escapeHtml(user.fullName || 'N/A')}</td>
+                        <td>${escapeHtml(user.phoneNum || 'N/A')}</td>
+                        <td>${escapeHtml(user.roles || 'N/A')}</td>
+                        <td><span class="status ${user.status === 'IN_REGISTER' ? 'in_register' : 'active'}">${user.status || 'ACTIVE'}</span></td>
+                        <td>${formatDate(user.created_at)}</td>
+                        <td>
+                            ${user.status === 'IN_REGISTER' ? 
+                                `<button class="btn btn-primary" onclick="showGroupSelection(${user.id}, '${escapeHtml(user.fullName)}', '${escapeHtml(user.phoneNum)}')">Choose Group</button>` : 
+                                user.roles === 'NEW_USER' ? 
+                                    `<button class="btn btn-success" onclick="convertToStudent(${user.id}, '${escapeHtml(user.fullName)}', '${escapeHtml(user.phoneNum)}')">Add to Students</button>` : 
+                                    '<span style="color: #999;">Already converted</span>'
+                            }
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            updatePagination();
+        }
+
+        // Update pagination controls
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / pageSize);
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, filteredData.length);
+            
+            // Update pagination info
+            document.getElementById('showingStart').textContent = filteredData.length > 0 ? startIndex + 1 : 0;
+            document.getElementById('showingEnd').textContent = endIndex;
+            document.getElementById('totalRecords').textContent = filteredData.length;
+            
+            // Update buttons
+            document.getElementById('prevPage').disabled = currentPage <= 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+            
+            // Update page numbers
+            const pageNumbersDiv = document.getElementById('pageNumbers');
+            pageNumbersDiv.innerHTML = '';
+            
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                pageBtn.className = i === currentPage ? 'btn btn-primary' : 'btn btn-outline';
+                pageBtn.style.cssText = 'padding:8px 12px; border:1px solid #ddd; background:' + (i === currentPage ? '#007bff; color:white' : 'white') + '; border-radius:6px; cursor:pointer;';
+                pageBtn.addEventListener('click', () => {
+                    currentPage = i;
+                    renderPage();
+                });
+                pageNumbersDiv.appendChild(pageBtn);
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchUsers').addEventListener('input', applyFilters);
+
+        // Utility functions
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            if (type === 'success') {
+                notification.style.backgroundColor = '#4CAF50';
+            } else if (type === 'warning') {
+                notification.style.backgroundColor = '#ff9800';
+            } else {
+                notification.style.backgroundColor = '#f44336';
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Suggested groups helpers
+        async function showSuggestedGroups(score){
+            const section = document.getElementById('suggestedGroupsSection');
+            const tbody = document.getElementById('suggestedGroupsBody');
+            const hint = document.getElementById('suggestionHint');
+
+            const targetTypes = score > 25 ? ['IELTS'] : ['BEGINNER','PRE_IELTS'];
+            hint.textContent = score > 25 ? 'Score > 25 → Showing IELTS groups with available spots' : 'Score ≤ 25 → Showing BEGINNER and PRE_IELTS groups with available spots';
+
+            let groups = [];
+            try {
+                const res = await fetch('/v1/group/list');
+                groups = await res.json();
+            } catch (_) { groups = []; }
+
+            const availableGroups = groups.filter(g => targetTypes.includes(g.typeOfGroup) && (g.currentStudents || 0) < (g.maxStudents || 0));
+
+            const searchEl = document.getElementById('groupSearch');
+            const apply = () => {
+                const term = (searchEl.value || '').toLowerCase();
+                const data = term ? availableGroups.filter(g => (g.nameOfGroup||'').toLowerCase().includes(term)) : availableGroups;
+                tbody.innerHTML = '';
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">No available groups found</td></tr>';
+                    return;
+                }
+                data.forEach(g => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${g.id}</td>
+                        <td>${escapeHtml(g.nameOfGroup)||''}</td>
+                        <td>${escapeHtml(g.typeOfGroup)||''}</td>
+                        <td>${g.currentStudents ?? 0}</td>
+                        <td>${g.maxStudents ?? '—'}</td>
+                        <td>${escapeHtml(g.created_at)||'—'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            };
+            apply();
+            searchEl.oninput = apply;
+            section.style.display = 'block';
+        }
+
+        function hideSuggestedGroups(){
+            document.getElementById('suggestedGroupsSection').style.display = 'none';
+            document.getElementById('suggestedGroupsBody').innerHTML = '';
+            document.getElementById('groupSearch').value = '';
+            document.getElementById('suggestionHint').textContent = '';
+        }
+
+        // Convert user to student
+        async function convertToStudent(userId, fullName, phoneNum) {
+            if (!confirm(`Convert ${fullName} to student and remove from new clients?`)) return;
+            
+            try {
+                const response = await fetch('/v1/student/convertFromUser', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: userId,
+                        fullName: fullName,
+                        phoneNum: phoneNum
+                    })
+                });
+                
+                if (response.ok) {
+                    showNotification('Client converted to student and removed from new clients!', 'success');
+                    loadUsers(); // Reload the users list
+                } else {
+                    const error = await response.text();
+                    showNotification('Error: ' + error, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error converting user to student', 'error');
+            }
+        }
+
+        // Group selection modal functions
+        let currentClientData = null;
+
+        function showGroupSelection(userId, fullName, phoneNum) {
+            currentClientData = { userId, fullName, phoneNum };
+            document.getElementById('modalClientName').textContent = fullName;
+            document.getElementById('groupSelectionModal').style.display = 'block';
+            document.getElementById('placementScore').value = '';
+            document.getElementById('groupSearchModal').value = '';
+            document.getElementById('modalGroupsBody').innerHTML = '<tr><td colspan="6" class="no-data">Enter placement test score to see available groups</td></tr>';
+        }
+
+        function closeGroupSelectionModal() {
+            document.getElementById('groupSelectionModal').style.display = 'none';
+            currentClientData = null;
+        }
+
+        // Load groups based on placement score
+        async function loadGroupsForModal() {
+            const score = Number(document.getElementById('placementScore').value || '0');
+            const searchTerm = document.getElementById('groupSearchModal').value.toLowerCase();
+            
+            if (score === 0) {
+                document.getElementById('modalGroupsBody').innerHTML = '<tr><td colspan="6" class="no-data">Enter placement test score to see available groups</td></tr>';
+                return;
+            }
+
+            try {
+                const response = await fetch('/v1/group/list');
+                const groups = await response.json();
+                
+                const targetTypes = score > 25 ? ['IELTS'] : ['BEGINNER', 'PRE_IELTS'];
+                const availableGroups = groups.filter(g => 
+                    targetTypes.includes(g.typeOfGroup) && 
+                    (g.currentStudents || 0) < (g.maxStudents || 0) &&
+                    (searchTerm === '' || (g.nameOfGroup || '').toLowerCase().includes(searchTerm))
+                );
+
+                const tbody = document.getElementById('modalGroupsBody');
+                tbody.innerHTML = '';
+
+                if (availableGroups.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">No available groups found</td></tr>';
+                    return;
+                }
+
+                availableGroups.forEach(group => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${group.id}</td>
+                        <td>${escapeHtml(group.nameOfGroup || '')}</td>
+                        <td>${escapeHtml(group.typeOfGroup || '')}</td>
+                        <td>${group.currentStudents ?? 0}</td>
+                        <td>${group.maxStudents ?? '—'}</td>
+                        <td><button class="btn btn-success" onclick="assignToGroup(${group.id}, '${escapeHtml(group.nameOfGroup || '')}')">Assign</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading groups:', error);
+                document.getElementById('modalGroupsBody').innerHTML = '<tr><td colspan="6" class="no-data">Error loading groups</td></tr>';
+            }
+        }
+
+        // Assign client to group
+        async function assignToGroup(groupId, groupName) {
+            if (!currentClientData) return;
+            
+            if (!confirm(`Assign ${currentClientData.fullName} to group "${groupName}" and convert to student?`)) return;
+
+            try {
+                // First convert to student
+                const convertResponse = await fetch('/v1/student/convertFromUser', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: currentClientData.userId,
+                        fullName: currentClientData.fullName,
+                        phoneNum: currentClientData.phoneNum
+                    })
+                });
+
+                if (!convertResponse.ok) {
+                    throw new Error('Failed to convert user to student');
+                }
+
+                const student = await convertResponse.json();
+
+                // Then assign to group
+                const assignResponse = await fetch(`/v1/student/addToGroup/${student.id}/${groupId}`, {
+                    method: 'POST'
+                });
+
+                if (assignResponse.ok) {
+                    showNotification(`${currentClientData.fullName} assigned to group "${groupName}" and converted to student!`, 'success');
+                    closeGroupSelectionModal();
+                    loadUsers(); // Reload the users list
+                } else {
+                    throw new Error('Failed to assign to group');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error assigning to group: ' + error.message, 'error');
+            }
+        }
+
+        // Event listeners for modal
+        document.getElementById('placementScore').addEventListener('input', loadGroupsForModal);
+        document.getElementById('groupSearchModal').addEventListener('input', loadGroupsForModal);
+    </script>
+
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.4rem;
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-body .table-container {
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-body table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .modal-body th,
+        .modal-body td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-body th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-body .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </body>
 </html>
-

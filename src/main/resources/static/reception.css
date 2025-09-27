@@ -1,78 +1,223 @@
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.app-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-.sidebar {
-    width: 250px; /* Adjust as needed */
-    background-color: #f8f8f8; /* Optional: for visibility */
-    flex-shrink: 0;
-}
-
-.content-container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center vertically */
-    align-items: center; /* Center horizontally */
+/* Reception Page Specific Styles */
+.reception-container {
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
-    box-sizing: border-box;
 }
 
-.form-table-container {
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 1200px; /* Optional: limit max width */
+.registration-section {
+    margin-bottom: 40px;
 }
 
-.reception-card {
+.users-section {
+    margin-bottom: 40px;
+}
+
+.card {
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    padding: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.card-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.registration-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
     flex: 1;
-    min-width: 280px;
-    max-width: 420px;
+    display: flex;
+    flex-direction: column;
 }
 
-.reception-list {
-    flex: 2;
-    min-width: 360px;
-}
-
-.reception-form label {
-    display: block;
+.form-label {
+    margin-bottom: 8px;
     font-weight: 600;
-    margin-bottom: 6px;
-    color: #444;
+    color: #555;
+    font-size: 14px;
 }
 
-.reception-form input,
-.reception-form select {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ddd;
+.form-input {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
     border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
 }
 
-.reception-list h2 {
-    margin: 0 0 12px;
+.form-input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
-.sidebar .nav-link {
-    gap: 10px;
-}
-
-.sidebar .nav-link span {
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
     font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+    background-color: #43a047;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background-color: #4CAF50;
+}
+
+.btn-success:hover {
+    background-color: #43a047;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status.active {
+    background-color: #4CAF50;
+}
+
+.status.inregister {
+    background-color: #ff9800;
+}
+
+.status.stoplearning {
+    background-color: #f44336;
+}
+
+.no-data {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 40px;
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .reception-container {
+        padding: 15px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .controls {
+        width: 100%;
+    }
+    
+    .form-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+@media (max-width: 480px) {
+    .reception-container {
+        padding: 10px;
+    }
+    
+    .card {
+        padding: 15px;
+    }
+    
+    th, td {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
+    
+    .status {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
 }

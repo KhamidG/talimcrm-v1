@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">📚 Talim CRM</div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
@@ -20,9 +20,10 @@
             <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
             <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
             <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
-        </nav>
-    </aside>
+    </nav>
+</aside>
     <main class="main-content">
+        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
 <div class="container">
 
     <h1>Create Student</h1>
@@ -35,18 +36,48 @@
         <div style="margin-bottom:12px;">
             <label>Phone *</label>
             <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
-        </div>
+            </div>
+        <div style="margin-bottom:12px;">
+            <label>Placement test score (0-40)</label>
+            <input type="number" id="testScore" min="0" max="40" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. 26">
+            <small style="color:#666;">If score > 25: show IELTS groups. Otherwise: BEGINNER and PRE_IELTS.</small>
+            </div>
         <div class="actions">
             <button type="submit" class="btn">Create</button>
             <a th:href="@{/v1/student/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
+            </div>
+        </form>
+
+    <!-- Suggested Groups Section (shown after registration) -->
+    <div id="suggestions" style="display:none; margin-top:24px;">
+        <h2>Suggested empty groups</h2>
+        <p id="suggestionHint" style="color:#666; margin-top:4px;"></p>
+        <div class="controls" style="display:flex; gap:12px; align-items:center; margin:12px 0; flex-wrap:wrap;">
+            <input id="groupSearch" type="text" placeholder="Search groups" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px; min-width:220px;">
         </div>
-    </form>
-</div>
-    </main>
+        <table class="table" style="width:100%; border-collapse: collapse;">
+            <thead>
+            <tr>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">ID</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Name</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Type</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Students</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Max</th>
+                <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Action</th>
+            </tr>
+            </thead>
+            <tbody id="suggestionsBody"></tbody>
+        </table>
+    </div>
+    </div>
+</main>
 </div>
 
 <script>
     const API = '/v1/student';
+    let createdStudentId = null;
+    let allGroups = [];
+
     document.getElementById('studentRegisterForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
@@ -59,11 +90,85 @@
             body: JSON.stringify(payload)
         });
         if (res.ok) {
-            window.location.href = '/v1/student/listPage';
+            const student = await res.json();
+            createdStudentId = student.id;
+            await showSuggestions();
         } else {
             alert('Failed to create student');
         }
     });
+
+    async function showSuggestions(){
+        if (allGroups.length === 0) {
+            try {
+                const res = await fetch('/v1/group/list');
+                allGroups = await res.json();
+            } catch(_) { allGroups = []; }
+        }
+        const score = Number(document.getElementById('testScore').value || '0');
+        const isIelts = score > 25;
+        const targetTypes = isIelts ? ['IELTS'] : ['BEGINNER','PRE_IELTS'];
+        document.getElementById('suggestionHint').textContent = isIelts ? 'Score > 25 → IELTS empty groups' : 'Score ≤ 25 → BEGINNER and PRE_IELTS empty groups';
+
+        const emptyGroups = allGroups.filter(g => targetTypes.includes(g.typeOfGroup) && (g.currentStudents === 0 || g.currentStudents == null));
+
+        const tbody = document.getElementById('suggestionsBody');
+        const search = document.getElementById('groupSearch').value?.toLowerCase?.() || '';
+        const filtered = search ? emptyGroups.filter(g => (g.nameOfGroup||'').toLowerCase().includes(search)) : emptyGroups;
+        tbody.innerHTML = '';
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:16px; color:#888;">No empty groups found</td></tr>`;
+        } else {
+            filtered.forEach(g => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style=\"border-bottom:1px solid #f0f0f0; padding:8px;\">${g.id}</td>
+                    <td style=\"border-bottom:1px solid #f0f0f0; padding:8px;\">${escapeHtml(g.nameOfGroup)||''}</td>
+                    <td style=\"border-bottom:1px solid #f0f0f0; padding:8px;\">${escapeHtml(g.typeOfGroup)||''}</td>
+                    <td style=\"border-bottom:1px solid #f0f0f0; padding:8px;\">${g.currentStudents ?? 0}</td>
+                    <td style=\"border-bottom:1px solid #f0f0f0; padding:8px;\">${g.maxStudents ?? '—'}</td>
+                    <td style=\"border-bottom:1px solid #f0f0f0; padding:8px;\"><button class=\"action-btn edit-btn\" data-group-id=\"${g.id}\">Assign</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        tbody.querySelectorAll('button[data-group-id]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const gid = btn.getAttribute('data-group-id');
+                if (!createdStudentId) return alert('Student not created');
+                try {
+                    const res = await fetch(`/v1/student/addToGroup/${createdStudentId}/${gid}`, { method: 'POST' });
+                    if (!res.ok) throw new Error(await res.text());
+                    alert('Student assigned to group');
+                } catch(e) {
+                    alert(e.message || 'Failed to assign');
+                }
+            });
+        });
+        document.getElementById('suggestions').style.display = 'block';
+        document.getElementById('groupSearch').oninput = showSuggestions;
+    }
+    // sidebar toggle
+    (() => {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.getElementById('sidebarToggle');
+      const key = 'talimcrm.sidebar.collapsed';
+      const apply = () => {
+        const collapsed = localStorage.getItem(key) === '1';
+        if (collapsed) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
+      };
+      apply();
+      toggle.addEventListener('click', () => {
+        const collapsed = !(localStorage.getItem(key) === '1');
+        localStorage.setItem(key, collapsed ? '1' : '0');
+        apply();
+      });
+    })();
+
+    function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+    }
 </script>
 </body>
 </html>

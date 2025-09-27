@@ -35,22 +35,25 @@ public class AuthController {
     public String showList(Model model) {
         List<AuthDto> authDtos = service.listOfUsers();
         model.addAttribute("users", authDtos); // Ensure "users" matches template
-        return "reception";
-    }
-
-    @GetMapping("/reception")
-    public String showReception(Model model) {
-        // Preload users for initial render; client script will refresh as needed
-        List<AuthDto> authDtos = service.listOfUsers();
-        model.addAttribute("users", authDtos);
-        model.addAttribute("auth", new AuthDto());
-        return "reception";
+        return "registers";
     }
 
     @GetMapping("/list")
     @ResponseBody
     public ResponseEntity<List<AuthDto>> getAll() {
         return ResponseEntity.ok(service.listOfUsers());
+    }
+
+    @GetMapping("/users")
+    @ResponseBody
+    public ResponseEntity<List<AuthDto>> getUsers() {
+        return ResponseEntity.ok(service.listOfUsers());
+    }
+
+    @GetMapping("/reception")
+    public String receptionPage(Model model) {
+        model.addAttribute("users", service.listOfUsers());
+        return "reception";
     }
 
 }

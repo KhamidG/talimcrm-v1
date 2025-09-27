@@ -1,5 +1,7 @@
-package com.gaipov.talim_crm.exps;
+package com.gaipov.talim_crm.controller;
 
+import com.gaipov.talim_crm.exps.AppBadExp;
+import com.gaipov.talim_crm.exps.NotFoundExp;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;

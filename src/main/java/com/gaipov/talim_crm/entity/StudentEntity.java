@@ -26,8 +26,7 @@ public class StudentEntity {
     @Enumerated(EnumType.STRING)
     private UserRole roles = UserRole.STUDENT;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
+    @OneToOne
     private GroupEntity group;
 
     @Column

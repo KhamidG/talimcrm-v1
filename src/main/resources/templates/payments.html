@@ -34,6 +34,12 @@
             <option value="CASH">CASH</option>
             <option value="CARD">CARD</option>
         </select>
+        <select id="pageSize" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
+            <option value="10">10 per page</option>
+            <option value="25" selected>25 per page</option>
+            <option value="50">50 per page</option>
+            <option value="100">100 per page</option>
+        </select>
     </div>
 
     <table class="table">
@@ -63,46 +69,136 @@
         </tr>
         </tbody>
     </table>
+    
+    <!-- Pagination Controls -->
+    <div id="paginationControls" style="display:flex; justify-content:space-between; align-items:center; margin:20px 0; padding:10px 0;">
+        <div id="paginationInfo" style="color:#666; font-size:14px;">
+            Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalRecords">0</span> entries
+        </div>
+        <div id="paginationButtons" style="display:flex; gap:8px;">
+            <button id="prevPage" class="btn btn-outline" style="padding:8px 12px; border:1px solid #ddd; background:white; border-radius:6px; cursor:pointer;" disabled>Previous</button>
+            <div id="pageNumbers" style="display:flex; gap:4px;"></div>
+            <button id="nextPage" class="btn btn-outline" style="padding:8px 12px; border:1px solid #ddd; background:white; border-radius:6px; cursor:pointer;" disabled>Next</button>
+        </div>
+    </div>
 </div>
     </main>
 </div>
 
 <script>
     let payments = [];
+    let currentPage = 1;
+    let pageSize = 25;
+    let filteredData = [];
+    
     document.addEventListener('DOMContentLoaded', () => {
         const srch = document.getElementById('searchInput');
         const type = document.getElementById('typeFilter');
-        srch && srch.addEventListener('input', filter);
-        type && type.addEventListener('change', filter);
+        const pageSizeSelect = document.getElementById('pageSize');
+        
+        srch && srch.addEventListener('input', applyFilters);
+        type && type.addEventListener('change', applyFilters);
+        pageSizeSelect && pageSizeSelect.addEventListener('change', (e) => {
+            pageSize = parseInt(e.target.value);
+            currentPage = 1;
+            applyFilters();
+        });
+        
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        });
+        document.getElementById('nextPage').addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredData.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        });
     });
-    function filter(){
+    
+    function applyFilters(){
         const term = (document.getElementById('searchInput').value||'').toLowerCase().trim();
         const type = document.getElementById('typeFilter').value;
         if (!Array.isArray(payments) || payments.length === 0) return;
-        const tbody = document.getElementById('paymentsTableBody');
+        
         const data = payments.filter(p => {
             const matchesTerm = !term || String(p.student||'').includes(term) || String(p.groupId||'').includes(term);
             const matchesType = !type || p.paymentType === type;
             return matchesTerm && matchesType;
         });
+        
+        filteredData = data;
+        currentPage = 1;
+        renderPage();
+    }
+    
+    function renderPage() {
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const pageData = filteredData.slice(startIndex, endIndex);
+        
+        const tbody = document.getElementById('paymentsTableBody');
         tbody.innerHTML = '';
-        if (data.length === 0) {
+        if (pageData.length === 0) {
             tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">No payments</td></tr>`;
-            return;
+        } else {
+            pageData.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.id}</td>
+                    <td>${p.student}</td>
+                    <td>${p.groupId}</td>
+                    <td>${p.sum}</td>
+                    <td>${p.paymentType}</td>
+                    <td>${p.paymentStatus}</td>
+                    <td>${p.created_at}</td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
-        data.forEach(p => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${p.id}</td>
-                <td>${p.student}</td>
-                <td>${p.groupId}</td>
-                <td>${p.sum}</td>
-                <td>${p.paymentType}</td>
-                <td>${p.paymentStatus}</td>
-                <td>${p.created_at}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+        updatePagination();
+    }
+    
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredData.length / pageSize);
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = Math.min(startIndex + pageSize, filteredData.length);
+        
+        // Update pagination info
+        document.getElementById('showingStart').textContent = filteredData.length > 0 ? startIndex + 1 : 0;
+        document.getElementById('showingEnd').textContent = endIndex;
+        document.getElementById('totalRecords').textContent = filteredData.length;
+        
+        // Update buttons
+        document.getElementById('prevPage').disabled = currentPage <= 1;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages;
+        
+        // Update page numbers
+        const pageNumbersDiv = document.getElementById('pageNumbers');
+        pageNumbersDiv.innerHTML = '';
+        
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.className = i === currentPage ? 'btn btn-primary' : 'btn btn-outline';
+            pageBtn.style.cssText = 'padding:8px 12px; border:1px solid #ddd; background:' + (i === currentPage ? '#007bff; color:white' : 'white') + '; border-radius:6px; cursor:pointer;';
+            pageBtn.addEventListener('click', () => {
+                currentPage = i;
+                renderPage();
+            });
+            pageNumbersDiv.appendChild(pageBtn);
+        }
     }
 </script>
 </body>

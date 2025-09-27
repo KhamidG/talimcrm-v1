@@ -7,6 +7,7 @@ import com.gaipov.talim_crm.enums.UserRole;
 import com.gaipov.talim_crm.enums.UserStatus;
 import com.gaipov.talim_crm.exps.NotFoundExp;
 import com.gaipov.talim_crm.repository.GroupRepo;
+import com.gaipov.talim_crm.repository.ProfileRepository;
 import com.gaipov.talim_crm.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,9 @@ public class StudentService {
 
     @Autowired
     GroupRepo groupRepo;
+
+    @Autowired
+    ProfileRepository profileRepository;
 
     // Create new student and add to DB
     public StudentDto registerNewStudent(StudentDto dto) {
@@ -94,8 +98,9 @@ public class StudentService {
         GroupEntity groupEntity = groupRepo.findById(groupId)
                 .orElseThrow(() -> new NotFoundExp("Group is not found."));
 
-        studentEntity.setGroup(groupEntity);
-        studentRepo.save(studentEntity);
+        groupEntity.getListOfStudents().add(studentEntity);
+
+        groupRepo.save(groupEntity);
 
         return "Successfully added.";
     }
@@ -108,10 +113,9 @@ public class StudentService {
         GroupEntity groupEntity = groupRepo.findById(groupId)
                 .orElseThrow(() -> new NotFoundExp("Group is not found."));
 
-        if (studentEntity.getGroup() != null && groupEntity.getId().equals(studentEntity.getGroup().getId())) {
-            studentEntity.setGroup(null);
-            studentRepo.save(studentEntity);
-        }
+        groupEntity.getListOfStudents().remove(studentEntity);
+
+        groupRepo.save(groupEntity);
         return "Successfully removed.";
     }
 
@@ -159,5 +163,20 @@ public class StudentService {
 
     public Integer studentsCountWithActiveStatus(UserStatus status) {
         return studentRepo.findByStatus(status).size();
+    }
+
+    // Convert user to student and delete from auth table
+    public StudentDto convertFromUser(Long userId, String fullName, String phoneNum) {
+        StudentDto studentDto = new StudentDto();
+        studentDto.setFullName(fullName);
+        studentDto.setPhoneNum(phoneNum);
+        studentDto.setStatus(UserStatus.IN_REGISTER);
+        
+        StudentDto createdStudent = registerNewStudent(studentDto);
+        
+        // Delete the user from auth table
+        profileRepository.deleteById(userId);
+        
+        return createdStudent;
     }
 }

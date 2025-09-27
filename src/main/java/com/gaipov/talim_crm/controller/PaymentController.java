@@ -35,7 +35,13 @@ public class PaymentController {
     @GetMapping("/statsPage")
     public String paymentsStatsPage(Model model) {
         model.addAttribute("payments", paymentService.listOfPayments());
-        return "payments_stats";
+        return "statistics";
+    }
+
+    @GetMapping("/monthlyStatsPage")
+    public String monthlyStatsPage(Model model) {
+        model.addAttribute("payments", paymentService.listOfPayments());
+        return "monthly_payments";
     }
 
     @GetMapping("/createPage")

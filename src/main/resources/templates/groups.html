@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">📚 Talim CRM</div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
@@ -23,6 +23,7 @@
     </nav>
 </aside>
     <main class="main-content">
+        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
 <div class="container">
 
     <h1>Groups</h1>
@@ -36,6 +37,12 @@
                 <option value="PRE_IELTS">Pre-IELTS</option>
                 <option value="IELTS">IELTS</option>
                 <option value="CEFR">CEFR</option>
+            </select>
+        <select id="pageSize" style="padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
+            <option value="10">10 per page</option>
+            <option value="25" selected>25 per page</option>
+            <option value="50">50 per page</option>
+            <option value="100">100 per page</option>
             </select>
         </div>
 
@@ -53,26 +60,21 @@
                 </tr>
                 </thead>
         <tbody id="groupsTableBody">
-        <tr th:if="${#lists.isEmpty(groups)}">
-            <td colspan="8" style="text-align:center; padding:20px; color:#888;">No groups found</td>
-        </tr>
-        <tr th:each="g : ${groups}">
-            <td th:text="${g.id}">1</td>
-            <td th:text="${g.nameOfGroup} ?: '—'"></td>
-            <td th:text="${g.typeOfGroup} ?: '—'"></td>
-            <td th:text="${g.teacherFullName} ?: '—'"></td>
-            <td th:text="${g.currentStudents} ?: 0"></td>
-            <td th:text="${g.maxStudents} ?: '—'"></td>
-            <td th:text="${g.created_at} ?: '—'"></td>
-            <td>
-                <div class="actions">
-                    <button class="action-btn edit-btn" type="button" th:attr="data-group-id=${g.id}" onclick="openAssignTeacherModal(this)">Assign teacher</button>
-                    <button class="action-btn" type="button" style="background:#6c757d;color:#fff;" th:attr="data-group-id=${g.id}" onclick="openAddStudentModal(this)">Add student</button>
-                </div>
-            </td>
-        </tr>
+            <!-- Groups will be loaded here -->
         </tbody>
             </table>
+            
+        <!-- Pagination Controls -->
+        <div id="paginationControls" style="display:flex; justify-content:space-between; align-items:center; margin:20px 0; padding:10px 0;">
+            <div id="paginationInfo" style="color:#666; font-size:14px;">
+                Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalRecords">0</span> entries
+            </div>
+            <div id="paginationButtons" style="display:flex; gap:8px;">
+                <button id="prevPage" class="btn btn-outline" style="padding:8px 12px; border:1px solid #ddd; background:white; border-radius:6px; cursor:pointer;" disabled>Previous</button>
+                <div id="pageNumbers" style="display:flex; gap:4px;"></div>
+                <button id="nextPage" class="btn btn-outline" style="padding:8px 12px; border:1px solid #ddd; background:white; border-radius:6px; cursor:pointer;" disabled>Next</button>
+            </div>
+        </div>
 </div>
     </main>
 </div>
@@ -111,8 +113,138 @@
 </div>
 
 <script>
+    const API_BASE = '/v1/group';
+    let groups = [];
     let teachersCache = [];
     let studentsCache = [];
+    let currentPage = 1;
+    let pageSize = 25;
+    let filteredData = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadGroups();
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('typeFilter').addEventListener('change', applyFilters);
+        document.getElementById('pageSize').addEventListener('change', (e) => {
+            pageSize = parseInt(e.target.value);
+            currentPage = 1;
+            applyFilters();
+        });
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        });
+        document.getElementById('nextPage').addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredData.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        });
+    });
+
+    async function loadGroups() {
+        try {
+            const res = await fetch(`${API_BASE}/list`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            groups = await res.json();
+            applyFilters();
+        } catch (e) {
+            console.error('Failed to load groups', e);
+        }
+    }
+
+    function applyFilters() {
+        const term = document.getElementById('searchInput').value.toLowerCase().trim();
+        const type = document.getElementById('typeFilter').value;
+        let data = groups.slice();
+        if (term) {
+            data = data.filter(g => 
+                (g.nameOfGroup || '').toLowerCase().includes(term) || 
+                (g.teacherFullName || '').toLowerCase().includes(term)
+            );
+        }
+        if (type) {
+            data = data.filter(g => g.typeOfGroup === type);
+        }
+        filteredData = data;
+        currentPage = 1;
+        renderPage();
+    }
+
+    function renderPage() {
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const pageData = filteredData.slice(startIndex, endIndex);
+        
+        const tbody = document.getElementById('groupsTableBody');
+        tbody.innerHTML = '';
+        if (!pageData || pageData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#888;">No groups found</td></tr>`;
+        } else {
+            pageData.forEach(g => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${g.id}</td>
+                    <td>${escapeHtml(g.nameOfGroup || '—')}</td>
+                    <td>${escapeHtml(g.typeOfGroup || '—')}</td>
+                    <td>${escapeHtml(g.teacherFullName || '—')}</td>
+                    <td>${g.currentStudents || 0}</td>
+                    <td>${g.maxStudents || '—'}</td>
+                    <td>${escapeHtml(g.created_at || '—')}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="action-btn edit-btn" type="button" data-group-id="${g.id}" onclick="openAssignTeacherModal(this)">Assign teacher</button>
+                            <button class="action-btn" type="button" style="background:#6c757d;color:#fff;" data-group-id="${g.id}" onclick="openAddStudentModal(this)">Add student</button>
+                        </div>
+                </td>
+            `;
+                tbody.appendChild(tr);
+            });
+        }
+        updatePagination();
+    }
+
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredData.length / pageSize);
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = Math.min(startIndex + pageSize, filteredData.length);
+        
+        // Update pagination info
+        document.getElementById('showingStart').textContent = filteredData.length > 0 ? startIndex + 1 : 0;
+        document.getElementById('showingEnd').textContent = endIndex;
+        document.getElementById('totalRecords').textContent = filteredData.length;
+        
+        // Update buttons
+        document.getElementById('prevPage').disabled = currentPage <= 1;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages;
+        
+        // Update page numbers
+        const pageNumbersDiv = document.getElementById('pageNumbers');
+        pageNumbersDiv.innerHTML = '';
+        
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.className = i === currentPage ? 'btn btn-primary' : 'btn btn-outline';
+            pageBtn.style.cssText = 'padding:8px 12px; border:1px solid #ddd; background:' + (i === currentPage ? '#007bff; color:white' : 'white') + '; border-radius:6px; cursor:pointer;';
+            pageBtn.addEventListener('click', () => {
+                currentPage = i;
+                renderPage();
+            });
+            pageNumbersDiv.appendChild(pageBtn);
+        }
+    }
 
     async function openAssignTeacherModal(btn){
         const groupId = btn.getAttribute('data-group-id');
@@ -137,7 +269,7 @@
             const res = await fetch(`/v1/group/assignTeacher/${groupId}/${teacherId}`, { method:'POST' });
             if (!res.ok) throw new Error(await res.text());
             closeAssignTeacherModal();
-            window.location.reload();
+            loadGroups(); // Reload groups instead of full page reload
         }catch(e){ alert(e.message || 'Failed to assign teacher'); }
     }
 
@@ -164,11 +296,27 @@
             const res = await fetch(`/v1/student/addToGroup/${studentId}/${groupId}`, { method:'POST' });
             if (!res.ok) throw new Error(await res.text());
             closeAddStudentModal();
-            window.location.reload();
+            loadGroups(); // Reload groups instead of full page reload
         }catch(e){ alert(e.message || 'Failed to add student'); }
     }
 
     function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+// sidebar toggle
+(() => {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebarToggle');
+  const key = 'talimcrm.sidebar.collapsed';
+  const apply = () => {
+    const collapsed = localStorage.getItem(key) === '1';
+    if (collapsed) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
+  };
+  apply();
+  toggle.addEventListener('click', () => {
+    const collapsed = !(localStorage.getItem(key) === '1');
+    localStorage.setItem(key, collapsed ? '1' : '0');
+    apply();
+  });
+})();
 </script>
 </body>
 </html>

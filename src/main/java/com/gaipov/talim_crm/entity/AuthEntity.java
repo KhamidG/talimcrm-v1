@@ -1,6 +1,7 @@
 package com.gaipov.talim_crm.entity;
 
 import com.gaipov.talim_crm.enums.UserRole;
+import com.gaipov.talim_crm.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,6 +23,9 @@ public class AuthEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole roles;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @Column(name = "created_at")
     private Date created_at;

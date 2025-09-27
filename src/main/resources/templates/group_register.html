@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">📚 Talim CRM</div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
@@ -20,9 +20,10 @@
             <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
             <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
             <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
-        </nav>
-    </aside>
+    </nav>
+</aside>
     <main class="main-content">
+        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
 <div class="container">
 
     <h1>Create Group</h1>
@@ -49,11 +50,11 @@
         <div class="actions">
             <button type="submit" class="btn">Create</button>
             <a th:href="@{/v1/group/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
     </main>
-</div>
+    </div>
 
 <script>
     const API = '/v1/group';
@@ -66,15 +67,31 @@
         };
         const res = await fetch(`${API}/register`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
         if (res.ok) {
             window.location.href = '/v1/group/listPage';
-        } else {
+            } else {
             alert('Failed to create group');
         }
     });
+// sidebar toggle
+(() => {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebarToggle');
+  const key = 'talimcrm.sidebar.collapsed';
+  const apply = () => {
+    const collapsed = localStorage.getItem(key) === '1';
+    if (collapsed) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
+  };
+  apply();
+  toggle.addEventListener('click', () => {
+    const collapsed = !(localStorage.getItem(key) === '1');
+    localStorage.setItem(key, collapsed ? '1' : '0');
+    apply();
+  });
+})();
 </script>
 </body>
 </html>
