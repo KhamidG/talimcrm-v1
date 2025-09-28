@@ -196,23 +196,16 @@ public class TeacherService {
     }
 
     public List<StudentDto> getGroupStudents(Long groupId, Long teacherId) {
-        System.out.println("TeacherService.getGroupStudents - groupId: " + groupId + ", teacherId: " + teacherId);
-        
         // Verify that the group belongs to the teacher
         GroupEntity group = groupRepo.findById(groupId)
                 .orElseThrow(() -> new NotFoundExp("Group not found"));
         
-        System.out.println("Group found: " + group.getNameOfGroup());
-        System.out.println("Group teacher: " + (group.getTeacher() != null ? group.getTeacher().getId() : "null"));
-        
+
         if (group.getTeacher() == null || !group.getTeacher().getId().equals(teacherId)) {
-            System.out.println("Access denied - teacher mismatch");
             throw new NotFoundExp("Group not found or access denied");
         }
         
         List<StudentEntity> students = group.getListOfStudents();
-        System.out.println("Group has " + (students != null ? students.size() : 0) + " students");
-        
         return students.stream()
                 .map(this::studentToDto)
                 .collect(Collectors.toList());
@@ -220,7 +213,6 @@ public class TeacherService {
 
     public void saveAttendance(List<AttendanceDto> attendanceData, Long teacherId) {
         for (AttendanceDto dto : attendanceData) {
-            // Verify that the group belongs to the teacher
             GroupEntity group = groupRepo.findById(dto.getGroupId())
                     .orElseThrow(() -> new NotFoundExp("Group not found"));
             
@@ -228,7 +220,6 @@ public class TeacherService {
                 throw new NotFoundExp("Group not found or access denied");
             }
             
-            // Check if attendance already exists for this student, group, and date
             AttendanceEntity existingAttendance = attendanceRepository
                     .findByStudentIdAndGroupIdAndAttendanceDate(dto.getStudentId(), dto.getGroupId(), dto.getAttendanceDate())
                     .orElse(null);

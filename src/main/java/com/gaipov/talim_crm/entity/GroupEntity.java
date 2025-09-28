@@ -43,11 +43,11 @@ public class GroupEntity {
     private LocalDate deleted_at;
 
     @Column(name = "lesson_start_time")
-    private String lessonStartTime; // Format: "16:00"
+    private String lessonStartTime;
 
     @Column(name = "lesson_end_time")
-    private String lessonEndTime; // Format: "18:00"
+    private String lessonEndTime;
 
     @Column(name = "lesson_days")
-    private String lessonDays; // Format: "MON,WED,FRI" or "Monday,Wednesday,Friday"
+    private String lessonDays;
 }

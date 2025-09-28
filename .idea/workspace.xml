@@ -6,36 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="refactor: frontend.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/TeacherController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/TeacherController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/GroupDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/GroupDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/PaymentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/PaymentDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/StudentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/StudentDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/TeacherDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/dto/TeacherDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/PaymentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/PaymentEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/TeacherEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/TeacherEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/enums/PaymentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/enums/PaymentStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/GroupRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/GroupRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/TeacherRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/TeacherRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/group_register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/group_register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/groups.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/groups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/monthly_payments.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/monthly_payments.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/payments.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/payments.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/payments_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/payments_create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/payments_stats.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/payments_stats.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/reception.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/reception.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/statistics.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/statistics.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/students.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/students.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/teacher_register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/teacher_register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/teachers.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/teachers.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,18 +33,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "KhamidG"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;KhamidG&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/KhamidG/talimcrm-v1.git",
-    "accountId": "76cc9dd0-2bc1-427a-b94a-27efb281c7ea"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/KhamidG/talimcrm-v1.git&quot;,
+    &quot;accountId&quot;: &quot;76cc9dd0-2bc1-427a-b94a-27efb281c7ea&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -89,7 +62,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Run.executor": "Debug",
+    "Application.Run.executor": "Run",
     "Application.TalimCrmApplication.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
