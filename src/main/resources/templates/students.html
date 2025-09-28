@@ -8,8 +8,10 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">
-        <div class="sidebar-header">📚 Talim CRM</div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            Talim CRM
+        </div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
             <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
@@ -19,7 +21,9 @@
             <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
             <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
             <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
         </nav>
     </aside>
     <main class="main-content">
@@ -128,7 +132,10 @@
                     <td style="border-bottom:1px solid #f0f0f0; padding:8px;">${escapeHtml(s.phoneNum) || ''}</td>
                     <td style="border-bottom:1px solid #f0f0f0; padding:8px;"><span class="status ${statusClass(s.status)}">${s.status || ''}</span></td>
                     <td style="border-bottom:1px solid #f0f0f0; padding:8px;">${formatDate(s.created_at)}</td>
-                    <td style="border-bottom:1px solid #f0f0f0; padding:8px; display:flex; gap:8px;"><a href="/v1/student/edit/${s.id}">Edit</a></td>
+                    <td style="border-bottom:1px solid #f0f0f0; padding:8px; display:flex; gap:8px;">
+                        <a href="/v1/student/details/${s.id}" class="btn btn-sm" style="background:#007bff; color:white; padding:4px 8px; text-decoration:none; border-radius:4px;">Details</a>
+                        <a href="/v1/student/edit/${s.id}" class="btn btn-sm" style="background:#28a745; color:white; padding:4px 8px; text-decoration:none; border-radius:4px;">Edit</a>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });

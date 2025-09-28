@@ -35,4 +35,10 @@ public class TeacherEntity {
 
     @Column
     private LocalDate on_leave_time;
+
+    @Column
+    private String username;
+
+    @Column
+    private String password;
 }

@@ -35,6 +35,8 @@ public class StudentService {
         StudentEntity entity = new StudentEntity();
         entity.setFullName(dto.getFullName());
         entity.setPhoneNum(dto.getPhoneNum());
+        entity.setParentName(dto.getParentName());
+        entity.setParentPhone(dto.getParentPhone());
         entity.setRoles(UserRole.STUDENT);
         entity.setStatus(UserStatus.ACTIVE);
         entity.setCreated_at(LocalDate.now());
@@ -135,6 +137,8 @@ public class StudentService {
         dto.setId(entity.getId());
         dto.setFullName(entity.getFullName());
         dto.setPhoneNum(entity.getPhoneNum());
+        dto.setParentName(entity.getParentName());
+        dto.setParentPhone(entity.getParentPhone());
         dto.setRoles(entity.getRoles());
         dto.setStatus(entity.getStatus());
         dto.setCreated_at(entity.getCreated_at());

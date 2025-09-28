@@ -9,12 +9,12 @@
 </head>
 <body>
     <div class="app-container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h2>📚 Talim CRM</h2>
+                Talim CRM
             </div>
             <nav class="sidebar-nav">
-                <a class="nav-link active" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+                <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
                 <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
                 <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
                 <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
@@ -22,13 +22,24 @@
                 <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
                 <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
                 <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-                <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+                <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+                <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+                <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
             </nav>
         </aside>
         
         <main class="main-content">
             <div class="reception-container">
                 <h1>Reception Dashboard - New Clients</h1>
+                
+                <!-- Teacher Login Section -->
+                <div class="teacher-login-section" style="margin-bottom: 30px;">
+                    <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <h2 style="color: white; margin-bottom: 15px;">👨‍🏫 Teacher Access</h2>
+                        <p style="margin-bottom: 15px; opacity: 0.9;">Teachers can access their dashboard to view students and manage their courses.</p>
+                        <a th:href="@{/v1/teacher/login}" class="btn" style="background: white; color: #667eea; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">Teacher Login</a>
+                    </div>
+                </div>
                 
                 <!-- Quick Registration Form -->
                 <div class="registration-section">

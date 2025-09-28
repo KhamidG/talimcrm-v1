@@ -19,4 +19,8 @@ public class GroupDto {
     private Integer maxStudents;
     private Integer currentStudents;
     private LocalDate created_at;
+    private String lessonStartTime;
+    private String lessonEndTime;
+    private String lessonDays;
+    private Long teacherId;
 }

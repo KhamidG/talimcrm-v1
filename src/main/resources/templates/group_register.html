@@ -9,7 +9,9 @@
 <body>
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">📚 Talim CRM</div>
+        <div class="sidebar-header">
+            Talim CRM
+        </div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
             <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
@@ -19,9 +21,11 @@
             <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
             <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
             <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
-    </nav>
-</aside>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+        </nav>
+    </aside>
     <main class="main-content">
         <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
 <div class="container">
@@ -47,6 +51,53 @@
             <label>Max students</label>
             <input type="number" id="maxStudents" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="30">
         </div>
+        <div style="margin-bottom:12px;">
+            <label>Teacher</label>
+            <select id="teacherId" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
+                <option value="">Select teacher</option>
+            </select>
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Lesson Start Time</label>
+            <input type="time" id="lessonStartTime" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="16:00">
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Lesson End Time</label>
+            <input type="time" id="lessonEndTime" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="18:00">
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Lesson Days</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;">
+                <label style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" value="Monday" name="lessonDays">
+                    Monday
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" value="Tuesday" name="lessonDays">
+                    Tuesday
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" value="Wednesday" name="lessonDays">
+                    Wednesday
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" value="Thursday" name="lessonDays">
+                    Thursday
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" value="Friday" name="lessonDays">
+                    Friday
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" value="Saturday" name="lessonDays">
+                    Saturday
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px;">
+                    <input type="checkbox" value="Sunday" name="lessonDays">
+                    Sunday
+                </label>
+            </div>
+        </div>
         <div class="actions">
             <button type="submit" class="btn">Create</button>
             <a th:href="@{/v1/group/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
@@ -58,21 +109,51 @@
 
 <script>
     const API = '/v1/group';
+    
+    // Load teachers on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('/v1/teacher/list');
+            if (response.ok) {
+                const teachers = await response.json();
+                const teacherSelect = document.getElementById('teacherId');
+                teachers.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher.id;
+                    option.textContent = teacher.fullName;
+                    teacherSelect.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Failed to load teachers:', error);
+        }
+    });
+    
     document.getElementById('groupRegisterForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        // Get selected lesson days
+        const selectedDays = Array.from(document.querySelectorAll('input[name="lessonDays"]:checked'))
+            .map(checkbox => checkbox.value);
+        
         const payload = {
             nameOfGroup: document.getElementById('nameOfGroup').value.trim(),
             typeOfGroup: document.getElementById('typeOfGroup').value,
-            maxStudents: document.getElementById('maxStudents').value ? parseInt(document.getElementById('maxStudents').value) : null
+            maxStudents: document.getElementById('maxStudents').value ? parseInt(document.getElementById('maxStudents').value) : null,
+            teacherId: document.getElementById('teacherId').value ? parseInt(document.getElementById('teacherId').value) : null,
+            lessonStartTime: document.getElementById('lessonStartTime').value,
+            lessonEndTime: document.getElementById('lessonEndTime').value,
+            lessonDays: selectedDays.join(',')
         };
+        
         const res = await fetch(`${API}/register`, {
             method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
         if (res.ok) {
             window.location.href = '/v1/group/listPage';
-            } else {
+        } else {
             alert('Failed to create group');
         }
     });

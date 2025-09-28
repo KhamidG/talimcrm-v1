@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group - Talim CRM</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">📚 Teacher Dashboard</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/teacher/dashboard}"><span>Dashboard</span></a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
+        <div class="container">
+            <h1>Group Students</h1>
+            <div style="margin: 12px 0; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                <label>Date:
+                    <input type="date" id="attendanceDate" style="padding:8px; border:1px solid #ddd; border-radius:6px;">
+                </label>
+                <button class="btn" id="saveBtn">Save Attendance</button>
+                <a class="btn" th:href="@{/v1/teacher/dashboard}">Back</a>
+            </div>
+            <table class="table" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">ID</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Name</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Phone</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Present</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Absent</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">History</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsBody">
+                    <tr><td colspan="6" style="padding:16px; text-align:center; color:#888;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<script>
+    // Get groupId from the URL path and validate
+    const pathParts = window.location.pathname.split('/');
+    const groupIdRaw = pathParts[pathParts.length - 2];
+    const groupId = Number(groupIdRaw);
+    
+    console.log('GroupId from URL:', groupIdRaw, 'parsed:', groupId);
+    console.log('Current URL:', window.location.pathname);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // Validate groupId
+        if (!Number.isFinite(groupId)) {
+            console.error('GroupId is invalid:', groupIdRaw);
+            const tbody = document.getElementById('studentsBody');
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: Invalid Group ID</td></tr>';
+            }
+            return;
+        }
+
+        const teacherId = sessionStorage.getItem('teacherId');
+        if (!teacherId) {
+            alert('Please login first');
+            window.location.href = '/v1/teacher/login';
+            return;
+        }
+        
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('attendanceDate').value = today;
+        loadStudents();
+        document.getElementById('saveBtn').addEventListener('click', saveAttendance);
+    });
+
+    async function loadStudents(){
+        try{
+            const teacherId = sessionStorage.getItem('teacherId');
+            if (!teacherId) {
+                document.getElementById('studentsBody').innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Please login first</td></tr>';
+                return;
+            }
+            
+            console.log('Loading students for group:', groupId, 'teacher:', teacherId);
+            const res = await fetch(`/v1/teacher/group/${groupId}/students`, { 
+                headers: { 'X-Teacher-Id': teacherId } 
+            });
+            
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.error('Failed to load students:', res.status, errorText);
+                document.getElementById('studentsBody').innerHTML = `<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: ${res.status} - ${errorText}</td></tr>`;
+                return;
+            }
+            
+            const students = await res.json();
+            console.log('Students loaded:', students);
+            const tbody = document.getElementById('studentsBody');
+            tbody.innerHTML = '';
+            
+            // Check if students is an array
+            if (!Array.isArray(students)) {
+                console.error('Students is not an array:', students);
+                tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: Invalid response format</td></tr>';
+                return;
+            }
+            
+            if(students.length === 0){
+                tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:#888;">No students in this group</td></tr>';
+                return;
+            }
+            students.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${s.id}</td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${escapeHtml(s.fullName||'')}</td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${escapeHtml(s.phoneNum||'')}</td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;"><input type="radio" name="att_${s.id}" value="present" checked></td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;"><input type="radio" name="att_${s.id}" value="absent"></td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;"><a href="/v1/teacher/student/${s.id}/attendance/page">View</a></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }catch(e){
+            console.error('Error loading students:', e);
+            document.getElementById('studentsBody').innerHTML = `<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: ${e.message}</td></tr>`;
+        }
+    }
+
+    async function saveAttendance(){
+        const date = document.getElementById('attendanceDate').value;
+        const rows = Array.from(document.querySelectorAll('#studentsBody tr'));
+        const payload = rows.map(row => {
+            const idCell = row.querySelector('td');
+            if(!idCell) return null;
+            const studentId = parseInt(idCell.textContent, 10);
+            const isPresent = row.querySelector(`input[name="att_${studentId}"][value="present"]`).checked;
+            return { studentId, groupId: groupId, attendanceDate: date, isPresent };
+        }).filter(Boolean);
+        try{
+            const teacherId = sessionStorage.getItem('teacherId');
+            const res = await fetch('/v1/teacher/attendance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Teacher-Id': teacherId },
+                body: JSON.stringify(payload)
+            });
+            if(res.ok){
+                alert('Saved');
+            }else{
+                alert('Failed');
+            }
+        }catch(e){ alert('Failed'); }
+    }
+
+    function escapeHtml(str){
+        if(str==null) return '';
+        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+    }
+</script>
+</body>
+</html>

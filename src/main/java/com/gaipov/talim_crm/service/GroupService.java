@@ -31,7 +31,17 @@ public class GroupService {
         groupEntity.setTypeOfGroup(dto.getTypeOfGroup());
         groupEntity.setListOfStudents(dto.getListOfStudents());
         groupEntity.setMaxStudents(dto.getMaxStudents());
+        groupEntity.setLessonStartTime(dto.getLessonStartTime());
+        groupEntity.setLessonEndTime(dto.getLessonEndTime());
+        groupEntity.setLessonDays(dto.getLessonDays());
         groupEntity.setCreated_at(LocalDate.now());
+
+        // Assign teacher if provided
+        if (dto.getTeacherId() != null) {
+            TeacherEntity teacher = teacherRepo.findById(dto.getTeacherId())
+                    .orElseThrow(() -> new NotFoundExp("Teacher not found"));
+            groupEntity.setTeacher(teacher);
+        }
 
         groupRepo.save(groupEntity);
 
@@ -94,10 +104,14 @@ public class GroupService {
         dto.setId(entity.getId());
         dto.setNameOfGroup(entity.getNameOfGroup());
         dto.setTeacherFullName(entity.getTeacher() != null ? entity.getTeacher().getFullName() : null);
+        dto.setTeacherId(entity.getTeacher() != null ? entity.getTeacher().getId() : null);
         dto.setTypeOfGroup(entity.getTypeOfGroup());
         dto.setListOfStudents(entity.getListOfStudents());
         dto.setCurrentStudents(entity.getListOfStudents() != null ? entity.getListOfStudents().size() : 0);
         dto.setMaxStudents(entity.getMaxStudents());
+        dto.setLessonStartTime(entity.getLessonStartTime());
+        dto.setLessonEndTime(entity.getLessonEndTime());
+        dto.setLessonDays(entity.getLessonDays());
         dto.setCreated_at(entity.getCreated_at());
         return dto;
     }

@@ -1,6 +1,5 @@
 package com.gaipov.talim_crm.dto;
 
-import com.gaipov.talim_crm.entity.GroupEntity;
 import com.gaipov.talim_crm.enums.UserRole;
 import com.gaipov.talim_crm.enums.UserStatus;
 import lombok.Data;
@@ -15,7 +14,7 @@ public class StudentDto {
 
     private String phoneNum;
 
-    private GroupEntity group;
+    private GroupDto group;
 
     private UserRole roles = UserRole.STUDENT;
 
@@ -26,4 +25,8 @@ public class StudentDto {
     private LocalDate created_at;
 
     private LocalDate deleted_at;
+
+    private String parentName;
+
+    private String parentPhone;
 }

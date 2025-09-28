@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance - Talim CRM</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">📚 Teacher Dashboard</div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/teacher/dashboard}"><span>Dashboard</span></a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
+        <div class="container">
+            <h1>Student Attendance</h1>
+            <div id="summary" style="margin:12px 0; color:#555;">Loading...</div>
+            <table class="table" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Date</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Group</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Status</th>
+                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceBody">
+                    <tr><td colspan="4" style="padding:16px; text-align:center; color:#888;">Loading...</td></tr>
+                </tbody>
+            </table>
+            <div style="margin-top:16px;"><a class="btn" th:href="@{/v1/teacher/dashboard}">Back</a></div>
+        </div>
+    </main>
+</div>
+<script>
+    // Extract studentId from URL: /v1/teacher/student/{studentId}/attendance/page
+    const pathParts = window.location.pathname.split('/');
+    const studentIdRaw = pathParts[pathParts.indexOf('student') + 1];
+    const studentId = Number(studentIdRaw);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!Number.isFinite(studentId)) {
+            const tbody = document.getElementById('attendanceBody');
+            const summary = document.getElementById('summary');
+            if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="padding:16px; text-align:center; color:red;">Error: Invalid student id</td></tr>';
+            if (summary) summary.textContent = 'Cannot load attendance: invalid student id.';
+            return;
+        }
+        loadAttendance();
+    });
+
+    async function loadAttendance(){
+        try{
+            const teacherId = sessionStorage.getItem('teacherId');
+            const res = await fetch(`/v1/teacher/student/${studentId}/attendance/history`, { headers: { 'X-Teacher-Id': teacherId } });
+            if (!res.ok) {
+                const errText = await res.text();
+                document.getElementById('attendanceBody').innerHTML = `<tr><td colspan="4" style="padding:16px; text-align:center; color:red;">Error ${res.status}: ${errText}</td></tr>`;
+                document.getElementById('summary').textContent = 'Failed to load attendance history';
+                return;
+            }
+            const data = await res.json();
+            const items = data.attendanceHistory || [];
+            const missedCount = data.missedCount || 0;
+            const tbody = document.getElementById('attendanceBody');
+            const summary = document.getElementById('summary');
+            tbody.innerHTML = '';
+            if(!items || items.length === 0){
+                tbody.innerHTML = '<tr><td colspan="4" style="padding:16px; text-align:center; color:#888;">No attendance records</td></tr>';
+                summary.textContent = 'No absences recorded.';
+                return;
+            }
+            items.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${escapeHtml(a.attendanceDate)}</td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${a.group && a.group.nameOfGroup ? escapeHtml(a.group.nameOfGroup) : '-'}</td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">
+                        <span style="color: ${a.isPresent ? '#28a745' : '#dc3545'}; font-weight: bold;">
+                            ${a.isPresent ? 'Present' : 'Absent'}
+                        </span>
+                    </td>
+                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${escapeHtml(a.notes||'')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            summary.innerHTML = `
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                    <h3 style="margin: 0 0 8px 0; color: #333;">Attendance Summary</h3>
+                    <p style="margin: 4px 0; color: #666;">Total missed classes: <strong style="color: #dc3545;">${missedCount}</strong></p>
+                    <p style="margin: 4px 0; color: #666;">Total attendance records: <strong>${items.length}</strong></p>
+                </div>
+            `;
+        }catch(e){
+            console.error(e);
+            document.getElementById('summary').innerHTML = '<p style="color: red;">Error loading attendance data</p>';
+        }
+    }
+
+    function escapeHtml(str){
+        if(str==null) return '';
+        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+    }
+</script>
+</body>
+</html>

@@ -1,7 +1,122 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Talim CRM - Регистрация преподавателя</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwind">
+    <title>Register Teacher - Talim CRM</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            Talim CRM
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
+        <div class="container">
+            <h1>Register New Teacher</h1>
+
+            <form id="teacherRegisterForm" style="max-width:520px;">
+                <div style="margin-bottom:12px;">
+                    <label>Full name *</label>
+                    <input type="text" id="fullName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="John Doe" required>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Phone *</label>
+                    <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Username *</label>
+                    <input type="text" id="username" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="johndoe" required>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Password *</label>
+                    <input type="password" id="password" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Enter password" required>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Level of Knowledge</label>
+                    <select id="levelOfKnowledge" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
+                        <option value="">Select level</option>
+                        <option value="BEGINNER">Beginner</option>
+                        <option value="INTERMEDIATE">Intermediate</option>
+                        <option value="ADVANCED">Advanced</option>
+                        <option value="EXPERT">Expert</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn">Create Teacher</button>
+                    <a th:href="@{/v1/teacher/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<script>
+    const API = '/v1/teacher';
+
+    document.getElementById('teacherRegisterForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const payload = {
+            fullName: document.getElementById('fullName').value.trim(),
+            phoneNum: document.getElementById('phoneNum').value.trim(),
+            username: document.getElementById('username').value.trim(),
+            password: document.getElementById('password').value.trim(),
+            levelOfKnowledge: document.getElementById('levelOfKnowledge').value
+        };
+
+        try {
+            const res = await fetch(`${API}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            if (res.ok) {
+                const teacher = await res.json();
+                alert('Teacher created successfully!');
+                window.location.href = '/v1/teacher/listPage';
+            } else {
+                const error = await res.text();
+                alert('Failed to create teacher: ' + error);
+            }
+        } catch (error) {
+            alert('Failed to create teacher: ' + error.message);
+        }
+    });
+
+    // sidebar toggle
+    (() => {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.getElementById('sidebarToggle');
+      const key = 'talimcrm.sidebar.collapsed';
+      const apply = () => {
+        const collapsed = localStorage.getItem(key) === '1';
+        if (collapsed) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
+      };
+      apply();
+      toggle.addEventListener('click', () => {
+        const collapsed = !(localStorage.getItem(key) === '1');
+        localStorage.setItem(key, collapsed ? '1' : '0');
+        apply();
+      });
+    })();
+</script>
+</body>
+</html>

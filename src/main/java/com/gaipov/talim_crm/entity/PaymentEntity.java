@@ -4,9 +4,7 @@ import com.gaipov.talim_crm.enums.PaymentStatus;
 import com.gaipov.talim_crm.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Generated;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -24,7 +22,7 @@ public class PaymentEntity {
     private GroupEntity groupId;
 
     @Column
-    private BigDecimal sum;
+    private Double sum;
 
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;

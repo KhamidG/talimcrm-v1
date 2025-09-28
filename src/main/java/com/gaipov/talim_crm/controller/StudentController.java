@@ -84,6 +84,17 @@ public class StudentController {
         return ResponseEntity.ok(service.removeStudentFromGroup(studentId, groupId));
     }
 
+    @GetMapping("/details/{id}")
+    public String showDetails(@PathVariable("id") Long id, Model model) {
+        Optional<StudentDto> studentOptional = service.getStudentById(id);
+        if (studentOptional.isPresent()) {
+            model.addAttribute("student", studentOptional.get());
+            return "details";
+        } else {
+            return "redirect:/v1/student/listPage";
+        }
+    }
+
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Optional<StudentDto> studentOptional = service.getStudentById(id);

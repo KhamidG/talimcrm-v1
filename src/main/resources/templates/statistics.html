@@ -4,802 +4,789 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics Dashboard - Talim CRM</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
-    <link rel="stylesheet" th:href="@{/statistics.css}">
+    <link rel="stylesheet" th:href="@{/style.css}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .stats-container {
+            padding: 24px;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .stats-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .stats-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .stats-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .stat-icon.students { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .stat-icon.groups { background: linear-gradient(135deg, #10b981, #059669); }
+        .stat-icon.teachers { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .stat-icon.revenue { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .stat-icon.reception { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        
+        .stat-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 8px 0;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stat-change.positive { color: #10b981; }
+        .stat-change.negative { color: #ef4444; }
+        .stat-change.neutral { color: #64748b; }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .chart-header {
+            margin-bottom: 20px;
+        }
+        
+        .chart-header h3 {
+            margin: 0 0 4px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .chart-header p {
+            margin: 0;
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .recent-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+        
+        .recent-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .recent-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+        
+        .recent-item-info {
+            flex: 1;
+        }
+        
+        .recent-item-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        
+        .recent-item-meta {
+            font-size: 12px;
+            color: #64748b;
+        }
+        
+        .recent-item-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-stopped { background: #fef2f2; color: #991b1b; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-completed { background: #dcfce7; color: #166534; }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #64748b;
+        }
+        
+        .error {
+            background: #fef2f2;
+            color: #991b1b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fas fa-graduation-cap"></i> Talim CRM</h2>
-            </div>
-            <nav class="sidebar-nav">
-                <a class="nav-link" th:href="@{/v1/auth/reception}">
-                    <i class="fas fa-clipboard-list"></i>
-                    <span>Reception</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/student/listPage}">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Students</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/student/register}">
-                    <i class="fas fa-user-plus"></i>
-                    <span>New student</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/group/listPage}">
-                    <i class="fas fa-users"></i>
-                    <span>Groups</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/group/register}">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>New group</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/teacher/listPage}">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <span>Teachers</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/teacher/register}">
-                    <i class="fas fa-user-tie"></i>
-                    <span>New teacher</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/pay/listPage}">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Payments</span>
-                </a>
-                <a class="nav-link active" th:href="@{/v1/pay/statsPage}">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Stats</span>
-                </a>
-                <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Monthly Stats</span>
-                </a>
-            </nav>
-        </aside>
+<div class="app-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            Talim CRM
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+        </nav>
+    </aside>
+    
+    <main class="main-content">
+        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
         
-        <main class="main-content">
-            <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <div class="statistics-container">
-                <!-- Header Section -->
-                <div class="stats-header">
-                    <div class="header-content">
-                        <h1><i class="fas fa-chart-line"></i> Learning Center Statistics</h1>
-                        <p>Comprehensive overview of your educational center's performance</p>
-                    </div>
-                    <div class="header-actions">
-                        <div class="month-selector">
-                            <div class="selector-card">
-                                <i class="fas fa-calendar-alt"></i>
-                                <div class="selector-content">
-                                    <label for="yearSelect">Year</label>
-                                    <select id="yearSelect" class="form-input">
-                                        <!-- Years will be populated by JavaScript -->
-                                    </select>
-                                </div>
-                                <div class="selector-content">
-                                    <label for="monthSelect">Month</label>
-                                    <select id="monthSelect" class="form-input">
-                                        <option value="0">January</option>
-                                        <option value="1">February</option>
-                                        <option value="2">March</option>
-                                        <option value="3">April</option>
-                                        <option value="4">May</option>
-                                        <option value="5">June</option>
-                                        <option value="6">July</option>
-                                        <option value="7">August</option>
-                                        <option value="8">September</option>
-                                        <option value="9">October</option>
-                                        <option value="10">November</option>
-                                        <option value="11">December</option>
-                                    </select>
-                                </div>
-                                <button id="loadMonthStats" class="btn btn-primary">
-                                    <i class="fas fa-sync-alt"></i>
-                                    Load Stats
-                                </button>
+        <div class="stats-container">
+            <!-- Header -->
+            <div class="stats-header">
+                <h1><i class="fas fa-chart-line"></i> Statistics Dashboard</h1>
+                <p>Comprehensive overview of your educational center's performance</p>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon students">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <p class="stat-title">Total Students</p>
+                            <div class="stat-value" id="totalStudents">-</div>
+                            <div class="stat-change neutral">
+                                <i class="fas fa-users"></i>
+                                <span>All time</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Summary Cards Grid -->
-                <div class="summary-grid">
-                    <div class="summary-card total-students">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-user-graduate"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>Total Students</h3>
-                                <p>All time registrations</p>
-                            </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon students">
+                            <i class="fas fa-check-circle"></i>
                         </div>
-                        <div class="card-body">
-                            <div class="card-number" id="totalStudents">0</div>
-                            <div class="card-trend">
-                                <i class="fas fa-chart-line"></i>
-                                <span>All time</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="summary-card active-students">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>Active Students</h3>
-                                <p>Currently learning</p>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-number" id="activeStudents">0</div>
-                            <div class="card-trend positive">
+                        <div>
+                            <p class="stat-title">Active Students</p>
+                            <div class="stat-value" id="activeStudents">-</div>
+                            <div class="stat-change positive">
                                 <i class="fas fa-arrow-up"></i>
-                                <span>Active</span>
+                                <span>Currently learning</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="summary-card stopped-students">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-pause-circle"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>Stopped Learning</h3>
-                                <p>Inactive students</p>
-                            </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon groups">
+                            <i class="fas fa-users"></i>
                         </div>
-                        <div class="card-body">
-                            <div class="card-number" id="stoppedStudents">0</div>
-                            <div class="card-trend negative">
-                                <i class="fas fa-arrow-down"></i>
-                                <span>Inactive</span>
+                        <div>
+                            <p class="stat-title">Total Groups</p>
+                            <div class="stat-value" id="totalGroups">-</div>
+                            <div class="stat-change neutral">
+                                <i class="fas fa-layer-group"></i>
+                                <span>All groups</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="summary-card new-students">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>New This Month</h3>
-                                <p>Recent registrations</p>
-                            </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon teachers">
+                            <i class="fas fa-chalkboard-teacher"></i>
                         </div>
-                        <div class="card-body">
-                            <div class="card-number" id="newThisMonth">0</div>
-                            <div class="card-trend positive">
-                                <i class="fas fa-calendar"></i>
-                                <span>This month</span>
+                        <div>
+                            <p class="stat-title">Total Teachers</p>
+                            <div class="stat-value" id="totalTeachers">-</div>
+                            <div class="stat-change neutral">
+                                <i class="fas fa-user-tie"></i>
+                                <span>All teachers</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="summary-card stopped-month">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-user-minus"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>Stopped This Month</h3>
-                                <p>Recent dropouts</p>
-                            </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-dollar-sign"></i>
                         </div>
-                        <div class="card-body">
-                            <div class="card-number" id="stoppedThisMonth">0</div>
-                            <div class="card-trend negative">
-                                <i class="fas fa-calendar-times"></i>
-                                <span>This month</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="summary-card reception-clients">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-clipboard-list"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>Reception Clients</h3>
-                                <p>Waiting for conversion</p>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-number" id="receptionClients">0</div>
-                            <div class="card-trend warning">
-                                <i class="fas fa-clock"></i>
-                                <span>Pending</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="summary-card total-revenue">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>Total Revenue</h3>
-                                <p>All time earnings</p>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-number" id="totalRevenue">$0</div>
-                            <div class="card-trend positive">
+                        <div>
+                            <p class="stat-title">Total Revenue</p>
+                            <div class="stat-value" id="totalRevenue">-</div>
+                            <div class="stat-change positive">
                                 <i class="fas fa-chart-line"></i>
                                 <span>All time</span>
                             </div>
                         </div>
                     </div>
-
-                    <div class="summary-card monthly-revenue">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-chart-bar"></i>
-                            </div>
-                            <div class="card-title">
-                                <h3>Monthly Revenue</h3>
-                                <p>Current month earnings</p>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-number" id="monthlyRevenue">$0</div>
-                            <div class="card-trend positive">
-                                <i class="fas fa-calendar"></i>
-                                <span>This month</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Charts Section -->
-                <div class="charts-section">
-                    <div class="chart-grid">
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3><i class="fas fa-chart-pie"></i> Student Status Distribution</h3>
-                                <p>Current status breakdown</p>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="statusChart"></canvas>
-                            </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon reception">
+                            <i class="fas fa-clipboard-list"></i>
                         </div>
-
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3><i class="fas fa-chart-line"></i> Monthly Registrations</h3>
-                                <p>New students over time</p>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="registrationChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3><i class="fas fa-credit-card"></i> Payment Types</h3>
-                                <p>Payment method distribution</p>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="paymentTypeChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3><i class="fas fa-chart-area"></i> Revenue Trend</h3>
-                                <p>Monthly revenue over time</p>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="revenueChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3><i class="fas fa-balance-scale"></i> Reception vs Students</h3>
-                                <p>Client conversion overview</p>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="receptionChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detailed Statistics -->
-                <div class="detailed-stats">
-                    <div class="stats-grid">
-                        <div class="stats-card">
-                            <div class="stats-header">
-                                <h3><i class="fas fa-list"></i> Recent Students</h3>
-                                <p>Latest registrations</p>
-                            </div>
-                            <div class="stats-body">
-                                <div id="recentStudents" class="stats-list">
-                                    <!-- Recent students will be populated here -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stats-card">
-                            <div class="stats-header">
-                                <h3><i class="fas fa-clipboard-list"></i> Recent Reception Clients</h3>
-                                <p>New clients waiting</p>
-                            </div>
-                            <div class="stats-body">
-                                <div id="recentReceptionClients" class="stats-list">
-                                    <!-- Recent reception clients will be populated here -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stats-card">
-                            <div class="stats-header">
-                                <h3><i class="fas fa-credit-card"></i> Recent Payments</h3>
-                                <p>Latest transactions</p>
-                            </div>
-                            <div class="stats-body">
-                                <div id="recentPayments" class="stats-list">
-                                    <!-- Recent payments will be populated here -->
-                                </div>
+                        <div>
+                            <p class="stat-title">Reception Clients</p>
+                            <div class="stat-value" id="receptionClients">-</div>
+                            <div class="stat-change warning">
+                                <i class="fas fa-clock"></i>
+                                <span>Pending conversion</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <script>
-        // Global variables
-        let studentsData = [];
-        let paymentsData = [];
-        let receptionData = [];
-        let selectedYear = new Date().getFullYear();
-        let selectedMonth = new Date().getMonth();
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-pie"></i> Student Status Distribution</h3>
+                        <p>Current status breakdown</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeYearSelector();
-            loadAllData();
-            setupEventListeners();
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-line"></i> Monthly Registrations</h3>
+                        <p>New students over time</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="registrationChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-credit-card"></i> Payment Types</h3>
+                        <p>Payment method distribution</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="paymentTypeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-area"></i> Revenue Trend</h3>
+                        <p>Monthly revenue over time</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-section">
+                <div class="recent-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-user-plus"></i> Recent Students</h3>
+                        <p>Latest registrations</p>
+                    </div>
+                    <div id="recentStudents" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading...
+                    </div>
+                </div>
+
+                <div class="recent-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-credit-card"></i> Recent Payments</h3>
+                        <p>Latest transactions</p>
+                    </div>
+                    <div id="recentPayments" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Global variables
+    let statisticsData = null;
+    let chartData = null;
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+        loadStatistics();
+        setupSidebarToggle();
+    });
+
+    // Load all statistics
+    async function loadStatistics() {
+        try {
+            // Load overview statistics
+            const statsResponse = await fetch('/v1/stats/overview');
+            if (statsResponse.ok) {
+                statisticsData = await statsResponse.json();
+                updateSummaryCards();
+            }
+
+            // Load chart data
+            const chartResponse = await fetch('/v1/stats/charts');
+            if (chartResponse.ok) {
+                chartData = await chartResponse.json();
+                renderCharts();
+            }
+
+            // Load recent data
+            loadRecentStudents();
+            loadRecentPayments();
+
+        } catch (error) {
+            console.error('Error loading statistics:', error);
+            showError('Failed to load statistics. Please refresh the page.');
+        }
+    }
+
+    // Update summary cards
+    function updateSummaryCards() {
+        if (!statisticsData) return;
+
+        document.getElementById('totalStudents').textContent = statisticsData.totalStudents || 0;
+        document.getElementById('activeStudents').textContent = statisticsData.activeStudents || 0;
+        document.getElementById('totalGroups').textContent = statisticsData.totalGroups || 0;
+        document.getElementById('totalTeachers').textContent = statisticsData.totalTeachers || 0;
+        document.getElementById('totalRevenue').textContent = formatCurrency(statisticsData.totalRevenue || 0);
+        document.getElementById('receptionClients').textContent = statisticsData.receptionClients || 0;
+    }
+
+    // Load recent students
+    async function loadRecentStudents() {
+        try {
+            const response = await fetch('/v1/stats/recent/students?limit=5');
+            if (response.ok) {
+                const students = await response.json();
+                renderRecentStudents(students);
+            }
+        } catch (error) {
+            console.error('Error loading recent students:', error);
+            document.getElementById('recentStudents').innerHTML = '<div class="error">Failed to load recent students</div>';
+        }
+    }
+
+    // Load recent payments
+    async function loadRecentPayments() {
+        try {
+            const response = await fetch('/v1/stats/recent/payments?limit=5');
+            if (response.ok) {
+                const payments = await response.json();
+                renderRecentPayments(payments);
+            }
+        } catch (error) {
+            console.error('Error loading recent payments:', error);
+            document.getElementById('recentPayments').innerHTML = '<div class="error">Failed to load recent payments</div>';
+        }
+    }
+
+    // Render recent students
+    function renderRecentStudents(students) {
+        const container = document.getElementById('recentStudents');
+        
+        if (students.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 20px;">No recent students</div>';
+            return;
+        }
+
+        container.innerHTML = students.map(student => `
+            <div class="recent-item">
+                <div class="recent-item-info">
+                    <div class="recent-item-name">${escapeHtml(student.fullName || 'Unknown')}</div>
+                    <div class="recent-item-meta">${escapeHtml(student.phoneNum || 'No phone')}</div>
+                </div>
+                <div class="recent-item-status status-${getStatusClass(student.status)}">
+                    ${formatStatus(student.status)}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Render recent payments
+    function renderRecentPayments(payments) {
+        const container = document.getElementById('recentPayments');
+        
+        if (payments.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 20px;">No recent payments</div>';
+            return;
+        }
+
+        container.innerHTML = payments.map(payment => `
+            <div class="recent-item">
+                <div class="recent-item-info">
+                    <div class="recent-item-name">${formatCurrency(payment.sum || 0)}</div>
+                    <div class="recent-item-meta">${formatPaymentType(payment.paymentType)}</div>
+                </div>
+                <div class="recent-item-status status-${getPaymentStatusClass(payment.paymentStatus)}">
+                    ${formatPaymentStatus(payment.paymentStatus)}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Render all charts
+    function renderCharts() {
+        if (!chartData) return;
+
+        renderStatusChart();
+        renderRegistrationChart();
+        renderPaymentTypeChart();
+        renderRevenueChart();
+    }
+
+    // Student status distribution chart
+    function renderStatusChart() {
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        const statusData = chartData.studentStatus || {};
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Stopped Learning', 'In Register'],
+                datasets: [{
+                    data: [
+                        statusData.ACTIVE || 0,
+                        statusData.STOP_LEARNING || 0,
+                        statusData.IN_REGISTER || 0
+                    ],
+                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
         });
+    }
 
-        // Initialize year selector
-        function initializeYearSelector() {
-            const yearSelect = document.getElementById('yearSelect');
-            const currentYear = new Date().getFullYear();
-            
-            for (let year = currentYear - 5; year <= currentYear + 1; year++) {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                if (year === currentYear) {
-                    option.selected = true;
-                }
-                yearSelect.appendChild(option);
-            }
-        }
+    // Monthly registration chart
+    function renderRegistrationChart() {
+        const ctx = document.getElementById('registrationChart').getContext('2d');
+        const registrationData = chartData.monthlyRegistrations || {};
+        const months = Object.keys(registrationData);
+        const values = Object.values(registrationData);
 
-        // Setup event listeners
-        function setupEventListeners() {
-            document.getElementById('loadMonthStats').addEventListener('click', function() {
-                selectedYear = parseInt(document.getElementById('yearSelect').value);
-                selectedMonth = parseInt(document.getElementById('monthSelect').value);
-                updateMonthlyStats(selectedYear, selectedMonth);
-            });
-        }
-
-        // Load all data
-        async function loadAllData() {
-            await Promise.all([
-                loadStudents(),
-                loadPayments(),
-                loadReceptionData()
-            ]);
-            updateSummaryCards();
-            renderCharts();
-            renderDetailedStats();
-        }
-
-        // Load students data
-        async function loadStudents() {
-            try {
-                const response = await fetch('/v1/student/all');
-                studentsData = await response.json();
-            } catch (error) {
-                console.error('Error loading students:', error);
-                studentsData = [];
-            }
-        }
-
-        // Load payments data
-        async function loadPayments() {
-            try {
-                const response = await fetch('/v1/pay/all');
-                paymentsData = await response.json();
-            } catch (error) {
-                console.error('Error loading payments:', error);
-                paymentsData = [];
-            }
-        }
-
-        // Load reception data
-        async function loadReceptionData() {
-            try {
-                const response = await fetch('/v1/auth/users');
-                const allUsers = await response.json();
-                receptionData = allUsers.filter(user => user.status === 'IN_REGISTER');
-            } catch (error) {
-                console.error('Error loading reception data:', error);
-                receptionData = [];
-            }
-        }
-
-        // Update summary cards
-        function updateSummaryCards() {
-            const totalStudents = studentsData.length;
-            const activeStudents = studentsData.filter(s => s.status === 'ACTIVE').length;
-            const stoppedStudents = studentsData.filter(s => s.status === 'STOP_LEARNING').length;
-            const receptionClients = receptionData.length;
-
-            const totalRevenue = paymentsData.reduce((sum, p) => {
-                const amount = Number(p.sum) || 0;
-                return sum + amount;
-            }, 0);
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            const monthlyRevenue = paymentsData
-                .filter(p => {
-                    const paymentDate = new Date(p.created_at);
-                    return paymentDate.getMonth() === currentMonth && paymentDate.getFullYear() === currentYear;
-                })
-                .reduce((sum, p) => sum + (Number(p.sum) || 0), 0);
-
-            document.getElementById('totalStudents').textContent = totalStudents;
-            document.getElementById('activeStudents').textContent = activeStudents;
-            document.getElementById('stoppedStudents').textContent = stoppedStudents;
-            document.getElementById('receptionClients').textContent = receptionClients;
-            document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toLocaleString();
-            document.getElementById('monthlyRevenue').textContent = '$' + monthlyRevenue.toLocaleString();
-            
-            // Initialize monthly stats with current month
-            updateMonthlyStats(currentYear, currentMonth);
-        }
-
-        // Update monthly statistics
-        function updateMonthlyStats(year, month) {
-            const newThisMonth = studentsData.filter(s => {
-                const createdDate = new Date(s.created_at);
-                return createdDate.getMonth() === month && createdDate.getFullYear() === year;
-            }).length;
-
-            const stoppedThisMonth = studentsData.filter(s => {
-                if (s.status !== 'STOP_LEARNING') return false;
-                const updatedDate = new Date(s.updated_at);
-                return updatedDate.getMonth() === month && updatedDate.getFullYear() === year;
-            }).length;
-
-            document.getElementById('newThisMonth').textContent = newThisMonth;
-            document.getElementById('stoppedThisMonth').textContent = stoppedThisMonth;
-        }
-
-        // Render all charts
-        function renderCharts() {
-            renderStatusChart();
-            renderRegistrationChart();
-            renderPaymentTypeChart();
-            renderRevenueChart();
-            renderReceptionChart();
-        }
-
-        // Student status distribution chart
-        function renderStatusChart() {
-            const ctx = document.getElementById('statusChart').getContext('2d');
-            const statusCounts = {
-                'ACTIVE': studentsData.filter(s => s.status === 'ACTIVE').length,
-                'STOP_LEARNING': studentsData.filter(s => s.status === 'STOP_LEARNING').length
-            };
-
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Active', 'Stop Learning'],
-                    datasets: [{
-                        data: Object.values(statusCounts),
-                        backgroundColor: ['#10B981', '#EF4444'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        }
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'New Students',
+                    data: values,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
                     }
-                }
-            });
-        }
-
-        // Monthly registration chart
-        function renderRegistrationChart() {
-            const ctx = document.getElementById('registrationChart').getContext('2d');
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const currentYear = new Date().getFullYear();
-            
-            const monthlyData = months.map((_, index) => {
-                return studentsData.filter(s => {
-                    const createdDate = new Date(s.created_at);
-                    return createdDate.getMonth() === index && createdDate.getFullYear() === currentYear;
-                }).length;
-            });
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'New Students',
-                        data: monthlyData,
-                        borderColor: '#3B82F6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
                         }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Payment type chart
-        function renderPaymentTypeChart() {
-            const ctx = document.getElementById('paymentTypeChart').getContext('2d');
-            const paymentTypes = {};
-            
-            paymentsData.forEach(payment => {
-                const type = payment.paymentType || 'Unknown';
-                paymentTypes[type] = (paymentTypes[type] || 0) + 1;
-            });
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(paymentTypes),
-                    datasets: [{
-                        data: Object.values(paymentTypes),
-                        backgroundColor: ['#8B5CF6', '#06B6D4', '#10B981', '#F59E0B'],
-                        borderWidth: 0,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
+                    x: {
+                        grid: {
                             display: false
                         }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
                     }
                 }
-            });
-        }
-
-        // Revenue chart
-        function renderRevenueChart() {
-            const ctx = document.getElementById('revenueChart').getContext('2d');
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const currentYear = new Date().getFullYear();
-            
-            const monthlyRevenue = months.map((_, index) => {
-                return paymentsData
-                    .filter(p => {
-                        const paymentDate = new Date(p.created_at);
-                        return paymentDate.getMonth() === index && paymentDate.getFullYear() === currentYear;
-                    })
-                    .reduce((sum, p) => sum + (Number(p.sum) || 0), 0);
-            });
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Revenue',
-                        data: monthlyRevenue,
-                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                        borderColor: '#10B981',
-                        borderWidth: 0,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Reception chart
-        function renderReceptionChart() {
-            const ctx = document.getElementById('receptionChart').getContext('2d');
-            const activeStudents = studentsData.filter(s => s.status === 'ACTIVE').length;
-            const receptionClients = receptionData.length;
-
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Active Students', 'Reception Clients'],
-                    datasets: [{
-                        data: [activeStudents, receptionClients],
-                        backgroundColor: ['#3B82F6', '#F59E0B'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Render detailed statistics
-        function renderDetailedStats() {
-            renderRecentStudents();
-            renderRecentReceptionClients();
-            renderRecentPayments();
-        }
-
-        // Render recent students
-        function renderRecentStudents() {
-            const container = document.getElementById('recentStudents');
-            const recentStudents = studentsData
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                .slice(0, 5);
-
-            container.innerHTML = recentStudents.map(student => `
-                <div class="stats-item">
-                    <div class="item-info">
-                        <div class="item-name">${student.fullName}</div>
-                        <div class="item-meta">${student.phoneNum}</div>
-                    </div>
-                    <div class="item-status status-${student.status.toLowerCase().replace('_', '-')}">
-                        ${student.status.replace('_', ' ')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render recent reception clients
-        function renderRecentReceptionClients() {
-            const container = document.getElementById('recentReceptionClients');
-            const recentClients = receptionData
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                .slice(0, 5);
-
-            container.innerHTML = recentClients.map(client => `
-                <div class="stats-item">
-                    <div class="item-info">
-                        <div class="item-name">${client.fullName}</div>
-                        <div class="item-meta">${client.phoneNum}</div>
-                    </div>
-                    <div class="item-status status-pending">
-                        Pending
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render recent payments
-        function renderRecentPayments() {
-            const container = document.getElementById('recentPayments');
-            const recentPayments = paymentsData
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                .slice(0, 5);
-
-            container.innerHTML = recentPayments.map(payment => `
-                <div class="stats-item">
-                    <div class="item-info">
-                        <div class="item-name">$${Number(payment.sum).toLocaleString()}</div>
-                        <div class="item-meta">${payment.paymentType || 'Unknown'}</div>
-                    </div>
-                    <div class="item-status status-${payment.paymentStatus.toLowerCase().replace('_', '-')}">
-                        ${payment.paymentStatus.replace('_', ' ')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Sidebar toggle functionality
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
+            }
         });
-    </script>
+    }
+
+    // Payment type chart
+    function renderPaymentTypeChart() {
+        const ctx = document.getElementById('paymentTypeChart').getContext('2d');
+        const paymentData = chartData.paymentTypes || {};
+        const types = Object.keys(paymentData);
+        const values = Object.values(paymentData);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: types,
+                datasets: [{
+                    data: values,
+                    backgroundColor: ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b'],
+                    borderWidth: 0,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Revenue chart
+    function renderRevenueChart() {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenueData = chartData.monthlyRevenue || {};
+        const months = Object.keys(revenueData);
+        const values = Object.values(revenueData);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Revenue',
+                    data: values,
+                    backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                    borderColor: '#10b981',
+                    borderWidth: 0,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Utility functions
+    function formatCurrency(amount) {
+        return '$' + Number(amount).toLocaleString();
+    }
+
+    function formatStatus(status) {
+        if (!status) return 'Unknown';
+        return status.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatPaymentType(type) {
+        if (!type) return 'Unknown';
+        return type.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatPaymentStatus(status) {
+        if (!status) return 'Unknown';
+        return status.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function getStatusClass(status) {
+        if (!status) return 'pending';
+        const s = status.toLowerCase();
+        if (s === 'active') return 'active';
+        if (s === 'stop_learning') return 'stopped';
+        if (s === 'in_register') return 'pending';
+        return 'pending';
+    }
+
+    function getPaymentStatusClass(status) {
+        if (!status) return 'pending';
+        const s = status.toLowerCase();
+        if (s === 'completed') return 'completed';
+        if (s === 'pending') return 'pending';
+        return 'pending';
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.textContent = message;
+        document.querySelector('.stats-container').insertBefore(errorDiv, document.querySelector('.stats-grid'));
+    }
+
+    function setupSidebarToggle() {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const key = 'talimcrm.sidebar.collapsed';
+        
+        const apply = () => {
+            const collapsed = localStorage.getItem(key) === '1';
+            if (collapsed) sidebar.classList.add('collapsed'); 
+            else sidebar.classList.remove('collapsed');
+        };
+        
+        apply();
+        toggle.addEventListener('click', () => {
+            const collapsed = !(localStorage.getItem(key) === '1');
+            localStorage.setItem(key, collapsed ? '1' : '0');
+            apply();
+        });
+    }
+</script>
 </body>
 </html>

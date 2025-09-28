@@ -8,8 +8,10 @@
 </head>
 <body>
 <div class="container">
-    <aside class="sidebar">
-        <div class="sidebar-header">📚 Talim CRM</div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            Talim CRM
+        </div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
             <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
@@ -19,7 +21,9 @@
             <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
             <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
             <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
         </nav>
     </aside>
 

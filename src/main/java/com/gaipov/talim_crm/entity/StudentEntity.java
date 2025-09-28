@@ -37,4 +37,10 @@ public class StudentEntity {
 
     @Column
     private LocalDate deleted_at;
+
+    @Column
+    private String parentName;
+
+    @Column
+    private String parentPhone;
 }

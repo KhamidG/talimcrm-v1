@@ -9,7 +9,9 @@
 <body>
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">📚 Talim CRM</div>
+        <div class="sidebar-header">
+            Talim CRM
+        </div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
             <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
@@ -19,9 +21,11 @@
             <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
             <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
             <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/statsPage}"><span>Stats</span></a>
-    </nav>
-</aside>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+        </nav>
+    </aside>
     <main class="main-content">
         <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
 <div class="container">
@@ -37,6 +41,14 @@
             <label>Phone *</label>
             <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
             </div>
+        <div style="margin-bottom:12px;">
+            <label>Parent Name</label>
+            <input type="text" id="parentName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Parent full name">
+        </div>
+        <div style="margin-bottom:12px;">
+            <label>Parent Phone</label>
+            <input type="tel" id="parentPhone" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx">
+        </div>
         <div style="margin-bottom:12px;">
             <label>Placement test score (0-40)</label>
             <input type="number" id="testScore" min="0" max="40" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. 26">
@@ -82,7 +94,9 @@
         e.preventDefault();
         const payload = {
             fullName: document.getElementById('fullName').value.trim(),
-            phoneNum: document.getElementById('phoneNum').value.trim()
+            phoneNum: document.getElementById('phoneNum').value.trim(),
+            parentName: document.getElementById('parentName').value.trim(),
+            parentPhone: document.getElementById('parentPhone').value.trim()
         };
         const res = await fetch(`${API}/register`, {
             method: 'POST',

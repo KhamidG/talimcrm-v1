@@ -14,7 +14,7 @@ public class PaymentDto {
     private Long id;
     private Long student;
     private Long groupId;
-    private BigDecimal sum;
+    private Double sum;
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
     private LocalDate created_at;

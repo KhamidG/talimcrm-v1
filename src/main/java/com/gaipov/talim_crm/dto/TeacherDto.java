@@ -22,4 +22,8 @@ public class TeacherDto {
     private List<GroupEntity> groups;
 
     private LocalDate created_at;
+
+    private String username;
+
+    private String password;
 }
