@@ -1,8 +1,8 @@
 package com.gaipov.talim_crm.controller;
 
+import com.gaipov.talim_crm.dto.PaymentDto;
 import com.gaipov.talim_crm.dto.StatisticsDto;
-import com.gaipov.talim_crm.entity.PaymentEntity;
-import com.gaipov.talim_crm.entity.StudentEntity;
+import com.gaipov.talim_crm.dto.StudentDto;
 import com.gaipov.talim_crm.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,15 +52,15 @@ public class StatisticsController {
 
     @GetMapping("/recent/students")
     @ResponseBody
-    public ResponseEntity<List<StudentEntity>> getRecentStudents(@RequestParam(defaultValue = "5") int limit) {
-        List<StudentEntity> recentStudents = statisticsService.getRecentStudents(limit);
+    public ResponseEntity<List<StudentDto>> getRecentStudents(@RequestParam(defaultValue = "5") int limit) {
+        List<StudentDto> recentStudents = statisticsService.getRecentStudents(limit);
         return ResponseEntity.ok(recentStudents);
     }
 
     @GetMapping("/recent/payments")
     @ResponseBody
-    public ResponseEntity<List<PaymentEntity>> getRecentPayments(@RequestParam(defaultValue = "5") int limit) {
-        List<PaymentEntity> recentPayments = statisticsService.getRecentPayments(limit);
+    public ResponseEntity<List<PaymentDto>> getRecentPayments(@RequestParam(defaultValue = "5") int limit) {
+        List<PaymentDto> recentPayments = statisticsService.getRecentPayments(limit);
         return ResponseEntity.ok(recentPayments);
     }
 }

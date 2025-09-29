@@ -25,6 +25,9 @@
                 <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
                 <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
                 <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+                <a class="nav-link" th:href="@{/v1/auth/system-users}"><span>System Users</span></a>
+                <a class="nav-link" th:href="@{/v1/center/login}"><span>Training Center Login</span></a>
+                <a class="nav-link" onclick="logout()" style="cursor: pointer; color: #dc3545;"><span>Logout</span></a>
             </nav>
         </aside>
         
@@ -32,12 +35,44 @@
             <div class="reception-container">
                 <h1>Reception Dashboard - New Clients</h1>
                 
+                <!-- User Login Section -->
+                <div class="user-login-section" style="margin-bottom: 30px;">
+                    <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <h2 style="color: white; margin-bottom: 15px;">🔐 System Login</h2>
+                        <p style="margin-bottom: 15px; opacity: 0.9;">Login with your credentials to access the system dashboard.</p>
+                        
+                        <!-- Available Accounts Info -->
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px;">Available Accounts:</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                                <div><strong>👑 Admin:</strong> admin / admin123</div>
+                                <div><strong>👨‍💼 Manager:</strong> manager / manager123</div>
+                                <div><strong>👩‍💼 Receptionist:</strong> receptionist / reception123</div>
+                                <div><strong>💰 Accountant:</strong> accountant / account123</div>
+                            </div>
+                        </div>
+                        
+                        <form id="adminLoginForm" style="display: flex; gap: 10px; align-items: end;">
+                            <div style="flex: 1;">
+                                <label style="display: block; margin-bottom: 5px; font-size: 14px; opacity: 0.9;">Username</label>
+                                <input type="text" id="adminUsername" placeholder="Enter username" style="width: 100%; padding: 8px 12px; border: none; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="display: block; margin-bottom: 5px; font-size: 14px; opacity: 0.9;">Password</label>
+                                <input type="password" id="adminPassword" placeholder="Enter password" style="width: 100%; padding: 8px 12px; border: none; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <button type="submit" style="background: white; color: #667eea; padding: 8px 20px; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; white-space: nowrap;">Login</button>
+                        </form>
+                        <div id="adminLoginError" style="margin-top: 10px; color: #ffeb3b; font-size: 14px; display: none;"></div>
+                    </div>
+                </div>
+                
                 <!-- Teacher Login Section -->
                 <div class="teacher-login-section" style="margin-bottom: 30px;">
-                    <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white;">
                         <h2 style="color: white; margin-bottom: 15px;">👨‍🏫 Teacher Access</h2>
                         <p style="margin-bottom: 15px; opacity: 0.9;">Teachers can access their dashboard to view students and manage their courses.</p>
-                        <a th:href="@{/v1/teacher/login}" class="btn" style="background: white; color: #667eea; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">Teacher Login</a>
+                        <a th:href="@{/v1/teacher/login}" class="btn" style="background: white; color: #28a745; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">Teacher Login</a>
                     </div>
                 </div>
                 
@@ -99,6 +134,7 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Type</th>
+                                    <th>Schedule</th>
                                     <th>Students</th>
                                     <th>Max</th>
                                     <th>Created</th>
@@ -224,6 +260,66 @@
                 if (currentPage < totalPages) {
                     currentPage++;
                     renderPage();
+                }
+            });
+
+            // Admin login form
+            document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('adminUsername').value.trim();
+                const password = document.getElementById('adminPassword').value;
+                const errorDiv = document.getElementById('adminLoginError');
+                
+                if (!username || !password) {
+                    errorDiv.textContent = 'Please fill in all fields';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/v1/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const userRole = result.user.role;
+                        showNotification(`Login successful! Welcome ${result.user.username} (${userRole})`, 'success');
+                        
+                        // Role-based redirects
+                        let redirectUrl = '/v1/student/listPage'; // default
+                        switch(userRole) {
+                            case 'admin':
+                                redirectUrl = '/v1/student/listPage';
+                                break;
+                            case 'manager':
+                                redirectUrl = '/v1/student/listPage';
+                                break;
+                            case 'receptionist':
+                                redirectUrl = '/v1/student/register';
+                                break;
+                            case 'accountant':
+                                redirectUrl = '/v1/pay/listPage';
+                                break;
+                        }
+                        
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 1500);
+                    } else {
+                        errorDiv.textContent = result.message || 'Login failed';
+                        errorDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    errorDiv.textContent = 'Network error. Please try again.';
+                    errorDiv.style.display = 'block';
                 }
             });
         });
@@ -452,20 +548,23 @@
             const availableGroups = groups.filter(g => targetTypes.includes(g.typeOfGroup) && (g.currentStudents || 0) < (g.maxStudents || 0));
 
             const searchEl = document.getElementById('groupSearch');
-            const apply = () => {
+                const apply = () => {
                 const term = (searchEl.value || '').toLowerCase();
                 const data = term ? availableGroups.filter(g => (g.nameOfGroup||'').toLowerCase().includes(term)) : availableGroups;
                 tbody.innerHTML = '';
                 if (data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">No available groups found</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="no-data">No available groups found</td></tr>';
                     return;
                 }
                 data.forEach(g => {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `
+                        const schedule = (g.lessonStartTime && g.lessonEndTime) ? `${g.lessonStartTime} - ${g.lessonEndTime}` : 'Not set';
+                        const days = g.lessonDays || '';
+                        tr.innerHTML = `
                         <td>${g.id}</td>
                         <td>${escapeHtml(g.nameOfGroup)||''}</td>
                         <td>${escapeHtml(g.typeOfGroup)||''}</td>
+                        <td><div style="font-weight:500;">${escapeHtml(schedule)}</div><div style="font-size:12px;color:#666;">${escapeHtml(days)}</div></td>
                         <td>${g.currentStudents ?? 0}</td>
                         <td>${g.maxStudents ?? '—'}</td>
                         <td>${escapeHtml(g.created_at)||'—'}</td>
@@ -622,6 +721,25 @@
         // Event listeners for modal
         document.getElementById('placementScore').addEventListener('input', loadGroupsForModal);
         document.getElementById('groupSearchModal').addEventListener('input', loadGroupsForModal);
+
+        // Logout function
+        async function logout() {
+            try {
+                await fetch('/v1/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                showNotification('Logged out successfully', 'success');
+                setTimeout(() => {
+                    window.location.href = '/v1/auth/reception';
+                }, 1000);
+            } catch (error) {
+                console.error('Logout error:', error);
+                showNotification('Error during logout', 'error');
+            }
+        }
     </script>
 
     <style>
