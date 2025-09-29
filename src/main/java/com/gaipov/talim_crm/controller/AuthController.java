@@ -6,6 +6,7 @@ import com.gaipov.talim_crm.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AuthController {
     private final AuthService service;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -27,8 +29,9 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseBody
-    public ResponseEntity<AuthDto> register(@RequestBody AuthDto dto) {
-        return ResponseEntity.ok(service.registerNewUser(dto));
+    public String register(@RequestBody AuthDto dto) {
+        service.registerNewUser(dto);
+        return "redirect:/login";
     }
 
     @GetMapping("/listPage")
@@ -55,4 +58,10 @@ public class AuthController {
         model.addAttribute("users", service.listOfUsers());
         return "reception";
     }
+
+    @GetMapping("/login")
+    public String login(){
+        return "loginPage";
+    }
+
 }

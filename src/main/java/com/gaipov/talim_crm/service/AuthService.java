@@ -7,6 +7,10 @@ import com.gaipov.talim_crm.enums.UserStatus;
 import com.gaipov.talim_crm.repository.ProfileRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,13 +20,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class AuthService {
+public class AuthService implements UserDetailsService {
     private final ProfileRepository profileRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthDto registerNewUser(AuthDto dto) {
         AuthEntity entity = new AuthEntity();
 
         entity.setFullName(dto.getFullName());
+        entity.setUsername(dto.getUsername());
+        entity.setPassword(passwordEncoder.encode(dto.getPassword() ));
         entity.setPhoneNum(dto.getPhoneNum());
         entity.setRoles(dto.getRoles() != null ? dto.getRoles() : UserRole.NEW_USER);
         entity.setStatus(UserStatus.IN_REGISTER);
@@ -52,5 +59,10 @@ public class AuthService {
         dto.setStatus(entity.getStatus());
         dto.setCreated_at(entity.getCreated_at());
         return dto;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return profileRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }
