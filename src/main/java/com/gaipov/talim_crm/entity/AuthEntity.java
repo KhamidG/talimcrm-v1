@@ -18,6 +18,12 @@ public class AuthEntity {
     @Column(name = "full_name")
     private String fullName;
 
+    @Column
+    private String username;
+
+    @Column
+    private String password;
+
     @Column(name = "phone_num")
     private String phoneNum;
 

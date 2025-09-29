@@ -74,9 +74,13 @@ public class TeacherController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<TeacherDto> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<TeacherDto> login(@RequestBody LoginRequest request, jakarta.servlet.http.HttpSession session) {
         try {
             TeacherDto teacher = teacherService.authenticate(request.getUsername(), request.getPassword());
+            // mark teacher session
+            session.setAttribute("teacherLoggedIn", true);
+            session.setAttribute("teacherId", teacher.getId());
+            session.setAttribute("teacherUsername", teacher.getUsername());
             return ResponseEntity.ok(teacher);
         } catch (Exception e) {
             return ResponseEntity.status(401).build();

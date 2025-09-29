@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Users - Talim CRM</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                Talim CRM
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
+                <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
+                <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
+                <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
+                <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
+                <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
+                <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
+                <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
+                <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
+                <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
+                <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+                <a class="nav-link" th:href="@{/v1/auth/system-users}" style="background: #007bff; color: white;"><span>System Users</span></a>
+                <a class="nav-link" th:href="@{/v1/center/login}"><span>Training Center Login</span></a>
+                <a class="nav-link" onclick="logout()" style="cursor: pointer; color: #dc3545;"><span>Logout</span></a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h1>System Users & Access Control</h1>
+                <p>Manage system users and their access permissions</p>
+            </div>
+
+            <!-- System Users Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Available System Accounts</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Access Level</th>
+                                <th>Permissions</th>
+                                <th>Default Page</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>admin</strong></td>
+                                <td><span class="role-badge admin">👑 Admin</span></td>
+                                <td>Full Access</td>
+                                <td>All system features</td>
+                                <td>Student List</td>
+                            </tr>
+                            <tr>
+                                <td><strong>manager</strong></td>
+                                <td><span class="role-badge manager">👨‍💼 Manager</span></td>
+                                <td>Management</td>
+                                <td>Students, Groups, Teachers, Payments, Statistics</td>
+                                <td>Student List</td>
+                            </tr>
+                            <tr>
+                                <td><strong>receptionist</strong></td>
+                                <td><span class="role-badge receptionist">👩‍💼 Receptionist</span></td>
+                                <td>Limited</td>
+                                <td>Student registration only</td>
+                                <td>New Student Registration</td>
+                            </tr>
+                            <tr>
+                                <td><strong>accountant</strong></td>
+                                <td><span class="role-badge accountant">💰 Accountant</span></td>
+                                <td>Financial</td>
+                                <td>Payments and Statistics</td>
+                                <td>Payments List</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Role Permissions -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Role-Based Access Control</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="permission-card">
+                        <h3>👑 Admin</h3>
+                        <ul>
+                            <li>✅ All student operations</li>
+                            <li>✅ All group operations</li>
+                            <li>✅ All teacher operations</li>
+                            <li>✅ All payment operations</li>
+                            <li>✅ All statistics access</li>
+                            <li>✅ User management</li>
+                        </ul>
+                    </div>
+                    <div class="permission-card">
+                        <h3>👨‍💼 Manager</h3>
+                        <ul>
+                            <li>✅ All student operations</li>
+                            <li>✅ All group operations</li>
+                            <li>✅ All teacher operations</li>
+                            <li>✅ All payment operations</li>
+                            <li>✅ All statistics access</li>
+                            <li>❌ User management</li>
+                        </ul>
+                    </div>
+                    <div class="permission-card">
+                        <h3>👩‍💼 Receptionist</h3>
+                        <ul>
+                            <li>✅ Student registration only</li>
+                            <li>❌ Group management</li>
+                            <li>❌ Teacher management</li>
+                            <li>❌ Payment operations</li>
+                            <li>❌ Statistics access</li>
+                            <li>❌ User management</li>
+                        </ul>
+                    </div>
+                    <div class="permission-card">
+                        <h3>💰 Accountant</h3>
+                        <ul>
+                            <li>❌ Student operations</li>
+                            <li>❌ Group management</li>
+                            <li>❌ Teacher management</li>
+                            <li>✅ All payment operations</li>
+                            <li>✅ All statistics access</li>
+                            <li>❌ User management</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Instructions -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Login Instructions</h2>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3>How to Login:</h3>
+                    <ol>
+                        <li>Go to the <a href="/v1/auth/reception" style="color: #007bff;">Reception page</a></li>
+                        <li>Use any of the credentials shown in the login form</li>
+                        <li>You'll be redirected to the appropriate page based on your role</li>
+                        <li>Access is automatically restricted based on your permissions</li>
+                    </ol>
+                    
+                    <h3 style="margin-top: 20px;">Test Credentials:</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 10px;">
+                        <div style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #dc3545;">
+                            <strong>Admin:</strong><br>
+                            Username: <code>admin</code><br>
+                            Password: <code>admin123</code>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #28a745;">
+                            <strong>Manager:</strong><br>
+                            Username: <code>manager</code><br>
+                            Password: <code>manager123</code>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #17a2b8;">
+                            <strong>Receptionist:</strong><br>
+                            Username: <code>receptionist</code><br>
+                            Password: <code>reception123</code>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #ffc107;">
+                            <strong>Accountant:</strong><br>
+                            Username: <code>accountant</code><br>
+                            Password: <code>account123</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Logout function
+        async function logout() {
+            try {
+                await fetch('/v1/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                alert('Logged out successfully');
+                window.location.href = '/v1/auth/reception';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Error during logout');
+            }
+        }
+    </script>
+
+    <style>
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .role-badge.admin {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .role-badge.manager {
+            background: #28a745;
+            color: white;
+        }
+        
+        .role-badge.receptionist {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .role-badge.accountant {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .permission-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .permission-card h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        
+        .permission-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .permission-card li {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        code {
+            background: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</body>
+</html>

@@ -43,4 +43,8 @@ public class StudentEntity {
 
     @Column
     private String parentPhone;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "center_id")
+    private LearningCenterEntity center;
 }

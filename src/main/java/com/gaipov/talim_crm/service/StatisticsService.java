@@ -1,6 +1,8 @@
 package com.gaipov.talim_crm.service;
 
+import com.gaipov.talim_crm.dto.PaymentDto;
 import com.gaipov.talim_crm.dto.StatisticsDto;
+import com.gaipov.talim_crm.dto.StudentDto;
 import com.gaipov.talim_crm.entity.AttendanceEntity;
 import com.gaipov.talim_crm.entity.GroupEntity;
 import com.gaipov.talim_crm.entity.PaymentEntity;
@@ -63,7 +65,7 @@ public class StatisticsService {
         // Payment statistics
         List<PaymentEntity> allPayments = paymentRepository.findAll();
         double totalRevenue = allPayments.stream()
-                .filter(p -> p.getPaymentStatus() == PaymentStatus.COMPLETED)
+                .filter(p -> p.getPaymentStatus() == PaymentStatus.COMPLETED || p.getPaymentStatus() == PaymentStatus.PAID)
                 .mapToDouble(p -> p.getSum() != null ? p.getSum() : 0.0)
                 .sum();
         stats.setTotalRevenue(totalRevenue);
@@ -71,7 +73,7 @@ public class StatisticsService {
         // Monthly revenue (current month)
         LocalDate now = LocalDate.now();
         double monthlyRevenue = allPayments.stream()
-                .filter(p -> p.getPaymentStatus() == PaymentStatus.COMPLETED)
+                .filter(p -> p.getPaymentStatus() == PaymentStatus.COMPLETED || p.getPaymentStatus() == PaymentStatus.PAID)
                 .filter(p -> p.getCreatedAt() != null &&
                            p.getCreatedAt().getMonth() == now.getMonth() &&
                            p.getCreatedAt().getYear() == now.getYear())
@@ -205,7 +207,7 @@ public class StatisticsService {
         return chartData;
     }
 
-    public List<StudentEntity> getRecentStudents(int limit) {
+    public List<StudentDto> getRecentStudents(int limit) {
         return studentRepo.findAll().stream()
                 .sorted((a, b) -> {
                     if (a.getCreated_at() == null && b.getCreated_at() == null) return 0;
@@ -214,10 +216,19 @@ public class StatisticsService {
                     return b.getCreated_at().compareTo(a.getCreated_at());
                 })
                 .limit(limit)
+                .map(se -> {
+                    StudentDto dto = new StudentDto();
+                    dto.setId(se.getId());
+                    dto.setFullName(se.getFullName());
+                    dto.setPhoneNum(se.getPhoneNum());
+                    dto.setStatus(se.getStatus());
+                    dto.setCreated_at(se.getCreated_at());
+                    return dto;
+                })
                 .toList();
     }
 
-    public List<PaymentEntity> getRecentPayments(int limit) {
+    public List<PaymentDto> getRecentPayments(int limit) {
         return paymentRepository.findAll().stream()
                 .sorted((a, b) -> {
                     if (a.getCreatedAt() == null && b.getCreatedAt() == null) return 0;
@@ -226,6 +237,15 @@ public class StatisticsService {
                     return b.getCreatedAt().compareTo(a.getCreatedAt());
                 })
                 .limit(limit)
+                .map(pe -> {
+                    PaymentDto dto = new PaymentDto();
+                    dto.setId(pe.getId());
+                    dto.setSum(pe.getSum());
+                    dto.setPaymentType(pe.getPaymentType());
+                    dto.setPaymentStatus(pe.getPaymentStatus());
+                    dto.setCreated_at(pe.getCreatedAt());
+                    return dto;
+                })
                 .toList();
     }
 }
