@@ -25,33 +25,24 @@ public class LearningCenterController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials, jakarta.servlet.http.HttpSession session) {
         try {
             String username = credentials.get("username");
             String password = credentials.get("password");
-            
-            // Simple hardcoded credentials for training center
-            if ("admin".equals(username) && "admin123".equals(password)) {
-                LearningCenterDto center = new LearningCenterDto();
-                center.setId(1L);
-                center.setCenterName("Training Center");
-                center.setUsername("admin");
-                center.setAddress("Main Office");
-                center.setPhone("+1234567890");
-                center.setEmail("admin@trainingcenter.com");
-                center.setIsActive(true);
-                
-                return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "center", center,
-                    "message", "Login successful"
-                ));
-            } else {
-                return ResponseEntity.badRequest().body(Map.of(
-                    "success", false,
-                    "message", "Invalid credentials"
-                ));
-            }
+
+            LearningCenterDto center = learningCenterService.authenticate(username, password);
+
+            // Mark center session (separate from staff session)
+            session.setAttribute("centerLoggedIn", true);
+            session.setAttribute("centerId", center.getId());
+            session.setAttribute("centerName", center.getCenterName());
+            session.setAttribute("centerUsername", center.getUsername());
+
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "center", center,
+                "message", "Login successful"
+            ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
                 "success", false,
@@ -61,18 +52,21 @@ public class LearningCenterController {
     }
 
     @GetMapping("/dashboard")
-    public String showDashboard(@RequestParam Long centerId, Model model) {
-        // Simple hardcoded center data
-        LearningCenterDto center = new LearningCenterDto();
-        center.setId(1L);
-        center.setCenterName("Training Center");
-        center.setUsername("admin");
-        center.setAddress("Main Office");
-        center.setPhone("+1234567890");
-        center.setEmail("admin@trainingcenter.com");
-        center.setIsActive(true);
-        
-        model.addAttribute("center", center);
+    public String showDashboard(@RequestParam(required = false) Long centerId, Model model, jakarta.servlet.http.HttpSession session) {
+        Boolean centerLoggedIn = (Boolean) session.getAttribute("centerLoggedIn");
+        Long sessionCenterId = (Long) session.getAttribute("centerId");
+
+        if (centerLoggedIn == null || !centerLoggedIn || sessionCenterId == null) {
+            return "redirect:/v1/center/login";
+        }
+
+        Long idToLoad = (centerId != null) ? centerId : sessionCenterId;
+        Optional<LearningCenterDto> centerOpt = learningCenterService.getCenterById(idToLoad);
+        if (centerOpt.isEmpty()) {
+            return "redirect:/v1/center/login";
+        }
+
+        model.addAttribute("center", centerOpt.get());
         return "center_dashboard";
     }
 

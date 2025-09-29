@@ -13,61 +13,83 @@ public class RoleBasedAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         
-        // Check if user is logged in
-        Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
-        String userRole = (String) session.getAttribute("role");
-        
-        if (isLoggedIn == null || !isLoggedIn) {
-            // Redirect to login page
-            response.sendRedirect("/v1/auth/reception");
+        String requestPath = request.getRequestURI();
+
+        // Allow unauthenticated access to login endpoints
+        if (requestPath.equals("/v1/auth/login") ||
+            requestPath.equals("/v1/auth/loginPage") ||
+            requestPath.equals("/v1/center/login") ||
+            requestPath.equals("/v1/teacher/login")) {
+            return true;
+        }
+
+        // Center area routing
+        if (requestPath.startsWith("/v1/center/")) {
+            // If SUPER_ADMIN is logged in, allow all center endpoints
+            Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
+            String userRole = (String) session.getAttribute("role");
+            if (Boolean.TRUE.equals(isLoggedIn) && "SUPER_ADMIN".equals(userRole)) {
+                return true;
+            }
+
+            // Admin-only center management endpoints
+            boolean adminOnly = requestPath.startsWith("/v1/center/management")
+                    || requestPath.startsWith("/v1/center/register")
+                    || (requestPath.matches("^/v1/center/\\d+$") && "DELETE".equalsIgnoreCase(request.getMethod()))
+                    || (requestPath.matches("^/v1/center/\\d+$") && "PUT".equalsIgnoreCase(request.getMethod()));
+
+            if (adminOnly) {
+                if (Boolean.TRUE.equals(isLoggedIn) && "SUPER_ADMIN".equals(userRole)) {
+                    return true;
+                }
+                response.sendRedirect("/v1/auth/loginPage");
+                return false;
+            }
+
+            // Center self area (dashboard, read endpoints, etc.) requires center session
+            Boolean centerLoggedIn = (Boolean) session.getAttribute("centerLoggedIn");
+            if (Boolean.TRUE.equals(centerLoggedIn)) {
+                return true;
+            }
+            response.sendRedirect("/v1/center/login");
             return false;
         }
-        
-        String requestPath = request.getRequestURI();
-        
-        // Role-based access control
-        if (userRole != null) {
-            switch (userRole) {
-                case "admin":
-                    // Admin has access to everything
-                    return true;
-                    
-                case "manager":
-                    // Manager can access most features except sensitive admin functions
-                    if (requestPath.contains("/v1/auth/") && !requestPath.contains("/logout")) {
-                        response.sendRedirect("/v1/student/listPage");
-                        return false;
-                    }
-                    return true;
-                    
-                case "receptionist":
-                    // Receptionist can only access student registration and basic info
-                    if (requestPath.contains("/v1/pay/") || 
-                        requestPath.contains("/v1/stats/") || 
-                        requestPath.contains("/v1/teacher/") ||
-                        requestPath.contains("/v1/group/")) {
-                        response.sendRedirect("/v1/student/register");
-                        return false;
-                    }
-                    return true;
-                    
-                case "accountant":
-                    // Accountant can access payments and statistics
-                    if (requestPath.contains("/v1/teacher/") || 
-                        requestPath.contains("/v1/group/") ||
-                        requestPath.contains("/v1/student/register")) {
-                        response.sendRedirect("/v1/pay/listPage");
-                        return false;
-                    }
-                    return true;
-                    
-                default:
-                    // Unknown role, redirect to reception
-                    response.sendRedirect("/v1/auth/reception");
-                    return false;
+
+        // System routes require SUPER_ADMIN
+        boolean isSystemRoute = requestPath.startsWith("/v1/student/") ||
+                requestPath.startsWith("/v1/group/") ||
+                requestPath.startsWith("/v1/pay/") ||
+                requestPath.startsWith("/v1/stats/");
+
+        if (isSystemRoute) {
+            Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
+            String userRole = (String) session.getAttribute("role");
+
+            if (Boolean.TRUE.equals(isLoggedIn) && "SUPER_ADMIN".equals(userRole)) {
+                return true;
             }
+            response.sendRedirect("/v1/auth/loginPage");
+            return false;
         }
-        
+
+        // Teacher area routing
+        if (requestPath.startsWith("/v1/teacher/")) {
+            // SUPER_ADMIN can access all teacher endpoints
+            Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
+            String userRole = (String) session.getAttribute("role");
+            if (Boolean.TRUE.equals(isLoggedIn) && "SUPER_ADMIN".equals(userRole)) {
+                return true;
+            }
+
+            Boolean teacherLoggedIn = (Boolean) session.getAttribute("teacherLoggedIn");
+            if (Boolean.TRUE.equals(teacherLoggedIn)) {
+                return true;
+            }
+            response.sendRedirect("/v1/teacher/login");
+            return false;
+        }
+
+        // Default allow
         return true;
     }
 }

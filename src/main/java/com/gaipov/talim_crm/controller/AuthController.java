@@ -54,8 +54,13 @@ public class AuthController {
 
     @GetMapping("/reception")
     public String receptionPage(Model model) {
-        model.addAttribute("users", service.listOfUsers());
-        return "reception";
+        // Redirect old path to new login page to avoid exposing system content pre-auth
+        return "redirect:/v1/auth/loginPage";
+    }
+
+    @GetMapping("/loginPage")
+    public String loginPage() {
+        return "login";
     }
 
     @GetMapping("/system-users")
@@ -68,66 +73,26 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials, HttpSession session) {
         String username = credentials.get("username");
         String password = credentials.get("password");
-        
-        // Multiple user accounts with different roles
-        if ("admin".equals(username) && "admin123".equals(password)) {
-            session.setAttribute("isLoggedIn", true);
-            session.setAttribute("username", username);
-            session.setAttribute("role", "admin");
-            
-            return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Login successful",
-                "user", Map.of(
-                    "username", username,
-                    "role", "admin"
-                )
-            ));
-        } else if ("manager".equals(username) && "manager123".equals(password)) {
-            session.setAttribute("isLoggedIn", true);
-            session.setAttribute("username", username);
-            session.setAttribute("role", "manager");
-            
-            return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Login successful",
-                "user", Map.of(
-                    "username", username,
-                    "role", "manager"
-                )
-            ));
-        } else if ("receptionist".equals(username) && "reception123".equals(password)) {
-            session.setAttribute("isLoggedIn", true);
-            session.setAttribute("username", username);
-            session.setAttribute("role", "receptionist");
-            
-            return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Login successful",
-                "user", Map.of(
-                    "username", username,
-                    "role", "receptionist"
-                )
-            ));
-        } else if ("accountant".equals(username) && "account123".equals(password)) {
-            session.setAttribute("isLoggedIn", true);
-            session.setAttribute("username", username);
-            session.setAttribute("role", "accountant");
-            
-            return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Login successful",
-                "user", Map.of(
-                    "username", username,
-                    "role", "accountant"
-                )
-            ));
-        } else {
-            return ResponseEntity.badRequest().body(Map.of(
-                "success", false,
-                "message", "Invalid credentials"
-            ));
-        }
+
+        return service.authenticate(username, password)
+                .filter(entity -> entity.getRoles() != null && entity.getRoles().name().equals("ADMIN"))
+                .map(entity -> {
+                    session.setAttribute("isLoggedIn", true);
+                    session.setAttribute("username", username);
+                    session.setAttribute("role", "SUPER_ADMIN");
+                    return ResponseEntity.ok(Map.of(
+                            "success", true,
+                            "message", "Login successful",
+                            "user", Map.of(
+                                    "username", username,
+                                    "role", "SUPER_ADMIN"
+                            )
+                    ));
+                })
+                .orElseGet(() -> ResponseEntity.badRequest().body(Map.of(
+                        "success", false,
+                        "message", "Invalid credentials"
+                )));
     }
 
     @PostMapping("/logout")

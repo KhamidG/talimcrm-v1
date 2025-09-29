@@ -50,4 +50,8 @@ public class GroupEntity {
 
     @Column(name = "lesson_days")
     private String lessonDays; // Format: "MON,WED,FRI" or "Monday,Wednesday,Friday"
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "center_id")
+    private LearningCenterEntity center;
 }

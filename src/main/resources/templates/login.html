@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Talim CRM</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .card {
+      width: 100%; max-width: 380px; background: #fff; border-radius: 14px; padding: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+    h1 { margin: 0 0 6px; font-size: 22px; color: #1f2937; }
+    p { margin: 0 0 18px; color: #6b7280; font-size: 14px; }
+    label { display: block; margin: 12px 0 6px; font-weight: 600; color: #374151; font-size: 13px; }
+    input {
+      width: 100%; padding: 12px 14px; border: 2px solid #e5e7eb; border-radius: 10px; background: #f9fafb; font-size: 14px;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    input:focus { outline: none; border-color: #667eea; background: #fff; box-shadow: 0 0 0 3px rgba(102,126,234,.12); }
+    .btn {
+      width: 100%; margin-top: 16px; padding: 12px; border: 0; border-radius: 10px; background: #6366f1; color: #fff;
+      font-weight: 700; cursor: pointer; transition: transform .1s ease, box-shadow .2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(99,102,241,.35); }
+    .msg { display: none; margin-top: 12px; padding: 10px 12px; border-radius: 10px; font-size: 13px; }
+    .msg.error { display: block; background: #fee2e2; color: #b91c1c; }
+    .msg.success { display: block; background: #dcfce7; color: #166534; }
+    .loading { display: none; gap: 8px; align-items: center; justify-content: center; color: #4f46e5; font-weight: 600; }
+    .spinner { width: 16px; height: 16px; border: 2px solid #e5e7eb; border-top-color: #4f46e5; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Sign in</h1>
+    <p>Enter SUPER ADMIN credentials to continue.</p>
+
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" placeholder="superadmin" required />
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" placeholder="••••••••" required />
+
+      <button class="btn" id="submitBtn" type="submit">
+        <span class="btn-text">Login</span>
+        <span class="loading" id="loading"><span class="spinner"></span> Signing in…</span>
+      </button>
+
+      <div class="msg" id="errorMsg"></div>
+      <div class="msg" id="successMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const btn = document.getElementById('submitBtn');
+    const loading = document.getElementById('loading');
+    const btnText = document.querySelector('.btn-text');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+
+    function showError(msg) { errorMsg.textContent = msg; errorMsg.className = 'msg error'; successMsg.className = 'msg'; }
+    function showSuccess(msg) { successMsg.textContent = msg; successMsg.className = 'msg success'; errorMsg.className = 'msg'; }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      if (!username || !password) { showError('Please fill in all fields'); return; }
+
+      btn.disabled = true; loading.style.display = 'inline-flex'; btnText.style.display = 'none'; errorMsg.className='msg'; successMsg.className='msg';
+
+      try {
+        const res = await fetch('/v1/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showSuccess('Login successful. Redirecting…');
+          setTimeout(() => { window.location.href = '/v1/center/management'; }, 900);
+        } else {
+          showError(data.message || 'Invalid credentials');
+        }
+      } catch (err) {
+        showError('Network error. Please try again.');
+      } finally {
+        btn.disabled = false; loading.style.display = 'none'; btnText.style.display = 'inline';
+      }
+    });
+  </script>
+</body>
+</html>
