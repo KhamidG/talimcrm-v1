@@ -4,39 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="refactor: frontend.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/AuthServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/GroupServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/PaymentServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/StatisticsServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/StudentServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/TeacherServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="recode">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/config/CurrentUser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController1.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/GroupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/PaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StatisticsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StatisticsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/StudentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/TeacherController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/TeacherController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/AuthEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/AuthEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/GroupRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/GroupRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/StudentEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/PaymentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StatisticsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StatisticsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/StudentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/Impl/GroupServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/TeacherService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/groups.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/groups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/loginPage.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/payments_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/payments_create.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/reception.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/reception.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/system_users.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/test.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/statistics.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/statistics.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/teacher_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/teacher_dashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,15 +29,15 @@
       <list>
         <option value="Exception" />
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="teacher-service" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -68,6 +49,31 @@
     &quot;assignee&quot;: &quot;KhamidG&quot;
   }
 }</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="prototype" />
+                    <option name="lastUsedInstant" value="1759238924" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1759238923" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/KhamidG/talimcrm-v1.git&quot;,
@@ -89,24 +95,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Run.executor&quot;: &quot;Run&quot;,
-    &quot;Application.TalimCrmApplication.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gaipov Khamid/Desktop/Work/Projects/talimcrm-v1&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Run.executor": "Run",
+    "Application.TalimCrmApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "prototype",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Gaipov Khamid/Desktop/Work/Projects/talimcrm-v1",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.gaipov.talim_crm.enums" />
@@ -271,7 +277,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759145810775</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="recode">
+      <option name="closed" value="true" />
+      <created>1759233768476</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1759233768476</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -297,6 +311,7 @@
     <MESSAGE value="add: teacher" />
     <MESSAGE value="add: teacher delete and go to leave" />
     <MESSAGE value="refactor: frontend." />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: frontend." />
+    <MESSAGE value="recode" />
+    <option name="LAST_COMMIT_MESSAGE" value="recode" />
   </component>
 </project>

@@ -1,12 +1,14 @@
 package com.gaipov.talim_crm.controller;
 
 import com.gaipov.talim_crm.dto.AttendanceDto;
+import com.gaipov.talim_crm.dto.GradeDto;
 import com.gaipov.talim_crm.dto.GroupDto;
 import com.gaipov.talim_crm.dto.StudentDto;
 import com.gaipov.talim_crm.dto.TeacherDto;
 import com.gaipov.talim_crm.entity.AttendanceEntity;
 import com.gaipov.talim_crm.repository.AttendanceRepository;
 import com.gaipov.talim_crm.service.Impl.TeacherServiceImpl;
+import com.gaipov.talim_crm.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +23,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/v1/teacher")
 public class TeacherController {
-    private final TeacherServiceImpl teacherService;
+    private final TeacherService teacherService;
     private final AttendanceRepository attendanceRepository;
 
     @GetMapping("/register")
@@ -71,6 +73,20 @@ public class TeacherController {
         return "teacher_login";
     }
 
+    @PostMapping("/login")
+    @ResponseBody
+    public ResponseEntity<TeacherDto> login(@RequestBody LoginRequest request, jakarta.servlet.http.HttpSession session) {
+        try {
+            TeacherDto teacher = teacherService.authenticate(request.getUsername(), request.getPassword());
+            // mark teacher session
+            session.setAttribute("teacherLoggedIn", true);
+            session.setAttribute("teacherId", teacher.getId());
+            session.setAttribute("teacherUsername", teacher.getUsername());
+            return ResponseEntity.ok(teacher);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).build();
+        }
+    }
 
     @GetMapping("/dashboard")
     public String showDashboard() {
@@ -206,6 +222,69 @@ public class TeacherController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.ok(Map.of("attendanceHistory", List.of(), "missedCount", 0L));
+        }
+    }
+
+    @GetMapping("/statistics")
+    public String showStatisticsPage() {
+        return "teacher_statistics";
+    }
+
+    @GetMapping("/statistics/weekly")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getWeeklyStatistics(@RequestHeader("X-Teacher-Id") Long teacherId) {
+        try {
+            Map<String, Object> stats = teacherService.getWeeklyStatistics(teacherId);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of());
+        }
+    }
+
+    @GetMapping("/statistics/monthly")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getMonthlyStatistics(@RequestHeader("X-Teacher-Id") Long teacherId) {
+        try {
+            Map<String, Object> stats = teacherService.getMonthlyStatistics(teacherId);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of());
+        }
+    }
+
+    @PostMapping("/grades")
+    @ResponseBody
+    public ResponseEntity<String> saveGrades(@RequestBody List<GradeDto> gradeData,
+                                            @RequestHeader("X-Teacher-Id") Long teacherId) {
+        try {
+            teacherService.saveGrades(gradeData, teacherId);
+            return ResponseEntity.ok("Grades saved successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to save grades: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/student/{studentId}/grades")
+    @ResponseBody
+    public ResponseEntity<List<GradeDto>> getStudentGrades(@PathVariable("studentId") Long studentId,
+                                                           @RequestHeader("X-Teacher-Id") Long teacherId) {
+        try {
+            List<GradeDto> grades = teacherService.getStudentGrades(studentId, teacherId);
+            return ResponseEntity.ok(grades);
+        } catch (Exception e) {
+            return ResponseEntity.ok(List.of());
+        }
+    }
+
+    @GetMapping("/group/{groupId}/grades")
+    @ResponseBody
+    public ResponseEntity<List<GradeDto>> getGroupGrades(@PathVariable("groupId") Long groupId,
+                                                         @RequestHeader("X-Teacher-Id") Long teacherId) {
+        try {
+            List<GradeDto> grades = teacherService.getGroupGrades(groupId, teacherId);
+            return ResponseEntity.ok(grades);
+        } catch (Exception e) {
+            return ResponseEntity.ok(List.of());
         }
     }
 

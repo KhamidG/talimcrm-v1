@@ -134,4 +134,16 @@ public class GroupServiceImpl implements GroupService {
             throw new NotFoundExp("Group not found with ID: " + group.getId());
         }
     }
+
+    @Override
+    public List<GroupDto> getAvailableGroups() {
+        return groupRepo.findAll().stream()
+                .filter(group -> {
+                    int currentStudents = group.getListOfStudents() != null ? group.getListOfStudents().size() : 0;
+                    int maxStudents = group.getMaxStudents() != null ? group.getMaxStudents() : 0;
+                    return currentStudents < maxStudents;
+                })
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
 }

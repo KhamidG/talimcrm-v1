@@ -311,22 +311,6 @@
 
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <div class="stat-icon revenue">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div>
-                            <p class="stat-title">Total Revenue</p>
-                            <div class="stat-value" id="totalRevenue">-</div>
-                            <div class="stat-change positive">
-                                <i class="fas fa-chart-line"></i>
-                                <span>All time</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-card-header">
                         <div class="stat-icon reception">
                             <i class="fas fa-clipboard-list"></i>
                         </div>
@@ -457,7 +441,6 @@
         document.getElementById('activeStudents').textContent = statisticsData.activeStudents || 0;
         document.getElementById('totalGroups').textContent = statisticsData.totalGroups || 0;
         document.getElementById('totalTeachers').textContent = statisticsData.totalTeachers || 0;
-        document.getElementById('totalRevenue').textContent = formatCurrency(statisticsData.totalRevenue || 0);
         document.getElementById('receptionClients').textContent = statisticsData.receptionClients || 0;
     }
 

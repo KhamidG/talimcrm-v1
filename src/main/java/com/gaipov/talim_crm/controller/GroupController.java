@@ -44,10 +44,10 @@ public class GroupController {
         return ResponseEntity.ok(service.getAllGroups());
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable("id") Long id) {
-        service.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/available")
+    @ResponseBody
+    public ResponseEntity<List<GroupDto>> getAvailableGroups() {
+        return ResponseEntity.ok(service.getAvailableGroups());
     }
 
     @PostMapping("/assignTeacher/{groupId}/{teacherId}")

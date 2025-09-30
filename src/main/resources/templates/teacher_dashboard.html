@@ -23,11 +23,12 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">📚 Teacher Dashboard</div>
         <nav class="sidebar-nav">
-            <a class="nav-link active" href="#dashboard"><span>Dashboard</span></a>
-            <a class="nav-link" href="#students"><span>My Students</span></a>
-            <a class="nav-link" href="#groups"><span>My Groups</span></a>
-            <a class="nav-link" href="#profile"><span>Profile</span></a>
-            <a class="nav-link" href="#" onclick="logout()"><span>Logout</span></a>
+            <a class="nav-link active" href="#dashboard"><i class="fas fa-home"></i><span>Dashboard</span></a>
+            <a class="nav-link" href="#students"><i class="fas fa-user-graduate"></i><span>My Students</span></a>
+            <a class="nav-link" href="#groups"><i class="fas fa-users"></i><span>My Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/statistics}"><i class="fas fa-chart-bar"></i><span>Statistics</span></a>
+            <a class="nav-link" href="#profile"><i class="fas fa-user"></i><span>Profile</span></a>
+            <a class="nav-link" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
         </nav>
     </aside>
     <main class="main-content">
@@ -109,7 +110,7 @@
                                 <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Phone</th>
                                 <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Group</th>
                                 <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Status</th>
-                                <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Parent</th>
+                                <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="studentsTableBody">
@@ -269,7 +270,9 @@
                 <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">
                     <span class="status ${getStatusClass(student.status)}">${student.status || ''}</span>
                 </td>
-                <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${student.parentName ? escapeHtml(student.parentName) : '-'}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">
+                    <button class="btn btn-sm" style="background: #ffc107; color: #000; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;" onclick="viewStudentGrades(${student.id})">View Grades</button>
+                </td>
             `;
             tbody.appendChild(tr);
         });
@@ -301,7 +304,8 @@
                 <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${group.currentStudents || 0}</td>
                 <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${group.maxStudents || '-'}</td>
                 <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">
-                    <button class="btn btn-sm" style="background: #007bff; color: white; padding: 4px 8px; border: none; border-radius: 4px; margin-right: 4px; cursor: pointer;" onclick="markAttendance(${group.id})">Mark Attendance</button>
+                    <button class="btn btn-sm" style="background: #007bff; color: white; padding: 4px 8px; border: none; border-radius: 4px; margin-right: 4px; cursor: pointer;" onclick="markAttendance(${group.id})">Attendance</button>
+                    <button class="btn btn-sm" style="background: #28a745; color: white; padding: 4px 8px; border: none; border-radius: 4px; margin-right: 4px; cursor: pointer;" onclick="setGrades(${group.id})">Set Grades</button>
                     <span class="status active">Active</span>
                 </td>
             `;
@@ -524,6 +528,266 @@
     function escapeHtml(str) {
         if (str == null) return '';
         return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+    }
+
+    function setGrades(groupId) {
+        const group = groupsData.find(g => g.id === groupId);
+        if (!group) return;
+
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); z-index: 1000; display: flex; 
+            justify-content: center; align-items: center;
+        `;
+        
+        modal.innerHTML = `
+            <div style="background: white; padding: 24px; border-radius: 8px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                <h3 style="margin: 0 0 20px 0;">Set Grades - ${group.nameOfGroup}</h3>
+                <div style="margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 4px;">Date:</label>
+                        <input type="date" id="gradeDate" value="${new Date().toISOString().split('T')[0]}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 4px;">Lesson Topic:</label>
+                        <input type="text" id="lessonTopic" placeholder="e.g., Variables and Data Types" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+                <div id="gradesList" style="margin-bottom: 20px;">
+                    <p>Loading students...</p>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <button onclick="this.closest('.modal').remove()" style="padding: 8px 16px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">Cancel</button>
+                    <button onclick="saveGrades(${groupId})" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Save Grades</button>
+                </div>
+            </div>
+        `;
+        
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+        
+        loadGroupStudentsForGrades(groupId, modal);
+    }
+
+    async function loadGroupStudentsForGrades(groupId, modal) {
+        try {
+            const teacherId = sessionStorage.getItem('teacherId');
+            const response = await fetch(`/v1/teacher/group/${groupId}/students`, {
+                headers: { 'X-Teacher-Id': teacherId }
+            });
+            
+            if (response.ok) {
+                const students = await response.json();
+                renderGradesList(students, modal);
+            }
+        } catch (error) {
+            console.error('Failed to load group students:', error);
+            modal.querySelector('#gradesList').innerHTML = '<p style="color: red;">Failed to load students</p>';
+        }
+    }
+
+    function renderGradesList(students, modal) {
+        const container = modal.querySelector('#gradesList');
+        container.innerHTML = '';
+        
+        if (students.length === 0) {
+            container.innerHTML = '<p>No students in this group</p>';
+            return;
+        }
+
+        students.forEach(student => {
+            const div = document.createElement('div');
+            div.style.cssText = 'display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 12px; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0;';
+            div.innerHTML = `
+                <div>
+                    <strong>${escapeHtml(student.fullName)}</strong>
+                    <div style="font-size: 12px; color: #666;">${escapeHtml(student.phoneNum)}</div>
+                </div>
+                <div>
+                    <select name="grade_${student.id}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">Select Grade</option>
+                        <option value="9">9.0 - Expert</option>
+                        <option value="8.5">8.5 - Very Good</option>
+                        <option value="8">8.0 - Very Good</option>
+                        <option value="7.5">7.5 - Good</option>
+                        <option value="7">7.0 - Good</option>
+                        <option value="6.5">6.5 - Competent</option>
+                        <option value="6">6.0 - Competent</option>
+                        <option value="5.5">5.5 - Modest</option>
+                        <option value="5">5.0 - Modest</option>
+                        <option value="4.5">4.5 - Limited</option>
+                        <option value="4">4.0 - Limited</option>
+                        <option value="3.5">3.5 - Extremely Limited</option>
+                        <option value="3">3.0 - Extremely Limited</option>
+                        <option value="2.5">2.5 - Intermittent</option>
+                        <option value="2">2.0 - Intermittent</option>
+                        <option value="1.5">1.5 - Non User</option>
+                        <option value="1">1.0 - Non User</option>
+                        <option value="0.5">0.5 - Did Not Attempt</option>
+                        <option value="0">0.0 - Did Not Attempt</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" name="comment_${student.id}" placeholder="Comment (optional)" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    async function saveGrades(groupId) {
+        const modal = document.querySelector('.modal');
+        const date = modal.querySelector('#gradeDate').value;
+        const lessonTopic = modal.querySelector('#lessonTopic').value;
+        const gradeData = [];
+        
+        const students = modal.querySelectorAll('[id^="gradesList"] > div');
+        students.forEach(studentDiv => {
+            const gradeSelect = studentDiv.querySelector('select[name^="grade_"]');
+            const commentInput = studentDiv.querySelector('input[name^="comment_"]');
+            
+            if (gradeSelect && gradeSelect.value) {
+                const studentId = gradeSelect.name.split('_')[1];
+                const gradeValue = parseFloat(gradeSelect.value);
+                const comment = commentInput ? commentInput.value : '';
+                
+                gradeData.push({
+                    studentId: parseInt(studentId),
+                    groupId: groupId,
+                    gradeValue: gradeValue,
+                    lessonDate: date,
+                    lessonTopic: lessonTopic,
+                    comment: comment
+                });
+            }
+        });
+
+        if (gradeData.length === 0) {
+            alert('Please enter at least one grade');
+            return;
+        }
+
+        try {
+            const teacherId = sessionStorage.getItem('teacherId');
+            const response = await fetch('/v1/teacher/grades', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Teacher-Id': teacherId
+                },
+                body: JSON.stringify(gradeData)
+            });
+
+            if (response.ok) {
+                alert('Grades saved successfully!');
+                modal.remove();
+            } else {
+                alert('Failed to save grades');
+            }
+        } catch (error) {
+            console.error('Failed to save grades:', error);
+            alert('Failed to save grades');
+        }
+    }
+
+    async function viewStudentGrades(studentId) {
+        const student = studentsData.find(s => s.id === studentId);
+        if (!student) return;
+
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); z-index: 1000; display: flex; 
+            justify-content: center; align-items: center;
+        `;
+        
+        modal.innerHTML = `
+            <div style="background: white; padding: 24px; border-radius: 8px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                <h3 style="margin: 0 0 8px 0;">Grades - ${escapeHtml(student.fullName)}</h3>
+                <p style="margin: 0 0 20px 0; color: #666;">Group: ${student.group ? escapeHtml(student.group.nameOfGroup) : 'No Group'}</p>
+                <div id="gradesHistory" style="margin-bottom: 20px;">
+                    <p>Loading grades...</p>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <button onclick="this.closest('div[style*=fixed]').remove()" style="padding: 8px 16px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">Close</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        try {
+            const teacherId = sessionStorage.getItem('teacherId');
+            const response = await fetch(`/v1/teacher/student/${studentId}/grades`, {
+                headers: { 'X-Teacher-Id': teacherId }
+            });
+            
+            if (response.ok) {
+                const grades = await response.json();
+                renderGradesHistory(grades, modal);
+            } else {
+                modal.querySelector('#gradesHistory').innerHTML = '<p style="color: red;">Failed to load grades</p>';
+            }
+        } catch (error) {
+            console.error('Failed to load grades:', error);
+            modal.querySelector('#gradesHistory').innerHTML = '<p style="color: red;">Failed to load grades</p>';
+        }
+    }
+
+    function renderGradesHistory(grades, modal) {
+        const container = modal.querySelector('#gradesHistory');
+        container.innerHTML = '';
+        
+        if (grades.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #888; padding: 20px;">No grades recorded yet</p>';
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.style.cssText = 'width: 100%; border-collapse: collapse;';
+        table.innerHTML = `
+            <thead>
+                <tr style="background: #f8f9fa;">
+                    <th style="text-align: left; padding: 12px; border-bottom: 2px solid #ddd;">Date</th>
+                    <th style="text-align: left; padding: 12px; border-bottom: 2px solid #ddd;">Topic</th>
+                    <th style="text-align: center; padding: 12px; border-bottom: 2px solid #ddd;">Grade</th>
+                    <th style="text-align: left; padding: 12px; border-bottom: 2px solid #ddd;">Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${grades.map(grade => `
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${grade.lessonDate || '-'}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${escapeHtml(grade.lessonTopic) || '-'}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #f0f0f0; text-align: center;">
+                            <span style="background: ${getGradeColor(grade.gradeValue)}; color: white; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                ${grade.gradeValue}
+                            </span>
+                        </td>
+                        <td style="padding: 12px; border-bottom: 1px solid #f0f0f0;">${escapeHtml(grade.comment) || '-'}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
+        container.appendChild(table);
+
+        // Calculate average
+        const avg = grades.reduce((sum, g) => sum + g.gradeValue, 0) / grades.length;
+        const avgDiv = document.createElement('div');
+        avgDiv.style.cssText = 'margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px; text-align: center;';
+        avgDiv.innerHTML = `<strong>Average Grade:</strong> <span style="font-size: 20px; color: ${getGradeColor(avg)}; font-weight: 700;">${avg.toFixed(1)}</span>`;
+        container.appendChild(avgDiv);
+    }
+
+    function getGradeColor(grade) {
+        // IELTS color scale
+        if (grade >= 8.5) return '#28a745';  // 8.5-9.0: Expert (Green)
+        if (grade >= 7.0) return '#17a2b8';  // 7.0-8.0: Good/Very Good (Blue)
+        if (grade >= 5.5) return '#ffc107';  // 5.5-6.5: Competent/Modest (Yellow)
+        if (grade >= 4.0) return '#fd7e14';  // 4.0-5.0: Limited (Orange)
+        return '#dc3545';                     // 0-3.5: Very Limited (Red)
     }
 
     // Sidebar toggle

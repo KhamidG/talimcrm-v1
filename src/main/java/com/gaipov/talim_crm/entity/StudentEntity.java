@@ -26,7 +26,8 @@ public class StudentEntity {
     @Enumerated(EnumType.STRING)
     private UserRole roles = UserRole.STUDENT;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "group_id")
     private GroupEntity group;
 
     @Column

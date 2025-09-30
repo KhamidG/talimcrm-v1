@@ -22,4 +22,6 @@ public interface GroupService {
     void deleteById(Long id);
 
     Optional<GroupDto> getGroupById(Long id);
+
+    List<GroupDto> getAvailableGroups();
 }
