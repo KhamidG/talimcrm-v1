@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -37,12 +38,13 @@ public class GroupEntity {
     private Integer currentStudents;
 
     @Column(name = "created_at")
-    private LocalDate created_at;
+    private LocalDateTime created_at;
 
     @Column(name = "deleted_at")
-    private LocalDate deleted_at;
+    private LocalDateTime deleted_at;
 
     @Column(name = "lesson_start_time")
+
     private String lessonStartTime; // Format: "16:00"
 
     @Column(name = "lesson_end_time")

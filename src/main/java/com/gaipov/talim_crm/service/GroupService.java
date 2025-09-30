@@ -34,7 +34,7 @@ public class GroupService {
         groupEntity.setLessonStartTime(dto.getLessonStartTime());
         groupEntity.setLessonEndTime(dto.getLessonEndTime());
         groupEntity.setLessonDays(dto.getLessonDays());
-        groupEntity.setCreated_at(LocalDate.now());
+
 
         // Assign teacher if provided
         if (dto.getTeacherId() != null) {
@@ -62,7 +62,7 @@ public class GroupService {
         GroupEntity entity = groupRepo.findById(id)
                 .orElseThrow(() -> new NotFoundExp("Group not found"));
 
-        entity.setDeleted_at(LocalDate.now());
+//        entity.setDeleted_at(LocalDate.now());
         groupRepo.save(entity);
     }
 
@@ -81,7 +81,7 @@ public class GroupService {
     }
 
     public List<GroupDto> findGroupByName(String groupName) {
-        List<GroupEntity> groupEntities = groupRepo.findByNameOfGroup(groupName);
+        var groupEntities = groupRepo.findByNameOfGroup(groupName);
 
         if (groupEntities.isEmpty()) {
             throw new NotFoundExp("Group not found.");
@@ -112,7 +112,7 @@ public class GroupService {
         dto.setLessonStartTime(entity.getLessonStartTime());
         dto.setLessonEndTime(entity.getLessonEndTime());
         dto.setLessonDays(entity.getLessonDays());
-        dto.setCreated_at(entity.getCreated_at());
+//        dto.setCreated_at(entity.getCreated_at());
         return dto;
     }
 

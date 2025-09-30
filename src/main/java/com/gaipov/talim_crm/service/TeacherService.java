@@ -15,7 +15,6 @@ import com.gaipov.talim_crm.repository.GroupRepo;
 import com.gaipov.talim_crm.repository.StudentRepo;
 import com.gaipov.talim_crm.repository.TeacherRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,15 +29,13 @@ public class TeacherService {
     private final StudentRepo studentRepo;
     private final GroupRepo groupRepo;
     private final AttendanceRepository attendanceRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-
     public TeacherDto createTeacher(TeacherDto teacherDto) {
         TeacherEntity teacherEntity = new TeacherEntity();
         teacherEntity.setFullName(teacherDto.getFullName());
         teacherEntity.setPhoneNum(teacherDto.getPhoneNum());
         teacherEntity.setLevelOfKnowledge(teacherDto.getLevelOfKnowledge());
         teacherEntity.setUsername(teacherDto.getUsername());
-        teacherEntity.setPassword(passwordEncoder.encode(teacherDto.getPassword()));
+        teacherEntity.setPassword(teacherDto.getPassword());
         teacherEntity.setRoles(UserRole.TEACHER);
         teacherEntity.setCreated_at(LocalDate.now());
 
@@ -108,16 +105,6 @@ public class TeacherService {
         return dto;
     }
 
-    public TeacherDto authenticate(String username, String password) {
-        TeacherEntity teacher = teacherRepo.findByUsername(username)
-                .orElseThrow(() -> new NotFoundExp("Teacher not found"));
-        
-        if (!passwordEncoder.matches(password, teacher.getPassword())) {
-            throw new NotFoundExp("Invalid password");
-        }
-        
-        return toDto(teacher);
-    }
 
     public TeacherDto getTeacherById(Long id) {
         TeacherEntity teacher = teacherRepo.findById(id)

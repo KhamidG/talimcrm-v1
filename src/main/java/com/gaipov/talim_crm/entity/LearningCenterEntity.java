@@ -31,8 +31,8 @@ public class LearningCenterEntity {
     @Column
     private String email;
 
-    @Column
-    private LocalDate created_at;
+    @Column(name = "created_at")
+    private LocalDate createdAt;
 
     @Column
     private LocalDate deleted_at;

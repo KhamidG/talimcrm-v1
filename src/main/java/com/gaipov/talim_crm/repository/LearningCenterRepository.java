@@ -8,8 +8,12 @@ import java.util.Optional;
 
 @Repository
 public interface LearningCenterRepository extends JpaRepository<LearningCenterEntity, Long> {
+
     Optional<LearningCenterEntity> findByUsername(String username);
+
     Optional<LearningCenterEntity> findByUsernameAndIsActiveTrue(String username);
+
     boolean existsByUsername(String username);
+
     boolean existsByCenterName(String centerName);
 }

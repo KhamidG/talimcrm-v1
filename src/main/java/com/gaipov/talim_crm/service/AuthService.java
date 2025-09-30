@@ -7,7 +7,6 @@ import com.gaipov.talim_crm.enums.UserStatus;
 import com.gaipov.talim_crm.repository.ProfileRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AuthService {
     private final ProfileRepository profileRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     public AuthDto registerNewUser(AuthDto dto) {
         AuthEntity entity = new AuthEntity();
@@ -43,11 +41,6 @@ public class AuthService {
         return profileRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
-    }
-
-    public Optional<AuthEntity> authenticate(String username, String rawPassword) {
-        return profileRepository.findByUsername(username)
-                .filter(entity -> entity.getPassword() != null && passwordEncoder.matches(rawPassword, entity.getPassword()));
     }
 
 

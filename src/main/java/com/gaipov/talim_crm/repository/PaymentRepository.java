@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<PaymentEntity, Long>
-{
+public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
     List<PaymentEntity> findByCreatedAtBeforeAndPaymentStatusNot(LocalDate date, PaymentStatus paymentStatus);
 
 }
