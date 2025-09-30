@@ -2,6 +2,7 @@ package com.gaipov.talim_crm.controller;
 
 import com.gaipov.talim_crm.dto.StudentDto;
 import com.gaipov.talim_crm.enums.UserStatus;
+import com.gaipov.talim_crm.service.Impl.StudentServiceImpl;
 import com.gaipov.talim_crm.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

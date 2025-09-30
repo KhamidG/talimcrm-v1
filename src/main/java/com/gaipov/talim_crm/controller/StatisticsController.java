@@ -3,6 +3,7 @@ package com.gaipov.talim_crm.controller;
 import com.gaipov.talim_crm.dto.StatisticsDto;
 import com.gaipov.talim_crm.entity.PaymentEntity;
 import com.gaipov.talim_crm.entity.StudentEntity;
+import com.gaipov.talim_crm.service.Impl.StatisticsServiceImpl;
 import com.gaipov.talim_crm.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,7 @@
 package com.gaipov.talim_crm.controller;
 
 import com.gaipov.talim_crm.dto.PaymentDto;
+import com.gaipov.talim_crm.service.Impl.PaymentServiceImpl;
 import com.gaipov.talim_crm.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class PaymentController {
 
     @PutMapping("/update/{id}")
     @ResponseBody
-    private ResponseEntity<String> update(@PathVariable("id") Long id, @RequestBody PaymentDto dto){
-        return ResponseEntity.ok(paymentService.updatePayment(id, dto));
+    private ResponseEntity<String> update(@PathVariable("id") Long id){
+        return ResponseEntity.ok(paymentService.updatePayment(id));
     }
 }

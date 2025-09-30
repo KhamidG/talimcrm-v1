@@ -4,6 +4,7 @@ import com.gaipov.talim_crm.dto.GroupDto;
 import com.gaipov.talim_crm.entity.GroupEntity;
 import com.gaipov.talim_crm.enums.GroupRole;
 import com.gaipov.talim_crm.service.GroupService;
+import com.gaipov.talim_crm.service.Impl.GroupServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

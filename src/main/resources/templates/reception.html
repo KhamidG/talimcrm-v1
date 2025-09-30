@@ -25,7 +25,6 @@
                 <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
                 <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
                 <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
-                <a class="nav-link" th:href="@{/v1/auth/system-users}"><span>System Users</span></a>
                 <a class="nav-link" th:href="@{/v1/center/login}"><span>Training Center Login</span></a>
                 <a class="nav-link" onclick="logout()" style="cursor: pointer; color: #dc3545;"><span>Logout</span></a>
             </nav>
@@ -34,6 +33,39 @@
         <main class="main-content">
             <div class="reception-container">
                 <h1>Reception Dashboard - New Clients</h1>
+                
+                <!-- User Login Section -->
+                <div class="user-login-section" style="margin-bottom: 30px;">
+                    <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <h2 style="color: white; margin-bottom: 15px;">🔐 System Login</h2>
+                        <p style="margin-bottom: 15px; opacity: 0.9;">Login with your credentials to access the system dashboard.</p>
+                        
+                        <!-- Available Accounts Info -->
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px;">Available Accounts:</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                                <div><strong>👑 Admin:</strong> admin / admin123</div>
+                                <div><strong>👨‍💼 Manager:</strong> manager / manager123</div>
+                                <div><strong>👩‍💼 Receptionist:</strong> receptionist / reception123</div>
+                                <div><strong>💰 Accountant:</strong> accountant / account123</div>
+                            </div>
+                        </div>
+                        
+                        <form id="adminLoginForm" style="display: flex; gap: 10px; align-items: end;">
+                            <div style="flex: 1;">
+                                <label style="display: block; margin-bottom: 5px; font-size: 14px; opacity: 0.9;">Username</label>
+                                <input type="text" id="adminUsername" placeholder="Enter username" style="width: 100%; padding: 8px 12px; border: none; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="display: block; margin-bottom: 5px; font-size: 14px; opacity: 0.9;">Password</label>
+                                <input type="password" id="adminPassword" placeholder="Enter password" style="width: 100%; padding: 8px 12px; border: none; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <button type="submit" style="background: white; color: #667eea; padding: 8px 20px; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; white-space: nowrap;">Login</button>
+                        </form>
+                        <div id="adminLoginError" style="margin-top: 10px; color: #ffeb3b; font-size: 14px; display: none;"></div>
+                    </div>
+                </div>
+                
                 <!-- Teacher Login Section -->
                 <div class="teacher-login-section" style="margin-bottom: 30px;">
                     <div class="card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white;">

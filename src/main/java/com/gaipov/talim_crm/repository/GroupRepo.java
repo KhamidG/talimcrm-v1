@@ -10,13 +10,6 @@ import java.util.List;
 
 @Repository
 public interface GroupRepo extends JpaRepository<GroupEntity, Long> {
-    @Query("""
-            select new com.gaipov.talim_crm.dto.GroupDto(
-            id,
-            
-            )
-            from GroupEntity
-            """)
     List<GroupDto> findByNameOfGroup(String name);
     List<GroupEntity> findByTeacherId(Long teacherId);
 }

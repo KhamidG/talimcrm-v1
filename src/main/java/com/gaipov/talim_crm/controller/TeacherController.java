@@ -5,9 +5,8 @@ import com.gaipov.talim_crm.dto.GroupDto;
 import com.gaipov.talim_crm.dto.StudentDto;
 import com.gaipov.talim_crm.dto.TeacherDto;
 import com.gaipov.talim_crm.entity.AttendanceEntity;
-import com.gaipov.talim_crm.enums.GroupRole;
 import com.gaipov.talim_crm.repository.AttendanceRepository;
-import com.gaipov.talim_crm.service.TeacherService;
+import com.gaipov.talim_crm.service.Impl.TeacherServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/v1/teacher")
 public class TeacherController {
-    private final TeacherService teacherService;
+    private final TeacherServiceImpl teacherService;
     private final AttendanceRepository attendanceRepository;
 
     @GetMapping("/register")
@@ -220,4 +219,5 @@ public class TeacherController {
         public String getPassword() { return password; }
         public void setPassword(String password) { this.password = password; }
     }
+
 }
