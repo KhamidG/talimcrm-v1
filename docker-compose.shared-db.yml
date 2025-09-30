@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Spring Boot Application (без локальной БД)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: talimcrm-app
+    environment:
+      # Подключение к внешней БД (измените на IP вашего сервера)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://192.168.1.100:5432/talimcrm_db
+      SPRING_DATASOURCE_USERNAME: talimcrm_user
+      SPRING_DATASOURCE_PASSWORD: talimcrm_password_2024
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: false
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - talimcrm-network
+    restart: unless-stopped
+
+networks:
+  talimcrm-network:
+    driver: bridge
