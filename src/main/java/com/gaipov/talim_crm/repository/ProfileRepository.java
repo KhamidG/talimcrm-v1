@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ProfileRepository extends JpaRepository<AuthEntity, Long> {
     Optional<AuthEntity> findByUsername(String username);
+
 }

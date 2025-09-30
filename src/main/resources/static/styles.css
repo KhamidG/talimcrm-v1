@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f7f6; /* Light background */
+}
+
+.login-container {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 350px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* --- Role Selector Styling --- */
+.role-selector {
+    display: flex;
+    margin-bottom: 25px;
+}
+
+.role-selector button {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: #eee;
+    font-size: 1em;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.role-selector #teacher-btn {
+    border-radius: 5px 0 0 5px;
+}
+
+.role-selector #admin-btn {
+    border-radius: 0 5px 5px 0;
+}
+
+.role-selector button.active {
+    background-color: #007bff; /* Primary color */
+    color: white;
+    border-color: #007bff;
+}
+
+/* --- Form Styling --- */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#submit-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745; /* Success/Action color */
+    color: white;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#submit-btn:hover {
+    background-color: #218838;
+}
+
+.role-hint {
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+}
+
+#current-role {
+    font-weight: bold;
+    color: #007bff;
+}

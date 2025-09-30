@@ -12,9 +12,9 @@ public class AuthDto {
     private Long id;
     private String fullName;
     private String phoneNum;
+    private UserRole roles;
     private String username;
     private String password;
-    private UserRole roles;
     private UserStatus status;
     private Date created_at;
 }
