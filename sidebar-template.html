@@ -1,0 +1,72 @@
+<!-- SIDEBAR TEMPLATE - Copy this to all pages -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Talim CRM</span>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" th:href="@{/v1/auth/reception}">
+            <i class="fas fa-home"></i>
+            <span>Reception</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/student/listPage}">
+            <i class="fas fa-user-graduate"></i>
+            <span>Students</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/student/register}">
+            <i class="fas fa-user-plus"></i>
+            <span>New Student</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/group/listPage}">
+            <i class="fas fa-users"></i>
+            <span>Groups</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/group/register}">
+            <i class="fas fa-plus-circle"></i>
+            <span>New Group</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/teacher/listPage}">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span>Teachers</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/teacher/register}">
+            <i class="fas fa-user-tie"></i>
+            <span>New Teacher</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/pay/listPage}">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/pay/createPage}">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>New Payment</span>
+        </a>
+        <a class="nav-link" th:href="@{/v1/stats/page}">
+            <i class="fas fa-chart-line"></i>
+            <span>Statistics</span>
+        </a>
+    </nav>
+</aside>
+
+<button class="btn btn-icon menu-toggle" id="sidebarToggle">
+    <i class="fas fa-bars"></i>
+</button>
+
+<!-- SIDEBAR TOGGLE SCRIPT - Add before </body> -->
+<script>
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    const key = 'talimcrm.sidebar.collapsed';
+    const apply = () => {
+        const collapsed = localStorage.getItem(key) === '1';
+        if (collapsed) sidebar.classList.add('collapsed');
+        else sidebar.classList.remove('collapsed');
+    };
+    apply();
+    toggle.addEventListener('click', () => {
+        const collapsed = !(localStorage.getItem(key) === '1');
+        localStorage.setItem(key, collapsed ? '1' : '0');
+        apply();
+    });
+</script>

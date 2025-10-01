@@ -5,64 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Teacher - Talim CRM</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            Talim CRM
+            <img th:src="@{/logo.jpg}" alt="Talim CRM Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+            <span>Talim CRM</span>
         </div>
         <nav class="sidebar-nav">
-            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
-            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
-            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
-            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
-            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
-            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><i class="fas fa-home"></i><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><i class="fas fa-user-plus"></i><span>New Student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><i class="fas fa-users"></i><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><i class="fas fa-plus-circle"></i><span>New Group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><i class="fas fa-chalkboard-teacher"></i><span>Teachers</span></a>
+            <a class="nav-link active" th:href="@{/v1/teacher/register}"><i class="fas fa-user-tie"></i><span>New Teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><i class="fas fa-credit-card"></i><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><i class="fas fa-money-bill-wave"></i><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><i class="fas fa-chart-line"></i><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><i class="fas fa-calendar-alt"></i><span>Monthly Stats</span></a>
         </nav>
     </aside>
+    
+    <button id="sidebarToggle" style="position: fixed; top: 1rem; left: 1rem; z-index: 1001; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+        <i class="fas fa-bars" style="font-size: 1.25rem;"></i>
+    </button>
+    
     <main class="main-content">
-        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
         <div class="container">
-            <h1>Register New Teacher</h1>
+            <!-- Page Header -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2.5rem 2rem; border-radius: 1rem; margin-bottom: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+                <h1 style="font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-user-tie" style="font-size: 2.5rem;"></i>
+                    Register New Teacher
+                </h1>
+                <p style="font-size: 1rem; opacity: 0.9; margin: 0;">Add a new teacher to the system</p>
+            </div>
 
-            <form id="teacherRegisterForm" style="max-width:520px;">
-                <div style="margin-bottom:12px;">
-                    <label>Full name *</label>
-                    <input type="text" id="fullName" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="John Doe" required>
-                </div>
-                <div style="margin-bottom:12px;">
-                    <label>Phone *</label>
-                    <input type="tel" id="phoneNum" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="+998 xx xxx xx xx" required>
-                </div>
-                <div style="margin-bottom:12px;">
-                    <label>Username *</label>
-                    <input type="text" id="username" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="johndoe" required>
-                </div>
-                <div style="margin-bottom:12px;">
-                    <label>Password *</label>
-                    <input type="password" id="password" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Enter password" required>
-                </div>
-                <div style="margin-bottom:12px;">
-                    <label>Level of Knowledge</label>
-                    <select id="levelOfKnowledge" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
-                        <option value="">Select level</option>
-                        <option value="BEGINNER">Beginner</option>
-                        <option value="INTERMEDIATE">Intermediate</option>
-                        <option value="ADVANCED">Advanced</option>
-                        <option value="EXPERT">Expert</option>
-                    </select>
-                </div>
-                <div class="actions">
-                    <button type="submit" class="btn">Create Teacher</button>
-                    <a th:href="@{/v1/teacher/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
-                </div>
-            </form>
+            <!-- Form Card -->
+            <div class="card" style="background: white; border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); padding: 2.5rem; max-width: 800px; margin: 0 auto;">
+                <form id="teacherRegisterForm">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <!-- Full Name -->
+                        <div style="grid-column: span 2;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1e293b; font-size: 0.875rem;">
+                                <i class="fas fa-user" style="color: #667eea; margin-right: 0.5rem;"></i>
+                                Full Name *
+                            </label>
+                            <input type="text" id="fullName" required
+                                   style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                   placeholder="Enter full name"
+                                   onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';"
+                                   onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1e293b; font-size: 0.875rem;">
+                                <i class="fas fa-phone" style="color: #667eea; margin-right: 0.5rem;"></i>
+                                Phone Number *
+                            </label>
+                            <input type="tel" id="phoneNum" required
+                                   style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                   placeholder="+998 xx xxx xx xx"
+                                   onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';"
+                                   onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                        </div>
+
+                        <!-- Knowledge Level -->
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1e293b; font-size: 0.875rem;">
+                                <i class="fas fa-graduation-cap" style="color: #667eea; margin-right: 0.5rem;"></i>
+                                Knowledge Level
+                            </label>
+                            <select id="levelOfKnowledge"
+                                    style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; cursor: pointer; transition: all 0.2s; appearance: none; background-image: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 24 24%27 stroke=%27%2364748b%27%3E%3Cpath stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 d=%27M19 9l-7 7-7-7%27%3E%3C/path%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25rem;"
+                                    onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';"
+                                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                                <option value="">Select level</option>
+                                <option value="BEGINNER">Beginner</option>
+                                <option value="INTERMEDIATE">Intermediate</option>
+                                <option value="ADVANCED">Advanced</option>
+                                <option value="EXPERT">Expert</option>
+                            </select>
+                        </div>
+
+                        <!-- Username -->
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1e293b; font-size: 0.875rem;">
+                                <i class="fas fa-user-circle" style="color: #667eea; margin-right: 0.5rem;"></i>
+                                Username *
+                            </label>
+                            <input type="text" id="username" required
+                                   style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                   placeholder="Enter username"
+                                   onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';"
+                                   onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1e293b; font-size: 0.875rem;">
+                                <i class="fas fa-lock" style="color: #667eea; margin-right: 0.5rem;"></i>
+                                Password *
+                            </label>
+                            <input type="password" id="password" required
+                                   style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                   placeholder="Enter password"
+                                   onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)';"
+                                   onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #f1f5f9;">
+                        <a th:href="@{/v1/teacher/listPage}" 
+                           style="padding: 0.875rem 1.5rem; border: 2px solid #e2e8f0; background: white; color: #475569; border-radius: 0.5rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
+                           onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e0';"
+                           onmouseout="this.style.background='white'; this.style.borderColor='#e2e8f0';">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                style="padding: 0.875rem 1.5rem; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 0.5rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 4px 6px rgba(102, 126, 234, 0.25);"
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(102, 126, 234, 0.4)';"
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(102, 126, 234, 0.25)';">
+                            <i class="fas fa-check"></i>
+                            Create Teacher
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </main>
 </div>
@@ -78,8 +153,13 @@
             phoneNum: document.getElementById('phoneNum').value.trim(),
             username: document.getElementById('username').value.trim(),
             password: document.getElementById('password').value.trim(),
-            levelOfKnowledge: document.getElementById('levelOfKnowledge').value
+            levelOfKnowledge: document.getElementById('levelOfKnowledge').value || null
         };
+
+        if (!payload.fullName || !payload.phoneNum || !payload.username || !payload.password) {
+            alert('Please fill in all required fields');
+            return;
+        }
 
         try {
             const res = await fetch(`${API}/register`, {
@@ -87,36 +167,147 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            
-            if (res.ok) {
-                const teacher = await res.json();
-                alert('Teacher created successfully!');
-                window.location.href = '/v1/teacher/listPage';
-            } else {
-                const error = await res.text();
-                alert('Failed to create teacher: ' + error);
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(errorText || `HTTP ${res.status}`);
             }
-        } catch (error) {
-            alert('Failed to create teacher: ' + error.message);
+
+            alert('Teacher created successfully!');
+            window.location.href = '/v1/teacher/listPage';
+        } catch (err) {
+            console.error('Failed to create teacher:', err);
+            alert('Failed to create teacher: ' + err.message);
         }
     });
-
-    // sidebar toggle
+    
+    // Sidebar toggle
     (() => {
-      const sidebar = document.getElementById('sidebar');
-      const toggle = document.getElementById('sidebarToggle');
-      const key = 'talimcrm.sidebar.collapsed';
-      const apply = () => {
-        const collapsed = localStorage.getItem(key) === '1';
-        if (collapsed) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
-      };
-      apply();
-      toggle.addEventListener('click', () => {
-        const collapsed = !(localStorage.getItem(key) === '1');
-        localStorage.setItem(key, collapsed ? '1' : '0');
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const mainContent = document.querySelector('.main-content');
+        const key = 'talimcrm.sidebar.collapsed';
+        const apply = () => {
+            const collapsed = localStorage.getItem(key) === '1';
+            if (collapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.style.marginLeft = '80px';
+                toggle.style.left = '5rem';
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.style.marginLeft = '280px';
+                toggle.style.left = '17rem';
+            }
+        };
         apply();
-      });
+        toggle.addEventListener('click', () => {
+            const collapsed = !(localStorage.getItem(key) === '1');
+            localStorage.setItem(key, collapsed ? '1' : '0');
+            apply();
+        });
     })();
 </script>
+
+<style>
+    /* Sidebar Styles */
+    .sidebar {
+        width: 280px;
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        color: white;
+        position: fixed;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow-x: hidden;
+    }
+    
+    .sidebar.collapsed {
+        width: 80px;
+    }
+    
+    .sidebar-header {
+        padding: 2rem 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
+        white-space: nowrap;
+    }
+    
+    .sidebar-header img {
+        min-width: 40px;
+        transition: all 0.3s;
+    }
+    
+    .sidebar.collapsed .sidebar-header img {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .sidebar.collapsed .sidebar-header span {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+    
+    .sidebar-nav {
+        padding: 1.5rem 0;
+        overflow-y: auto;
+        height: calc(100vh - 100px);
+    }
+    
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.875rem 1.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 500;
+        white-space: nowrap;
+    }
+    
+    .nav-link i {
+        font-size: 1.25rem;
+        min-width: 24px;
+        text-align: center;
+    }
+    
+    .nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+    
+    .nav-link.active {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar.collapsed .nav-link {
+        justify-content: center;
+        padding: 0.875rem;
+    }
+    
+    .sidebar.collapsed .nav-link span {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+    
+    .main-content {
+        margin-left: 280px;
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 100vh;
+        background: #f8fafc;
+    }
+</style>
 </body>
 </html>

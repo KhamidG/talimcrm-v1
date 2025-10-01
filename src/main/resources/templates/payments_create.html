@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Payment - Talim CRM</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         .payment-container {
             max-width: 800px;
@@ -210,28 +211,133 @@
                 padding: 20px;
             }
         }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow-x: hidden;
+        }
+        
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+        
+        .sidebar-header img {
+            min-width: 40px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar.collapsed .sidebar-header img {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .sidebar.collapsed .sidebar-header span {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        
+        .sidebar-nav {
+            padding: 1.5rem 0;
+            overflow-y: auto;
+            height: calc(100vh - 100px);
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .nav-link i {
+            font-size: 1.25rem;
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+            padding: 0.875rem;
+        }
+        
+        .sidebar.collapsed .nav-link span {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+            background: #f8fafc;
+        }
     </style>
 </head>
 <body>
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            Talim CRM
+            <img th:src="@{/logo.jpg}" alt="Talim CRM Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+            <span>Talim CRM</span>
         </div>
         <nav class="sidebar-nav">
-            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
-            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
-            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
-            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
-            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link active" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
-            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><i class="fas fa-home"></i><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><i class="fas fa-user-plus"></i><span>New Student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><i class="fas fa-users"></i><span>Groups</span></a>
+            <a class="nav-link" th:href="@{/v1/group/register}"><i class="fas fa-plus-circle"></i><span>New Group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><i class="fas fa-chalkboard-teacher"></i><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><i class="fas fa-user-tie"></i><span>New Teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><i class="fas fa-credit-card"></i><span>Payments</span></a>
+            <a class="nav-link active" th:href="@{/v1/pay/createPage}"><i class="fas fa-money-bill-wave"></i><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><i class="fas fa-chart-line"></i><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><i class="fas fa-calendar-alt"></i><span>Monthly Stats</span></a>
         </nav>
     </aside>
+    
+    <button id="sidebarToggle" style="position: fixed; top: 1rem; left: 1rem; z-index: 1001; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+        <i class="fas fa-bars" style="font-size: 1.25rem;"></i>
+    </button>
 
     <main class="main-content">
         <div class="payment-container">
@@ -504,7 +610,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function clearError(elementId) {
         const errorElement = document.getElementById(elementId);
-        errorElement.style.display = 'none';
+        if (errorElement) {
+            errorElement.style.display = 'none';
+        }
         
         const inputElement = document.getElementById(elementId.replace('Error', ''));
         if (inputElement) {
@@ -580,6 +688,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load initial data
     loadData();
+    
+    // Sidebar toggle
+    (() => {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const mainContent = document.querySelector('.main-content');
+        const key = 'talimcrm.sidebar.collapsed';
+        const apply = () => {
+            const collapsed = localStorage.getItem(key) === '1';
+            if (collapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.style.marginLeft = '80px';
+                toggle.style.left = '5rem';
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.style.marginLeft = '280px';
+                toggle.style.left = '17rem';
+            }
+        };
+        apply();
+        toggle.addEventListener('click', () => {
+            const collapsed = !(localStorage.getItem(key) === '1');
+            localStorage.setItem(key, collapsed ? '1' : '0');
+            apply();
+        });
+    })();
 });
 </script>
 </body>

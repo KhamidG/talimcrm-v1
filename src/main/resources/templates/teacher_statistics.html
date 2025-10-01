@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Teacher Statistics - Talim CRM</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -41,22 +44,88 @@
         }
         .tab-btn.active { background: #667eea; color: white; }
         .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .sidebar-nav {
+            padding: 1.5rem 0;
+            overflow-y: auto;
+            height: calc(100vh - 100px);
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.15s;
+            font-weight: 500;
+        }
+        
+        .nav-link i {
+            font-size: 1.25rem;
+            min-width: 24px;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
     </style>
 </head>
 <body>
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">📚 Teacher Dashboard</div>
+        <div class="sidebar-header">
+            <img th:src="@{/logo.jpg}" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Teacher Panel</h2>
+        </div>
         <nav class="sidebar-nav">
             <a class="nav-link" th:href="@{/v1/teacher/dashboard}"><i class="fas fa-home"></i><span>Dashboard</span></a>
+            <a class="nav-link" href="#"><i class="fas fa-users"></i><span>My Groups</span></a>
+            <a class="nav-link" href="#"><i class="fas fa-user-graduate"></i><span>My Students</span></a>
             <a class="nav-link active" th:href="@{/v1/teacher/statistics}"><i class="fas fa-chart-bar"></i><span>Statistics</span></a>
+            <a class="nav-link" href="#"><i class="fas fa-user"></i><span>Profile</span></a>
             <a class="nav-link" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
         </nav>
     </aside>
     
     <main class="main-content">
-        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
-        
         <div class="stats-container">
             <div class="stats-header">
                 <h1><i class="fas fa-chart-line"></i> Attendance Statistics</h1>
@@ -150,7 +219,7 @@
 
         loadWeeklyStatistics();
         loadMonthlyStatistics();
-        setupSidebarToggle();
+        // setupSidebarToggle(); // Removed - no toggle button in this page
     });
 
     async function loadWeeklyStatistics() {
@@ -205,9 +274,21 @@
         if (!weeklyData || !weeklyData.dailyPresent) return;
         
         const ctx = document.getElementById('weeklyChart').getContext('2d');
-        const days = Object.keys(weeklyData.dailyPresent);
-        const presentData = Object.values(weeklyData.dailyPresent);
-        const absentData = Object.values(weeklyData.dailyAbsent);
+        
+        // Correct day order
+        const dayOrder = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+        const dayLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        
+        // Sort data by day order
+        const sortedData = dayOrder.map((day, index) => ({
+            day: dayLabels[index],
+            present: weeklyData.dailyPresent[day] || 0,
+            absent: weeklyData.dailyAbsent[day] || 0
+        }));
+        
+        const days = sortedData.map(d => d.day);
+        const presentData = sortedData.map(d => d.present);
+        const absentData = sortedData.map(d => d.absent);
 
         if (weeklyChart) weeklyChart.destroy();
 
@@ -315,21 +396,7 @@
         window.location.href = '/v1/teacher/login';
     }
 
-    function setupSidebarToggle() {
-        const sidebar = document.getElementById('sidebar');
-        const toggle = document.getElementById('sidebarToggle');
-        const key = 'talimcrm.sidebar.collapsed';
-        const apply = () => {
-            const collapsed = localStorage.getItem(key) === '1';
-            if (collapsed) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
-        };
-        apply();
-        toggle.addEventListener('click', () => {
-            const collapsed = !(localStorage.getItem(key) === '1');
-            localStorage.setItem(key, collapsed ? '1' : '0');
-            apply();
-        });
-    }
+    // Sidebar toggle removed - no toggle button in teacher statistics page
 </script>
 </body>
 </html>

@@ -3,63 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group - Talim CRM</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Group Attendance - Talim CRM</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8fafc;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .sidebar-nav {
+            padding: 1.5rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.15s;
+            font-weight: 500;
+        }
+        
+        .nav-link i {
+            font-size: 1.25rem;
+            min-width: 24px;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .page-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+        
+        /* Controls */
+        .controls-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        /* Table */
+        .table-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead tr {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        td {
+            padding: 1rem;
+            color: #1e293b;
+        }
+        
+        /* Radio buttons */
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .radio-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .radio-label.present {
+            color: #10b981;
+        }
+        
+        .radio-label.absent {
+            color: #ef4444;
+        }
+        
+        /* Link */
+        .link-btn {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .link-btn:hover {
+            color: #764ba2;
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">📚 Teacher Dashboard</div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img th:src="@{/logo.jpg}" alt="Logo">
+            <h2>Teacher Panel</h2>
+        </div>
         <nav class="sidebar-nav">
-            <a class="nav-link" th:href="@{/v1/teacher/dashboard}"><span>Dashboard</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/dashboard}">
+                <i class="fas fa-home"></i><span>Dashboard</span>
+            </a>
+            <a class="nav-link active" href="#">
+                <i class="fas fa-users"></i><span>Group Attendance</span>
+            </a>
+            <a class="nav-link" th:href="@{/v1/teacher/statistics}">
+                <i class="fas fa-chart-bar"></i><span>Statistics</span>
+            </a>
         </nav>
     </aside>
+
+    <!-- Main Content -->
     <main class="main-content">
-        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
-        <div class="container">
-            <h1>Group Students</h1>
-            <div style="margin: 12px 0; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-                <label>Date:
-                    <input type="date" id="attendanceDate" style="padding:8px; border:1px solid #ddd; border-radius:6px;">
-                </label>
-                <button class="btn" id="saveBtn">Save Attendance</button>
-                <a class="btn" th:href="@{/v1/teacher/dashboard}">Back</a>
+        <div class="page-header">
+            <h1><i class="fas fa-clipboard-check"></i> Group Attendance</h1>
+            <p>Mark attendance for your students</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-card">
+            <div class="controls-grid">
+                <div class="form-group">
+                    <label for="attendanceDate"><i class="fas fa-calendar"></i> Date</label>
+                    <input type="date" id="attendanceDate" class="form-control">
+                </div>
+                <div></div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-primary" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Attendance
+                    </button>
+                    <a class="btn btn-secondary" th:href="@{/v1/teacher/dashboard}">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
             </div>
-            <table class="table" style="width:100%; border-collapse:collapse;">
+        </div>
+
+        <!-- Students Table -->
+        <div class="table-card">
+            <table>
                 <thead>
                     <tr>
-                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">ID</th>
-                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Name</th>
-                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Phone</th>
-                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Present</th>
-                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">Absent</th>
-                        <th style="text-align:left; border-bottom:1px solid #ddd; padding:8px;">History</th>
+                        <th><i class="fas fa-hashtag"></i> ID</th>
+                        <th><i class="fas fa-user"></i> Name</th>
+                        <th><i class="fas fa-phone"></i> Phone</th>
+                        <th><i class="fas fa-check-circle"></i> Attendance</th>
+                        <th><i class="fas fa-history"></i> History</th>
                     </tr>
                 </thead>
                 <tbody id="studentsBody">
-                    <tr><td colspan="6" style="padding:16px; text-align:center; color:#888;">Loading...</td></tr>
+                    <tr>
+                        <td colspan="5" class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <div>Loading students...</div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </main>
 </div>
+
 <script>
-    // Get groupId from the URL path and validate
+    // Get groupId from URL
     const pathParts = window.location.pathname.split('/');
     const groupIdRaw = pathParts[pathParts.length - 2];
     const groupId = Number(groupIdRaw);
     
-    console.log('GroupId from URL:', groupIdRaw, 'parsed:', groupId);
-    console.log('Current URL:', window.location.pathname);
+    console.log('GroupId:', groupId);
     
     document.addEventListener('DOMContentLoaded', () => {
-        // Validate groupId
         if (!Number.isFinite(groupId)) {
-            console.error('GroupId is invalid:', groupIdRaw);
-            const tbody = document.getElementById('studentsBody');
-            if (tbody) {
-                tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: Invalid Group ID</td></tr>';
-            }
+            document.getElementById('studentsBody').innerHTML = 
+                '<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #ef4444;">Error: Invalid Group ID</td></tr>';
             return;
         }
 
@@ -72,91 +383,104 @@
         
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('attendanceDate').value = today;
+        
         loadStudents();
         document.getElementById('saveBtn').addEventListener('click', saveAttendance);
     });
 
-    async function loadStudents(){
-        try{
+    async function loadStudents() {
+        try {
             const teacherId = sessionStorage.getItem('teacherId');
-            if (!teacherId) {
-                document.getElementById('studentsBody').innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Please login first</td></tr>';
-                return;
-            }
-            
-            console.log('Loading students for group:', groupId, 'teacher:', teacherId);
             const res = await fetch(`/v1/teacher/group/${groupId}/students`, { 
                 headers: { 'X-Teacher-Id': teacherId } 
             });
             
             if (!res.ok) {
-                const errorText = await res.text();
-                console.error('Failed to load students:', res.status, errorText);
-                document.getElementById('studentsBody').innerHTML = `<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: ${res.status} - ${errorText}</td></tr>`;
-                return;
+                throw new Error(`HTTP ${res.status}`);
             }
             
             const students = await res.json();
-            console.log('Students loaded:', students);
             const tbody = document.getElementById('studentsBody');
             tbody.innerHTML = '';
             
-            // Check if students is an array
-            if (!Array.isArray(students)) {
-                console.error('Students is not an array:', students);
-                tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: Invalid response format</td></tr>';
+            if (!Array.isArray(students) || students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">No students in this group</td></tr>';
                 return;
             }
             
-            if(students.length === 0){
-                tbody.innerHTML = '<tr><td colspan="6" style="padding:16px; text-align:center; color:#888;">No students in this group</td></tr>';
-                return;
-            }
             students.forEach(s => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${s.id}</td>
-                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${escapeHtml(s.fullName||'')}</td>
-                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;">${escapeHtml(s.phoneNum||'')}</td>
-                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;"><input type="radio" name="att_${s.id}" value="present" checked></td>
-                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;"><input type="radio" name="att_${s.id}" value="absent"></td>
-                    <td style="padding:8px; border-bottom:1px solid #f0f0f0;"><a href="/v1/teacher/student/${s.id}/attendance/page">View</a></td>
+                    <td style="font-weight: 600; color: #667eea;">#${s.id}</td>
+                    <td><strong>${escapeHtml(s.fullName || '')}</strong></td>
+                    <td>${escapeHtml(s.phoneNum || '')}</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-label present">
+                                <input type="radio" name="att_${s.id}" value="present" checked>
+                                <i class="fas fa-check-circle"></i> Present
+                            </label>
+                            <label class="radio-label absent">
+                                <input type="radio" name="att_${s.id}" value="absent">
+                                <i class="fas fa-times-circle"></i> Absent
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/v1/teacher/student/${s.id}/attendance/page" class="link-btn">
+                            <i class="fas fa-eye"></i> View History
+                        </a>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }catch(e){
-            console.error('Error loading students:', e);
-            document.getElementById('studentsBody').innerHTML = `<tr><td colspan="6" style="padding:16px; text-align:center; color:red;">Error: ${e.message}</td></tr>`;
+        } catch (e) {
+            console.error('Error:', e);
+            document.getElementById('studentsBody').innerHTML = 
+                `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #ef4444;">Error: ${e.message}</td></tr>`;
         }
     }
 
-    async function saveAttendance(){
+    async function saveAttendance() {
         const date = document.getElementById('attendanceDate').value;
         const rows = Array.from(document.querySelectorAll('#studentsBody tr'));
+        
         const payload = rows.map(row => {
             const idCell = row.querySelector('td');
-            if(!idCell) return null;
-            const studentId = parseInt(idCell.textContent, 10);
-            const isPresent = row.querySelector(`input[name="att_${studentId}"][value="present"]`).checked;
-            return { studentId, groupId: groupId, attendanceDate: date, isPresent };
+            if (!idCell) return null;
+            const studentId = parseInt(idCell.textContent.replace('#', ''), 10);
+            const isPresent = row.querySelector(`input[name="att_${studentId}"][value="present"]`)?.checked || false;
+            return { studentId, groupId, attendanceDate: date, isPresent };
         }).filter(Boolean);
-        try{
+        
+        if (payload.length === 0) {
+            alert('No students to save attendance for');
+            return;
+        }
+        
+        try {
             const teacherId = sessionStorage.getItem('teacherId');
             const res = await fetch('/v1/teacher/attendance', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-Teacher-Id': teacherId },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'X-Teacher-Id': teacherId 
+                },
                 body: JSON.stringify(payload)
             });
-            if(res.ok){
-                alert('Saved');
-            }else{
-                alert('Failed');
+            
+            if (res.ok) {
+                alert('✅ Attendance saved successfully!');
+            } else {
+                alert('❌ Failed to save attendance');
             }
-        }catch(e){ alert('Failed'); }
+        } catch (e) {
+            alert('❌ Error: ' + e.message);
+        }
     }
 
-    function escapeHtml(str){
-        if(str==null) return '';
+    function escapeHtml(str) {
+        if (str == null) return '';
         return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
     }
 </script>

@@ -1,5 +1,6 @@
 package com.gaipov.talim_crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gaipov.talim_crm.enums.UserRole;
 import com.gaipov.talim_crm.enums.UserStatus;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name = "students_entity")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StudentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +30,7 @@ public class StudentEntity {
 
     @ManyToOne
     @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties({"students", "teacher"})
     private GroupEntity group;
 
     @Column

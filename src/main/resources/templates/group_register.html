@@ -3,109 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Group</title>
+    <title>Create Group - Talim CRM</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            Talim CRM
+            <img th:src="@{/logo.jpg}" alt="Talim CRM Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+            <span>Talim CRM</span>
         </div>
         <nav class="sidebar-nav">
-            <a class="nav-link" th:href="@{/v1/auth/reception}"><span>Reception</span></a>
-            <a class="nav-link" th:href="@{/v1/student/listPage}"><span>Students</span></a>
-            <a class="nav-link" th:href="@{/v1/student/register}"><span>New student</span></a>
-            <a class="nav-link" th:href="@{/v1/group/listPage}"><span>Groups</span></a>
-            <a class="nav-link" th:href="@{/v1/group/register}"><span>New group</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><span>Teachers</span></a>
-            <a class="nav-link" th:href="@{/v1/teacher/register}"><span>New teacher</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/listPage}"><span>Payments</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/createPage}"><span>New Payment</span></a>
-            <a class="nav-link" th:href="@{/v1/stats/page}"><span>Statistics</span></a>
-            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><span>Monthly Stats</span></a>
+            <a class="nav-link" th:href="@{/v1/auth/reception}"><i class="fas fa-home"></i><span>Reception</span></a>
+            <a class="nav-link" th:href="@{/v1/student/listPage}"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+            <a class="nav-link" th:href="@{/v1/student/register}"><i class="fas fa-user-plus"></i><span>New Student</span></a>
+            <a class="nav-link" th:href="@{/v1/group/listPage}"><i class="fas fa-users"></i><span>Groups</span></a>
+            <a class="nav-link active" th:href="@{/v1/group/register}"><i class="fas fa-plus-circle"></i><span>New Group</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/listPage}"><i class="fas fa-chalkboard-teacher"></i><span>Teachers</span></a>
+            <a class="nav-link" th:href="@{/v1/teacher/register}"><i class="fas fa-user-tie"></i><span>New Teacher</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/listPage}"><i class="fas fa-credit-card"></i><span>Payments</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/createPage}"><i class="fas fa-money-bill-wave"></i><span>New Payment</span></a>
+            <a class="nav-link" th:href="@{/v1/stats/page}"><i class="fas fa-chart-line"></i><span>Statistics</span></a>
+            <a class="nav-link" th:href="@{/v1/pay/monthlyStatsPage}"><i class="fas fa-calendar-alt"></i><span>Monthly Stats</span></a>
         </nav>
     </aside>
+    
+    <button id="sidebarToggle" style="position: fixed; top: 1rem; left: 1rem; z-index: 1001; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+        <i class="fas fa-bars" style="font-size: 1.25rem;"></i>
+    </button>
+    
     <main class="main-content">
-        <button class="menu-toggle btn btn-outline" id="sidebarToggle" aria-label="Toggle menu">☰</button>
-<div class="container">
+        <div class="container">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2.5rem 2rem; border-radius: 1rem; margin-bottom: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+                <h1 style="font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-plus-circle" style="font-size: 2.5rem;"></i>
+                    Create New Group
+                </h1>
+                <p style="font-size: 1rem; opacity: 0.9; margin: 0;">Add a new group to the system</p>
+            </div>
 
-    <h1>Create Group</h1>
-
-    <form id="groupRegisterForm" style="max-width:520px;">
-        <div style="margin-bottom:12px;">
-            <label>Name *</label>
-            <input type="text" id="nameOfGroup" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="Group name" required>
-        </div>
-        <div style="margin-bottom:12px;">
-            <label>Type *</label>
-            <select id="typeOfGroup" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" required>
-                <option value="BEGINNER">Beginner</option>
-                <option value="INTERMEDIATE">Intermediate</option>
-                <option value="PRE_IELTS">Pre-IELTS</option>
-                <option value="IELTS">IELTS</option>
-                <option value="CEFR">CEFR</option>
-            </select>
-        </div>
-        <div style="margin-bottom:12px;">
-            <label>Max students</label>
-            <input type="number" id="maxStudents" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="30">
-        </div>
-        <div style="margin-bottom:12px;">
-            <label>Teacher</label>
-            <select id="teacherId" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;">
-                <option value="">Select teacher</option>
-            </select>
-        </div>
-        <div style="margin-bottom:12px;">
-            <label>Lesson Start Time</label>
-            <input type="time" id="lessonStartTime" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="16:00">
-        </div>
-        <div style="margin-bottom:12px;">
-            <label>Lesson End Time</label>
-            <input type="time" id="lessonEndTime" style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:8px;" placeholder="18:00">
-        </div>
-        <div style="margin-bottom:12px;">
-            <label>Lesson Days</label>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;">
-                <label style="display: flex; align-items: center; gap: 4px;">
-                    <input type="checkbox" value="Monday" name="lessonDays">
-                    Monday
-                </label>
-                <label style="display: flex; align-items: center; gap: 4px;">
-                    <input type="checkbox" value="Tuesday" name="lessonDays">
-                    Tuesday
-                </label>
-                <label style="display: flex; align-items: center; gap: 4px;">
-                    <input type="checkbox" value="Wednesday" name="lessonDays">
-                    Wednesday
-                </label>
-                <label style="display: flex; align-items: center; gap: 4px;">
-                    <input type="checkbox" value="Thursday" name="lessonDays">
-                    Thursday
-                </label>
-                <label style="display: flex; align-items: center; gap: 4px;">
-                    <input type="checkbox" value="Friday" name="lessonDays">
-                    Friday
-                </label>
-                <label style="display: flex; align-items: center; gap: 4px;">
-                    <input type="checkbox" value="Saturday" name="lessonDays">
-                    Saturday
-                </label>
-                <label style="display: flex; align-items: center; gap: 4px;">
-                    <input type="checkbox" value="Sunday" name="lessonDays">
-                    Sunday
-                </label>
+            <div class="card" style="background: white; border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 2rem;">
+                <div style="padding: 1.5rem; border-bottom: 2px solid #f1f5f9;">
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.75rem;">
+                        <i class="fas fa-users" style="color: #667eea;"></i>
+                        Group Information
+                    </h3>
+                </div>
+                <div style="padding: 2rem;">
+                    <form id="groupRegisterForm">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; font-size: 0.875rem;">
+                                    <i class="fas fa-tag"></i> Group Name *
+                                </label>
+                                <input type="text" id="nameOfGroup" required
+                                       style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                       onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                                       onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
+                                       placeholder="e.g. IELTS Morning Group">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; font-size: 0.875rem;">
+                                    <i class="fas fa-layer-group"></i> Group Type *
+                                </label>
+                                <select id="typeOfGroup" required
+                                        style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; cursor: pointer; transition: all 0.2s;"
+                                        onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                                        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                                    <option value="BEGINNER">Beginner</option>
+                                    <option value="INTERMEDIATE">Intermediate</option>
+                                    <option value="PRE_IELTS">Pre-IELTS</option>
+                                    <option value="IELTS">IELTS</option>
+                                    <option value="CEFR">CEFR</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; font-size: 0.875rem;">
+                                    <i class="fas fa-users"></i> Max Students
+                                </label>
+                                <input type="number" id="maxStudents" min="1" max="50"
+                                       style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                       onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                                       onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'"
+                                       placeholder="30">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; font-size: 0.875rem;">
+                                    <i class="fas fa-chalkboard-teacher"></i> Teacher
+                                </label>
+                                <select id="teacherId"
+                                        style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; cursor: pointer; transition: all 0.2s;"
+                                        onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                                        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                                    <option value="">Select teacher (optional)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; font-size: 0.875rem;">
+                                    <i class="fas fa-clock"></i> Lesson Start Time
+                                </label>
+                                <input type="time" id="lessonStartTime"
+                                       style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                       onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                                       onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; font-size: 0.875rem;">
+                                    <i class="fas fa-clock"></i> Lesson End Time
+                                </label>
+                                <input type="time" id="lessonEndTime"
+                                       style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s;"
+                                       onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                                       onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #475569; font-size: 0.875rem;">
+                                <i class="fas fa-calendar-week"></i> Lesson Days
+                            </label>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; user-select: none;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8fafc'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                                    <input type="checkbox" value="Monday" name="lessonDays" style="width: 18px; height: 18px; cursor: pointer; accent-color: #667eea;">
+                                    <span style="font-weight: 500; color: #475569;">Monday</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; user-select: none;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8fafc'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                                    <input type="checkbox" value="Tuesday" name="lessonDays" style="width: 18px; height: 18px; cursor: pointer; accent-color: #667eea;">
+                                    <span style="font-weight: 500; color: #475569;">Tuesday</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; user-select: none;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8fafc'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                                    <input type="checkbox" value="Wednesday" name="lessonDays" style="width: 18px; height: 18px; cursor: pointer; accent-color: #667eea;">
+                                    <span style="font-weight: 500; color: #475569;">Wednesday</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; user-select: none;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8fafc'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                                    <input type="checkbox" value="Thursday" name="lessonDays" style="width: 18px; height: 18px; cursor: pointer; accent-color: #667eea;">
+                                    <span style="font-weight: 500; color: #475569;">Thursday</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; user-select: none;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8fafc'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                                    <input type="checkbox" value="Friday" name="lessonDays" style="width: 18px; height: 18px; cursor: pointer; accent-color: #667eea;">
+                                    <span style="font-weight: 500; color: #475569;">Friday</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; user-select: none;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8fafc'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                                    <input type="checkbox" value="Saturday" name="lessonDays" style="width: 18px; height: 18px; cursor: pointer; accent-color: #667eea;">
+                                    <span style="font-weight: 500; color: #475569;">Saturday</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; user-select: none;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8fafc'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                                    <input type="checkbox" value="Sunday" name="lessonDays" style="width: 18px; height: 18px; cursor: pointer; accent-color: #667eea;">
+                                    <span style="font-weight: 500; color: #475569;">Sunday</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="submit" style="flex: 1; padding: 0.875rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="fas fa-check-circle"></i>
+                                Create Group
+                            </button>
+                            <a th:href="@{/v1/group/listPage}" style="flex: 1; padding: 0.875rem; background: #e2e8f0; color: #475569; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;" onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='#e2e8f0'">
+                                <i class="fas fa-times-circle"></i>
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="actions">
-            <button type="submit" class="btn">Create</button>
-            <a th:href="@{/v1/group/listPage}" class="btn" style="background:#e0e0e0; color:#333;">Cancel</a>
-                </div>
-            </form>
-        </div>
     </main>
-    </div>
+</div>
 
 <script>
     const API = '/v1/group';
@@ -120,7 +191,7 @@
                 teachers.forEach(teacher => {
                     const option = document.createElement('option');
                     option.value = teacher.id;
-                    option.textContent = teacher.fullName;
+                    option.textContent = `${teacher.fullName} (${teacher.phoneNum || 'No phone'})`;
                     teacherSelect.appendChild(option);
                 });
             }
@@ -146,34 +217,153 @@
             lessonDays: selectedDays.join(',')
         };
         
-        const res = await fetch(`${API}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-            window.location.href = '/v1/group/listPage';
-        } else {
+        try {
+            const res = await fetch(`${API}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            if (res.ok) {
+                alert('Group created successfully!');
+                window.location.href = '/v1/group/listPage';
+            } else {
+                const error = await res.text();
+                alert('Failed to create group: ' + error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
             alert('Failed to create group');
         }
     });
-// sidebar toggle
-(() => {
-  const sidebar = document.getElementById('sidebar');
-  const toggle = document.getElementById('sidebarToggle');
-  const key = 'talimcrm.sidebar.collapsed';
-  const apply = () => {
-    const collapsed = localStorage.getItem(key) === '1';
-    if (collapsed) sidebar.classList.add('collapsed'); else sidebar.classList.remove('collapsed');
-  };
-  apply();
-  toggle.addEventListener('click', () => {
-    const collapsed = !(localStorage.getItem(key) === '1');
-    localStorage.setItem(key, collapsed ? '1' : '0');
-    apply();
-  });
-})();
+    
+    // Sidebar toggle
+    (() => {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const mainContent = document.querySelector('.main-content');
+        const key = 'talimcrm.sidebar.collapsed';
+        const apply = () => {
+            const collapsed = localStorage.getItem(key) === '1';
+            if (collapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.style.marginLeft = '80px';
+                toggle.style.left = '5rem';
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.style.marginLeft = '280px';
+                toggle.style.left = '17rem';
+            }
+        };
+        apply();
+        toggle.addEventListener('click', () => {
+            const collapsed = !(localStorage.getItem(key) === '1');
+            localStorage.setItem(key, collapsed ? '1' : '0');
+            apply();
+        });
+    })();
 </script>
+
+<style>
+    /* Sidebar Styles */
+    .sidebar {
+        width: 280px;
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        color: white;
+        position: fixed;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow-x: hidden;
+    }
+    
+    .sidebar.collapsed {
+        width: 80px;
+    }
+    
+    .sidebar-header {
+        padding: 2rem 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
+        white-space: nowrap;
+    }
+    
+    .sidebar-header img {
+        min-width: 40px;
+        transition: all 0.3s;
+    }
+    
+    .sidebar.collapsed .sidebar-header img {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .sidebar.collapsed .sidebar-header span {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+    
+    .sidebar-nav {
+        padding: 1.5rem 0;
+        overflow-y: auto;
+        height: calc(100vh - 100px);
+    }
+    
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.875rem 1.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 500;
+        white-space: nowrap;
+    }
+    
+    .nav-link i {
+        font-size: 1.25rem;
+        min-width: 24px;
+        text-align: center;
+    }
+    
+    .nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+    
+    .nav-link.active {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar.collapsed .nav-link {
+        justify-content: center;
+        padding: 0.875rem;
+    }
+    
+    .sidebar.collapsed .nav-link span {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+    
+    .main-content {
+        margin-left: 280px;
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 100vh;
+        background: #f8fafc;
+    }
+</style>
 </body>
 </html>
-
