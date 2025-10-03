@@ -1,0 +1,16 @@
+Index: src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.application.name=talim_crm\r\n\r\n# Database Configuration (supports Docker environment variables)\r\nspring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}\r\nspring.datasource.username=${SPRING_DATASOURCE_USERNAME:postgres}\r\nspring.datasource.password=${SPRING_DATASOURCE_PASSWORD:123123}\r\nspring.datasource.driver-class-name=org.postgresql.Driver\r\n\r\n# JPA/Hibernate Configuration\r\nspring.jpa.hibernate.ddl-auto=${SPRING_JPA_HIBERNATE_DDL_AUTO:update}\r\nspring.jpa.show-sql=${SPRING_JPA_SHOW_SQL:true}\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect\r\nspring.jpa.properties.hibernate.format_sql=true\r\n\r\n# Thymeleaf Configuration\r\nspring.thymeleaf.prefix=classpath:/templates/\r\nspring.thymeleaf.suffix=.html\r\nspring.thymeleaf.cache=false\r\n\r\n# Server Configuration\r\nserver.port=${SERVER_PORT:8080}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+--- a/src/main/resources/application.properties	(revision 064e0d166f161d2eba64852416ba8a4b664aeeab)
++++ b/src/main/resources/application.properties	(date 1759507025107)
+@@ -19,3 +19,4 @@
+ 
+ # Server Configuration
+ server.port=${SERVER_PORT:8080}
++server.address=0.0.0.0
+\ No newline at end of file
