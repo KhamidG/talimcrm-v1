@@ -23,16 +23,16 @@ public class GradeEntity {
     private GroupEntity group;
 
     @Column(name = "grade_value", nullable = false)
-    private Double gradeValue; // Оценка по шкале IELTS (0.0 - 9.0 с шагом 0.5)
+    private Double gradeValue;
 
     @Column(name = "lesson_date", nullable = false)
     private LocalDate lessonDate;
 
     @Column(name = "lesson_topic")
-    private String lessonTopic; // Тема урока
+    private String lessonTopic;
 
     @Column(name = "comment")
-    private String comment; // Комментарий учителя
+    private String comment;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -13,10 +13,8 @@ public interface GradeRepository extends JpaRepository<GradeEntity, Long> {
     List<GradeEntity> findByStudentIdOrderByLessonDateDesc(Long studentId);
     
     List<GradeEntity> findByGroupIdOrderByLessonDateDesc(Long groupId);
-    
-    List<GradeEntity> findByStudentIdAndGroupIdOrderByLessonDateDesc(Long studentId, Long groupId);
+
     
     Optional<GradeEntity> findByStudentIdAndGroupIdAndLessonDate(Long studentId, Long groupId, LocalDate lessonDate);
-    
-    List<GradeEntity> findByCreatedByTeacherIdOrderByLessonDateDesc(Long teacherId);
+
 }

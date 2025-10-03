@@ -5,9 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fca668bf-e7fe-47f9-902e-74500c45d97d" name="Changes" comment="fix docker">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/messages/message_ru.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/messages/message_uz.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages/message_en.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/TalimCrmApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/TalimCrmApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/AuthEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/AuthEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/Grade.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GradeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GradeEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/GroupEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/entity/LearningCenterEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/AttendanceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/AttendanceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/GradeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/GradeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/LearningCenterRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/ProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/ProfileRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/StudentRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/repository/StudentRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gaipov/talim_crm/service/GroupService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +60,10 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
+                    <option name="branchName" value="internatsionalization" />
+                    <option name="lastUsedInstant" value="1759507370" />
+                  </RecentBranch>
+                  <RecentBranch>
                     <option name="branchName" value="prototype" />
                     <option name="lastUsedInstant" value="1759238924" />
                   </RecentBranch>
@@ -85,24 +101,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Run.executor": "Run",
-    "Application.TalimCrmApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "internatsionalization",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Gaipov Khamid/Desktop/Work/Projects/talimcrm-v1",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Run.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TalimCrmApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;internatsionalization&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gaipov Khamid/Desktop/Work/Projects/talimcrm-v1&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.gaipov.talim_crm.enums" />
@@ -303,11 +319,41 @@
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="e8c1a761-7eca-45df-bbc8-d025e1c32a60" value="TOOL_WINDOW" />
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
             <State />
+          </value>
+        </entry>
+        <entry key="e8c1a761-7eca-45df-bbc8-d025e1c32a60">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
           </value>
         </entry>
       </map>

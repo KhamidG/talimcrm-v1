@@ -13,7 +13,5 @@ public interface StudentRepo extends JpaRepository<StudentEntity, Long> {
 
     List<StudentEntity> findByStatus(UserStatus userStatus);
 
-//    List<StudentEntity> findStudentsByGroup(Long groupId);
-
 
 }

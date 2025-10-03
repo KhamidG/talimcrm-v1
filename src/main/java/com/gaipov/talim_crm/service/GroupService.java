@@ -19,9 +19,6 @@ public interface GroupService {
 
     String assignTeacherToGroup(Long groupId, Long teacherId);
 
-    void deleteById(Long id);
-
-    Optional<GroupDto> getGroupById(Long id);
 
     List<GroupDto> getAvailableGroups();
 }
