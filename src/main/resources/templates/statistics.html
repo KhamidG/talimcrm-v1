@@ -446,6 +446,22 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <p class="stat-title">Debtors</p>
+                            <div class="stat-value" id="debtorsCount">-</div>
+                            <div class="stat-change negative">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payment overdue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Charts Section -->
@@ -559,6 +575,7 @@
         document.getElementById('totalGroups').textContent = statisticsData.totalGroups || 0;
         document.getElementById('totalTeachers').textContent = statisticsData.totalTeachers || 0;
         document.getElementById('receptionClients').textContent = statisticsData.receptionClients || 0;
+        document.getElementById('debtorsCount').textContent = statisticsData.debtorsCount || 0;
         
         console.log('Summary cards updated successfully');
     }

@@ -36,6 +36,10 @@ public class StudentEntity {
     @Column
     private UserStatus status;
 
+    @ManyToOne
+    @JoinColumn(name = "center_id")
+    private CenterEntity center;
+
     @CreatedDate
     private LocalDate created_at;
 

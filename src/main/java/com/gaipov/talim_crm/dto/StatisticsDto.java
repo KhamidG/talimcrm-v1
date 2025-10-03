@@ -11,6 +11,7 @@ public class StatisticsDto {
     private int inRegisterStudents;
     private int newStudentsThisMonth;
     private int stoppedStudentsThisMonth;
+    private long debtorsCount;
     
     // Group statistics
     private int totalGroups;

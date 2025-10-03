@@ -19,4 +19,6 @@ public interface StatisticsService {
     List<StudentEntity> getRecentStudents(int limit);
 
     List<PaymentEntity> getRecentPayments(int limit);
+    
+    long getDebtorsCount();
 }

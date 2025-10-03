@@ -31,14 +31,12 @@ public class TeacherEntity {
     private LocalDate created_at;
 
     @Column
-    private LocalDate deleted_at;
-
-    @Column
-    private LocalDate on_leave_time;
-
-    @Column
     private String username;
 
     @Column
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "center_id")
+    private CenterEntity center;
 }

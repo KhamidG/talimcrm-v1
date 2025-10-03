@@ -97,6 +97,9 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .count();
         stats.setStoppedStudentsThisMonth((int) stoppedThisMonth);
 
+        // Debtors count
+        stats.setDebtorsCount(getDebtorsCount());
+
         return stats;
     }
 
@@ -226,5 +229,49 @@ public class StatisticsServiceImpl implements StatisticsService {
                 })
                 .limit(limit)
                 .toList();
+    }
+
+    @Override
+    public long getDebtorsCount() {
+        List<StudentEntity> activeStudents = studentRepo.findAll().stream()
+                .filter(s -> s.getStatus() == UserStatus.ACTIVE)
+                .toList();
+        
+        LocalDate now = LocalDate.now();
+        long debtorsCount = 0;
+        
+        for (StudentEntity student : activeStudents) {
+            if (student.getCreated_at() == null) continue;
+            
+            // Get all payments for this student
+            List<PaymentEntity> studentPayments = paymentRepository.findAll().stream()
+                    .filter(p -> p.getStudent() != null && p.getStudent().equals(student.getId()))
+                    .filter(p -> p.getPaymentStatus() == PaymentStatus.PAID)
+                    .sorted((a, b) -> {
+                        if (a.getCreatedAt() == null && b.getCreatedAt() == null) return 0;
+                        if (a.getCreatedAt() == null) return 1;
+                        if (b.getCreatedAt() == null) return -1;
+                        return b.getCreatedAt().compareTo(a.getCreatedAt());
+                    })
+                    .toList();
+            
+            // Determine the date to check from
+            LocalDate checkDate;
+            if (studentPayments.isEmpty()) {
+                // No payments yet - check from registration date
+                checkDate = student.getCreated_at();
+            } else {
+                // Has payments - check from last payment date
+                checkDate = studentPayments.get(0).getCreatedAt();
+            }
+            
+            // If more than 1 month has passed since checkDate, student is a debtor
+            LocalDate nextPaymentDue = checkDate.plusMonths(1);
+            if (now.isAfter(nextPaymentDue)) {
+                debtorsCount++;
+            }
+        }
+        
+        return debtorsCount;
     }
 }

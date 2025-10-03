@@ -13,31 +13,17 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "auth")
-public class AuthEntity{
+public class AuthEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name")
-    private String fullName;
-
-    @Column
     private String username;
-
-    @Column
     private String password;
-
-    @Column(name = "phone_num")
-    private String phoneNum;
-
     @Enumerated(EnumType.STRING)
     private UserRole roles;
 
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
-
-    @Column(name = "created_at")
-    private Date created_at;
-
-
+    @ManyToOne
+    @JoinColumn(name = "center_id")
+    private CenterEntity center;
 }
